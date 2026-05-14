@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------
+// ENUMS
+// ----------------------------------------------------
+enum Role {
+  USER
+  ADMIN
+  BOT
+}
+
+enum GameStatus {
+  ONGOING
+  RED_WON
+  BLACK_WON
+  DRAW
+}
+
+// ----------------------------------------------------
+// BẢNG 1: USER (Xác thực, bảo mật, phân quyền)
+// ----------------------------------------------------
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String?   
+  
+  role          Role      @default(USER)  
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  
+  // Quan hệ 1-1: Một User có thể có 1 Profile. Dấu ? vì Admin có thể không cần Profile
+  profile       Profile?  
+}
+
+// ----------------------------------------------------
+// BẢNG 2: PROFILE (Hồ sơ người chơi game)
+// ----------------------------------------------------
+model Profile {
+  id            String    @id @default(uuid())
+  
+  // Ràng buộc 1-1 tới bảng User
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  username      String    @unique
+  elo           Int       @default(1200)
+  avatar        String?   // Ảnh đại diện
+  
+  // Lịch sử thi đấu giờ sẽ gắn thẳng vào Profile của người chơi
+  gamesAsRed    Game[]    @relation("RedPlayer")
+  gamesAsBlack  Game[]    @relation("BlackPlayer")
+}
+
+// ----------------------------------------------------
+// BẢNG 3: ACCOUNT (Quản lý đăng nhập OAuth2/Google)
+// ----------------------------------------------------
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  provider          String  
+  providerAccountId String  
+
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+// ----------------------------------------------------
+// BẢNG 4: GAME (Ván đấu)
+// ----------------------------------------------------
+model Game {
+  id            String     @id @default(uuid())
+  status        GameStatus @default(ONGOING)
+  currentFen    String     @default("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1")
+
+  // Thay vì trỏ đến User, giờ sẽ trỏ đến Profile
+  redPlayer     Profile    @relation("RedPlayer", fields: [redPlayerId], references: [id])
+  redPlayerId   String
+
+  blackPlayer   Profile    @relation("BlackPlayer", fields: [blackPlayerId], references: [id])
+  blackPlayerId String
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  moves         Move[]
+}
+
+// ----------------------------------------------------
+// BẢNG 5: MOVE (Nước đi)
+// ----------------------------------------------------
+model Move {
+  id          String   @id @default(uuid())
+  
+  game        Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  gameId      String
+
+  moveNumber  Int
+  notation    String   
+  fenAfter    String   
+  
+  createdAt   DateTime @default(now())
+
+  @@unique([gameId, moveNumber]) 
+}

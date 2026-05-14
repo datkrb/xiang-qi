@@ -1,0 +1,16 @@
+export const CHINESE_CHARS: Record<string, string> = {
+  k: "帥",
+  K: "將",
+  a: "士",
+  A: "士",
+  b: "相",
+  B: "象",
+  n: "馬",
+  N: "馬",
+  r: "俥",
+  R: "車",
+  c: "砲",
+  C: "砲",
+  s: "兵",
+  S: "卒",
+};

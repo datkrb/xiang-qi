@@ -1,0 +1,88 @@
+import { hashPassword, comparePassword } from "../../utils/bcrypt";
+import prisma from "../../utils/prisma";
+import { generateAccessToken, generateRefreshToken } from "../../utils/token";
+
+export const register = async (email: string, password: string) => {
+  //Check if user already exists
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser) {
+    throw new Error("User already exists");
+  }
+
+  //Hash password
+  const hashedPassword = await hashPassword(password);
+
+  //Save user to database
+  const user = await prisma.user.create({
+    data: {
+      email,
+      password: hashedPassword,
+      role: "USER",
+      profile: {
+        create: {
+          username: "Need to update",
+          elo: 1200,
+        },
+      },
+    },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+    },
+  });
+  return {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+  };
+};
+
+export const login = async (email: string, password: string) => {
+  //Check if user exists
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      password: true,
+      email: true,
+      role: true,
+    },
+  });
+  if (!user || !user.password) {
+    throw new Error("Invalid email or password");
+  }
+
+  //Check password
+  const isMatch = await comparePassword(password, user.password);
+  if (!isMatch) {
+    throw new Error("Invalid email or password");
+  }
+
+  //Generate tokens
+  const accessToken = generateAccessToken(user.id, user.role);
+  const refreshToken = generateRefreshToken(user.id);
+
+  //Save refresh token to database
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { refreshToken },
+  });
+
+  return {
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    },
+    accessToken,
+    refreshToken,
+  };
+};
+
+export const logout = async (userId: string) => {
+  await prisma.user.update({
+    where: { id: userId },
+    data: { refreshToken: null },
+  });
+};

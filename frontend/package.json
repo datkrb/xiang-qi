@@ -1,27 +1,48 @@
 {
   "name": "xiangqi",
-  "private": true,
   "version": "0.0.1",
+  "description": "Xiangqi (Chinese Chess) game with AI - library module",
+  "private": false,
   "type": "module",
+  "main": "dist/xiangqi.umd.js",
+  "module": "dist/xiangqi.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/xiangqi.js",
+      "require": "./dist/xiangqi.umd.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
-  "dependencies": {
+  "peerDependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "@mui/material": "^5.14.8",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.0",
+    "@types/node": "^20.10.6",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
-    "@types/node": "^20.10.6",
     "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.5.14",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^4.3.0",
     "typescript": "^5.3.3",
-    "vite": "^5.0.8"
+    "vite": "^7.0.0",
+    "vite-plugin-dts": "^3.7.0"
+  },
+  "dependencies": {
+    "lucide-react": "^1.16.0"
   }
 }

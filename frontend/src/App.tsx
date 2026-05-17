@@ -1,319 +1,142 @@
-import React, { useState, useCallback, useEffect } from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Stack,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Button,
-  DialogActions,
-} from "@mui/material";
-import GameBoard from "./components/Board";
-import CapturedTray from "./components/CapturedTray";
-import GameControls from "./components/Controls";
-import MoveLog from "./components/MoveLog";
-import {
-  initialBoard,
-  getLegalMovesFiltered,
-  applyMove,
-  isInCheck,
-  isCheckmate,
-  isStalemate,
-  getAIMoveAdaptive,
-  evaluateBoard,
-  recordWin,
-  getWinLossStats,
-} from "./logic";
-import { GameState, Board, Position, Move, Color, Piece } from "./types";
+import { useState } from 'react';
+import "./App.css";
+import HomeScreen from './components/HomeScreen';
+import GameModeScreen, { GameConfig } from './components/GameModeScreen';
+import MainGameScreen from './components/MainGameScreen';
+import LoadGameScreen from './components/LoadGameScreen';
+import AllScreensShowcase from './components/AllScreensShowcase';
 
-const App: React.FC = () => {
-  const [gameState, setGameState] = useState<GameState>({
-    board: initialBoard(),
-    currentPlayer: "red",
-    selectedPosition: null,
-    legalMoves: [],
-    moveHistory: [],
-    capturedPieces: { red: [], black: [] },
-    gameStatus: "playing",
-    evaluation: 0,
-  });
+type Screen = 'home' | 'offline' | 'online' | 'ai' | 'game' | 'load' | 'tutorial' | 'leaderboard';
 
-  const [aiConfig, setAiConfig] = useState({ skill: 3, isEnabled: true });
-  const [gameOverDialogOpen, setGameOverDialogOpen] = useState(false);
-  const [gameOverMessage, setGameOverMessage] = useState("");
+export default function App() {
+  const [currentScreen, setCurrentScreen] = useState<Screen>('home');
+  const [gameConfig, setGameConfig] = useState<GameConfig | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
-  // Handle square click
-  const onSquareClick = useCallback(
-    (r: number, c: number) => {
-      if (gameState.gameStatus !== "playing") return;
-      if (aiConfig.isEnabled && gameState.currentPlayer === "black") return;
+  const handleNavigate = (screen: string) => {
+    setCurrentScreen(screen as Screen);
+  };
 
-      const clickedPiece = gameState.board[r][c];
+  const handleStartGame = (config: GameConfig) => {
+    setGameConfig(config);
+    setCurrentScreen('game');
+  };
 
-      // If clicking an empty square or opponent piece
-      if (!clickedPiece || clickedPiece.c !== gameState.currentPlayer) {
-        // Check if it's a legal move from selected piece
-        if (
-          gameState.selectedPosition &&
-          gameState.legalMoves.some((m) => m[0] === r && m[1] === c)
-        ) {
-          makeMove(gameState.selectedPosition, [r, c]);
-        }
-        return;
-      }
+  const handleBackToHome = () => {
+    setCurrentScreen('home');
+    setGameConfig(null);
+  };
 
-      // Clicking own piece - select it
-      const moves = getLegalMovesFiltered(gameState.board, r, c);
-      const validMoves = moves.filter(([nr, nc]) => {
-        const testBoard = applyMove(gameState.board, [r, c], [nr, nc]);
-        return !isInCheck(testBoard, gameState.currentPlayer);
-      });
-
-      setGameState((prev) => ({
-        ...prev,
-        selectedPosition: [r, c],
-        legalMoves: validMoves,
-      }));
-    },
-    [gameState],
-  );
-
-  // Make a move
-  const makeMove = useCallback(
-    (from: Position, to: Position) => {
-      const newBoard = applyMove(gameState.board, from, to);
-      const capturedPiece = gameState.board[to[0]][to[1]];
-      const newCapturedPieces = { ...gameState.capturedPieces };
-
-      if (capturedPiece) {
-        newCapturedPieces[gameState.currentPlayer].push(capturedPiece);
-      }
-
-      const nextPlayer: Color =
-        gameState.currentPlayer === "red" ? "black" : "red";
-      const evaluation = evaluateBoard(newBoard);
-
-      // Check game status
-      let gameStatus: GameState["gameStatus"] = "playing";
-      if (isCheckmate(newBoard, nextPlayer)) {
-        gameStatus = "checkmate";
-        recordWin(gameState.currentPlayer);
-        setGameOverMessage(
-          `${gameState.currentPlayer.toUpperCase()} wins by checkmate!`,
-        );
-        setGameOverDialogOpen(true);
-      } else if (isStalemate(newBoard, nextPlayer)) {
-        gameStatus = "stalemate";
-        setGameOverMessage("Draw by stalemate!");
-        setGameOverDialogOpen(true);
-      }
-
-      const newMove: Move = {
-        from,
-        to,
-        captured: capturedPiece,
-      };
-
-      setGameState((prev) => ({
-        board: newBoard,
-        currentPlayer: nextPlayer,
-        selectedPosition: null,
-        legalMoves: [],
-        moveHistory: [...prev.moveHistory, newMove],
-        capturedPieces: newCapturedPieces,
-        gameStatus,
-        evaluation,
-      }));
-    },
-    [gameState],
-  );
-
-  // AI move
-  useEffect(() => {
-    if (
-      gameState.currentPlayer === "black" &&
-      aiConfig.isEnabled &&
-      gameState.gameStatus === "playing"
-    ) {
-      const timer = setTimeout(() => {
-        const move = getAIMoveAdaptive(
-          gameState.board,
-          "black",
-          aiConfig.skill,
-        );
-        if (move) {
-          makeMove(move[0], move[1]);
-        }
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [
-    gameState.currentPlayer,
-    gameState.gameStatus,
-    aiConfig.isEnabled,
-    aiConfig.skill,
-    makeMove,
-    gameState.board,
-  ]);
-
-  // Reset game
-  const onReset = useCallback(() => {
-    setGameState({
-      board: initialBoard(),
-      currentPlayer: "red",
-      selectedPosition: null,
-      legalMoves: [],
-      moveHistory: [],
-      capturedPieces: { red: [], black: [] },
-      gameStatus: "playing",
-      evaluation: 0,
-    });
-    setGameOverDialogOpen(false);
-  }, []);
-
-  // Undo move
-  const onUndo = useCallback(() => {
-    if (gameState.moveHistory.length === 0) return;
-    const lastMove = gameState.moveHistory[gameState.moveHistory.length - 1];
-    let newBoard = gameState.board;
-    newBoard[lastMove.from[0]][lastMove.from[1]] =
-      newBoard[lastMove.to[0]][lastMove.to[1]];
-    newBoard[lastMove.to[0]][lastMove.to[1]] = lastMove.captured || null;
-
-    const newCapturedPieces = { ...gameState.capturedPieces };
-    if (lastMove.captured) {
-      const color = gameState.currentPlayer === "red" ? "black" : "red";
-      newCapturedPieces[color] = newCapturedPieces[color].slice(0, -1);
-    }
-
-    const nextPlayer: Color =
-      gameState.currentPlayer === "red" ? "black" : "red";
-
-    setGameState((prev) => ({
-      board: newBoard,
-      currentPlayer: nextPlayer,
-      selectedPosition: null,
-      legalMoves: [],
-      moveHistory: prev.moveHistory.slice(0, -1),
-      capturedPieces: newCapturedPieces,
-      gameStatus: "playing",
-      evaluation: evaluateBoard(newBoard),
-    }));
-  }, [gameState]);
-
-  const stats = getWinLossStats();
+  const handleLoadGame = (gameId: string) => {
+    // In a real implementation, this would load the game state
+    console.log('Loading game:', gameId);
+    setCurrentScreen('game');
+  };
 
   return (
-    <Container maxWidth="lg" sx={{ padding: "24px" }}>
-      <Typography
-        variant="h3"
-        gutterBottom
-        sx={{ fontFamily: '"Zhi Mang Xing", cursive' }}
+    <div className="size-full">
+      <button
+        onClick={() => setShowAll((v) => !v)}
+        className="fixed bottom-4 right-4 z-50 px-4 py-2 bg-amber-900 hover:bg-amber-800 text-amber-50 rounded-full shadow-lg font-semibold"
       >
-        象棋 Xiangqi
-      </Typography>
+        {showAll ? 'Exit Showcase' : 'Show All Screens'}
+      </button>
 
-      <Grid container spacing={3}>
-        {/* Board */}
-        <Grid item xs={12} md={6}>
-          <Stack spacing={2}>
-            <GameBoard
-              board={gameState.board}
-              selectedPosition={gameState.selectedPosition}
-              legalMoves={gameState.legalMoves}
-              onSquareClick={onSquareClick}
-            />
+      {showAll && <AllScreensShowcase />}
 
-            {/* Captured pieces */}
-            <Box>
-              <Typography variant="subtitle2">Red Captured:</Typography>
-              <CapturedTray pieces={gameState.capturedPieces.red} color="red" />
-            </Box>
-            <Box>
-              <Typography variant="subtitle2">Black Captured:</Typography>
-              <CapturedTray
-                pieces={gameState.capturedPieces.black}
-                color="black"
-              />
-            </Box>
-          </Stack>
-        </Grid>
+      {!showAll && currentScreen === 'home' && <HomeScreen onNavigate={handleNavigate} />}
 
-        {/* Sidebar */}
-        <Grid item xs={12} md={6}>
-          <Stack spacing={2}>
-            {/* Current player */}
-            <Box
-              sx={{
-                padding: "12px",
-                backgroundColor: "#f5f5f5",
-                borderRadius: "4px",
-              }}
+      {!showAll && currentScreen === 'offline' && (
+        <GameModeScreen
+          mode="offline"
+          onBack={handleBackToHome}
+          onStartGame={handleStartGame}
+        />
+      )}
+
+      {!showAll && currentScreen === 'online' && (
+        <GameModeScreen
+          mode="online"
+          onBack={handleBackToHome}
+          onStartGame={handleStartGame}
+        />
+      )}
+
+      {!showAll && currentScreen === 'ai' && (
+        <GameModeScreen
+          mode="ai"
+          onBack={handleBackToHome}
+          onStartGame={handleStartGame}
+        />
+      )}
+
+      {!showAll && currentScreen === 'game' && gameConfig && (
+        <MainGameScreen config={gameConfig} onExit={handleBackToHome} />
+      )}
+
+      {!showAll && currentScreen === 'load' && (
+        <LoadGameScreen onBack={handleBackToHome} onLoadGame={handleLoadGame} />
+      )}
+
+      {!showAll && currentScreen === 'tutorial' && (
+        <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-amber-900 p-8">
+          <div className="max-w-4xl mx-auto">
+            <button
+              onClick={handleBackToHome}
+              className="mb-8 px-6 py-3 bg-red-700 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors"
             >
-              <Typography variant="subtitle2">
-                Current Player:{" "}
-                <strong>{gameState.currentPlayer.toUpperCase()}</strong>
-              </Typography>
-              <Typography variant="caption">
-                Status: {gameState.gameStatus}
-              </Typography>
-            </Box>
+              ← Back to Menu
+            </button>
+            <div className="bg-red-800/50 backdrop-blur-sm rounded-2xl p-8 border border-red-700/50">
+              <h1 className="text-4xl font-bold text-amber-100 mb-6">Xiangqi Tutorial</h1>
+              <div className="space-y-4 text-amber-100">
+                <p className="text-lg">Welcome to Xiangqi (Chinese Chess)!</p>
+                <p>This tutorial will guide you through the rules and strategies of this ancient game.</p>
+                <p className="text-amber-200/70 italic">Tutorial content coming soon...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-            {/* Controls */}
-            <GameControls
-              onUndo={onUndo}
-              onReset={onReset}
-              onAIToggle={() =>
-                setAiConfig((prev) => ({ ...prev, isEnabled: !prev.isEnabled }))
-              }
-              aiEnabled={aiConfig.isEnabled}
-              skill={aiConfig.skill}
-              onSkillChange={(skill: number) =>
-                setAiConfig((prev) => ({ ...prev, skill }))
-              }
-            />
-
-            {/* Stats */}
-            <Box
-              sx={{
-                padding: "12px",
-                backgroundColor: "#f5f5f5",
-                borderRadius: "4px",
-              }}
+      {!showAll && currentScreen === 'leaderboard' && (
+        <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-amber-900 p-8">
+          <div className="max-w-4xl mx-auto">
+            <button
+              onClick={handleBackToHome}
+              className="mb-8 px-6 py-3 bg-red-700 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors"
             >
-              <Typography variant="subtitle2">Stats</Typography>
-              <Typography variant="caption">
-                Red Wins: {stats.redWins}
-              </Typography>
-              <br />
-              <Typography variant="caption">
-                Black Wins: {stats.blackWins}
-              </Typography>
-            </Box>
-
-            {/* Move log */}
-            <MoveLog moves={gameState.moveHistory} />
-          </Stack>
-        </Grid>
-      </Grid>
-
-      {/* Game over dialog */}
-      <Dialog open={gameOverDialogOpen} onClose={onReset}>
-        <DialogTitle>Game Over</DialogTitle>
-        <DialogContent>
-          <Typography>{gameOverMessage}</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onReset} variant="contained">
-            Play Again
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+              ← Back to Menu
+            </button>
+            <div className="bg-red-800/50 backdrop-blur-sm rounded-2xl p-8 border border-red-700/50">
+              <h1 className="text-4xl font-bold text-amber-100 mb-6">Leaderboard</h1>
+              <div className="space-y-3">
+                {[
+                  { rank: 1, name: 'Master Chen', score: 2850, wins: 145 },
+                  { rank: 2, name: 'Dragon King', score: 2720, wins: 128 },
+                  { rank: 3, name: 'Phoenix Rider', score: 2690, wins: 112 },
+                  { rank: 4, name: 'Wise Monk', score: 2580, wins: 98 },
+                  { rank: 5, name: 'Swift Knight', score: 2450, wins: 87 },
+                ].map((player) => (
+                  <div
+                    key={player.rank}
+                    className="flex items-center justify-between p-4 bg-red-700/50 rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="text-2xl font-bold text-amber-400 w-8">#{player.rank}</span>
+                      <span className="text-xl text-amber-100 font-semibold">{player.name}</span>
+                    </div>
+                    <div className="flex gap-8 text-amber-200">
+                      <span>Score: <strong>{player.score}</strong></span>
+                      <span>Wins: <strong>{player.wins}</strong></span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
-};
-
-export default App;
+}

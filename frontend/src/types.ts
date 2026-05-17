@@ -1,37 +1,45 @@
-// Type definitions for Xiangqi game
-
-export type PieceType = "k" | "a" | "b" | "n" | "r" | "c" | "s";
 export type Color = "red" | "black";
-export type Position = [number, number];
+export type PieceType =
+  | "king"
+  | "advisor"
+  | "elephant"
+  | "horse"
+  | "chariot"
+  | "cannon"
+  | "soldier";
 
-export interface Piece {
-  t: PieceType;
-  c: Color;
+export interface Position {
+  x: number;
+  y: number;
 }
 
-export type Board = (Piece | null)[][];
+export interface Piece {
+  type: PieceType;
+  color: Color;
+  position: Position;
+}
 
 export interface Move {
   from: Position;
   to: Position;
-  captured?: Piece;
 }
 
 export interface GameState {
-  board: Board;
+  board: (Piece | null)[][];
   currentPlayer: Color;
-  selectedPosition: Position | null;
+  selectedSquare: Position | null;
   legalMoves: Position[];
   moveHistory: Move[];
   capturedPieces: {
     red: Piece[];
     black: Piece[];
   };
-  gameStatus: "playing" | "checkmate" | "stalemate" | "draw";
-  evaluation: number;
+  isGameOver: boolean;
+  winner: Color | null;
 }
 
 export interface AIConfig {
-  skill: number;
-  isEnabled: boolean;
+  enabled: boolean;
+  level: "easy" | "medium" | "hard";
+  depth: number;
 }

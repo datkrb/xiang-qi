@@ -5,25 +5,27 @@ import { PieceView } from './xiangqi/PieceView';
 import { TurnIndicator } from './xiangqi/TurnIndicator';
 import { BOARD_H, BOARD_W, COLS, ROWS } from './xiangqi/constants';
 import { XiangqiGame, useXiangqiGame } from './xiangqi/useXiangqiGame';
+import { PieceColor } from './xiangqi/types';
 
 interface XiangqiBoardProps {
   config?: GameConfig;
   game?: XiangqiGame;
-  onGameEnd?: (result: GameResult) => void;
   showTurnIndicator?: boolean;
+  /** Bên nào ở phía dưới bàn cờ (mặc định: 'red') */
+  perspective?: PieceColor;
 }
 
-export interface GameResult {
-  winner: 'red' | 'black' | 'draw';
-  reason: string;
-  moves: number;
-  duration: number;
-}
-
-export default function XiangqiBoard({ game: externalGame, showTurnIndicator = true }: XiangqiBoardProps) {
+export default function XiangqiBoard({
+  game: externalGame,
+  showTurnIndicator = true,
+  perspective = 'red',
+}: XiangqiBoardProps) {
   const internalGame = useXiangqiGame();
   const game = externalGame ?? internalGame;
   const { pieces, selectedPiece, validMoves, currentTurn, isCheck, getPieceAt, handleClick } = game;
+
+  // Khi perspective='black', lật bàn cờ 180° (Đen ở dưới)
+  const flipped = perspective === 'black';
 
   return (
     <div className="flex items-center justify-center p-4">
@@ -34,6 +36,7 @@ export default function XiangqiBoard({ game: externalGame, showTurnIndicator = t
             width: BOARD_W,
             height: BOARD_H,
             background: 'linear-gradient(180deg, #f3d9a4 0%, #e9c587 100%)',
+            transform: flipped ? 'rotate(180deg)' : undefined,
           }}
         >
           <BoardGrid />
@@ -66,6 +69,7 @@ export default function XiangqiBoard({ game: externalGame, showTurnIndicator = t
                 capturable={capturable}
                 inCheck={isCheck}
                 onClick={handleClick}
+                flipped={flipped}
               />
             );
           })}

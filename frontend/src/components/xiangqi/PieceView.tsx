@@ -7,16 +7,18 @@ interface PieceViewProps {
   capturable?: boolean;
   inCheck?: boolean;
   onClick: (x: number, y: number) => void;
+  /** Khi board bị lật 180°, counter-rotate chữ quân cờ cho đọc được */
+  flipped?: boolean;
 }
 
-export function PieceView({ piece, selected, capturable, inCheck, onClick }: PieceViewProps) {
+export function PieceView({ piece, selected, capturable, inCheck, onClick, flipped }: PieceViewProps) {
   const [x, y] = piece.position;
   const ring = selected
     ? 'ring-4 ring-blue-500'
     : capturable
     ? 'ring-4 ring-green-500'
     : inCheck && piece.type === 'general'
-    ? 'ring-4 ring-yellow-400'
+    ? 'ring-4 ring-yellow-400 animate-pulse'
     : '';
 
   return (
@@ -48,6 +50,8 @@ export function PieceView({ piece, selected, capturable, inCheck, onClick }: Pie
           fontWeight: 700,
           fontFamily: 'serif',
           lineHeight: 1,
+          // Counter-rotate khi bàn cờ bị lật, để chữ Hán vẫn đọc được
+          transform: flipped ? 'rotate(180deg)' : undefined,
         }}
       >
         {pieceNames[piece.type][piece.color]}

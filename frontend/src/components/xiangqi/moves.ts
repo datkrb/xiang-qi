@@ -282,3 +282,150 @@ export function calculateValidMoves(piece: Piece, getPieceAt: GetPieceAt): Coord
       return [];
   }
 }
+
+// ============================================================
+// Check / Checkmate / Game Result
+// ============================================================
+
+/**
+ * Tìm Tướng của một bên.
+ */
+function findGeneral(pieces: Piece[], color: PieceColor): Piece | null {
+  return pieces.find((p) => p.type === 'general' && p.color === color) || null;
+}
+
+/**
+ * Helper: tạo getPieceAt từ Piece[].
+ */
+function makeLookup(pieces: Piece[]): GetPieceAt {
+  return (x: number, y: number) =>
+    pieces.find((p) => p.position[0] === x && p.position[1] === y) || null;
+}
+
+/**
+ * Kiểm tra xem bên `color` có đang bị chiếu không.
+ *
+ * Cách kiểm tra: duyệt tất cả quân đối phương,
+ * tính nước đi hợp lệ, nếu bất kỳ nước nào nhắm vào Tướng → bị chiếu.
+ */
+export function isInCheck(pieces: Piece[], color: PieceColor): boolean {
+  const general = findGeneral(pieces, color);
+  if (!general) return false; // Tướng đã bị ăn → xử lý ở nơi khác
+
+  const [gx, gy] = general.position;
+  const opponentColor: PieceColor = color === 'red' ? 'black' : 'red';
+  const getPieceAt = makeLookup(pieces);
+
+  for (const piece of pieces) {
+    if (piece.color !== opponentColor) continue;
+
+    const moves = calculateValidMoves(piece, getPieceAt);
+    if (moves.some(([mx, my]) => mx === gx && my === gy)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Mô phỏng di chuyển 1 quân và trả về Piece[] mới.
+ */
+function simulateMove(pieces: Piece[], from: Coord, to: Coord): Piece[] {
+  const piece = pieces.find(
+    (p) => p.position[0] === from[0] && p.position[1] === from[1]
+  );
+  if (!piece) return pieces;
+
+  return pieces
+    .filter(
+      (p) =>
+        !(p.position[0] === from[0] && p.position[1] === from[1]) &&
+        !(p.position[0] === to[0] && p.position[1] === to[1])
+    )
+    .concat([{ ...piece, position: to }]);
+}
+
+/**
+ * Lọc các nước đi hợp lệ: bỏ những nước đi mà sau khi đi, Tướng mình bị chiếu.
+ */
+export function getLegalMoves(piece: Piece, pieces: Piece[]): Coord[] {
+  const getPieceAt = makeLookup(pieces);
+  const rawMoves = calculateValidMoves(piece, getPieceAt);
+
+  return rawMoves.filter(([tx, ty]) => {
+    const newPieces = simulateMove(pieces, piece.position, [tx, ty]);
+    return !isInCheck(newPieces, piece.color);
+  });
+}
+
+/**
+ * Kiểm tra xem bên `color` có bị chiếu hết không.
+ *
+ * Chiếu hết = đang bị chiếu + không có nước đi nào thoát chiếu.
+ */
+export function isCheckmate(pieces: Piece[], color: PieceColor): boolean {
+  if (!isInCheck(pieces, color)) return false;
+
+  // Thử tất cả nước đi có thể của bên `color`
+  for (const piece of pieces) {
+    if (piece.color !== color) continue;
+
+    const legalMoves = getLegalMoves(piece, pieces);
+    if (legalMoves.length > 0) return false; // Còn nước thoát
+  }
+
+  return true; // Không có nước thoát → chiếu hết
+}
+
+/**
+ * Kiểm tra bế tắc (stalemate): không bị chiếu nhưng không có nước đi hợp lệ.
+ */
+export function isStalemate(pieces: Piece[], color: PieceColor): boolean {
+  if (isInCheck(pieces, color)) return false;
+
+  for (const piece of pieces) {
+    if (piece.color !== color) continue;
+
+    const legalMoves = getLegalMoves(piece, pieces);
+    if (legalMoves.length > 0) return false;
+  }
+
+  return true;
+}
+
+export type GameResult =
+  | { type: 'ongoing' }
+  | { type: 'checkmate'; winner: PieceColor; loser: PieceColor }
+  | { type: 'captured'; winner: PieceColor; loser: PieceColor }
+  | { type: 'stalemate' };
+
+/**
+ * Kiểm tra kết quả ván cờ sau khi di chuyển.
+ *
+ * @param pieces - trạng thái bàn cờ hiện tại
+ * @param nextTurn - lượt tiếp theo (bên vừa CHƯA đi)
+ */
+export function getGameResult(pieces: Piece[], nextTurn: PieceColor): GameResult {
+  const prevTurn: PieceColor = nextTurn === 'red' ? 'black' : 'red';
+
+  // 1. Tướng bị ăn → thua ngay
+  if (!findGeneral(pieces, 'red')) {
+    return { type: 'captured', winner: 'black', loser: 'red' };
+  }
+  if (!findGeneral(pieces, 'black')) {
+    return { type: 'captured', winner: 'red', loser: 'black' };
+  }
+
+  // 2. Chiếu hết
+  if (isCheckmate(pieces, nextTurn)) {
+    return { type: 'checkmate', winner: prevTurn, loser: nextTurn };
+  }
+
+  // 3. Bế tắc (hòa)
+  if (isStalemate(pieces, nextTurn)) {
+    return { type: 'stalemate' };
+  }
+
+  return { type: 'ongoing' };
+}

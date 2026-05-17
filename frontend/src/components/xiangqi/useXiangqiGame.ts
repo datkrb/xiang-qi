@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { INITIAL_PIECES } from './initialPieces';
-import { calculateValidMoves } from './moves';
+import { calculateValidMoves, getLegalMoves, isInCheck, getGameResult, GameResult } from './moves';
 import { Coord, Piece, PieceColor } from './types';
 
 export interface MoveRecord {
@@ -17,9 +17,16 @@ export interface XiangqiGame {
   validMoves: Coord[];
   captured: { red: Piece[]; black: Piece[] };
   moveHistory: MoveRecord[];
+  /** Bên đang đi có bị chiếu không */
   isCheck: boolean;
+  /** Kết quả ván cờ (ongoing / checkmate / captured / stalemate) */
+  gameResult: GameResult;
+  /** Game đã kết thúc chưa */
+  isGameOver: boolean;
   getPieceAt: (x: number, y: number) => Piece | null;
   handleClick: (x: number, y: number) => void;
+  /** Di chuyển quân trực tiếp (dùng cho AI, không qua UI select) */
+  makeMove: (fromX: number, fromY: number, toX: number, toY: number) => void;
   reset: () => void;
 }
 
@@ -30,7 +37,11 @@ export function useXiangqiGame(): XiangqiGame {
   const [validMoves, setValidMoves] = useState<Coord[]>([]);
   const [captured, setCaptured] = useState<{ red: Piece[]; black: Piece[] }>({ red: [], black: [] });
   const [moveHistory, setMoveHistory] = useState<MoveRecord[]>([]);
-  const [isCheck] = useState(false);
+
+  // Tính check và game result từ state hiện tại
+  const isCheck = useMemo(() => isInCheck(pieces, currentTurn), [pieces, currentTurn]);
+  const gameResult = useMemo(() => getGameResult(pieces, currentTurn), [pieces, currentTurn]);
+  const isGameOver = gameResult.type !== 'ongoing';
 
   const getPieceAt = useCallback(
     (x: number, y: number): Piece | null =>
@@ -68,22 +79,41 @@ export function useXiangqiGame(): XiangqiGame {
 
   const handleClick = useCallback(
     (x: number, y: number) => {
+      // Không cho đi nếu game đã kết thúc
+      if (isGameOver) return;
+
       const piece = getPieceAt(x, y);
+
+      // Nếu đã chọn quân và click vào ô hợp lệ → di chuyển
       if (selectedPiece && validMoves.some(([mx, my]) => mx === x && my === y)) {
         movePiece(selectedPiece, [x, y]);
         setSelectedPiece(null);
         setValidMoves([]);
         return;
       }
+
+      // Chọn quân của mình → tính legal moves (lọc nước tự chiếu)
       if (piece && piece.color === currentTurn) {
         setSelectedPiece([x, y]);
-        setValidMoves(calculateValidMoves(piece, getPieceAt));
+        const legal = getLegalMoves(piece, pieces);
+        setValidMoves(legal);
       } else {
         setSelectedPiece(null);
         setValidMoves([]);
       }
     },
-    [currentTurn, getPieceAt, movePiece, selectedPiece, validMoves]
+    [currentTurn, getPieceAt, movePiece, selectedPiece, validMoves, isGameOver, pieces]
+  );
+
+  /** Di chuyển quân trực tiếp từ (fromX,fromY) đến (toX,toY). Dùng cho AI. */
+  const makeMove = useCallback(
+    (fromX: number, fromY: number, toX: number, toY: number) => {
+      if (isGameOver) return;
+      movePiece([fromX, fromY], [toX, toY]);
+      setSelectedPiece(null);
+      setValidMoves([]);
+    },
+    [movePiece, isGameOver]
   );
 
   const reset = useCallback(() => {
@@ -104,10 +134,13 @@ export function useXiangqiGame(): XiangqiGame {
       captured,
       moveHistory,
       isCheck,
+      gameResult,
+      isGameOver,
       getPieceAt,
       handleClick,
+      makeMove,
       reset,
     }),
-    [pieces, currentTurn, selectedPiece, validMoves, captured, moveHistory, isCheck, getPieceAt, handleClick, reset]
+    [pieces, currentTurn, selectedPiece, validMoves, captured, moveHistory, isCheck, gameResult, isGameOver, getPieceAt, handleClick, makeMove, reset]
   );
 }

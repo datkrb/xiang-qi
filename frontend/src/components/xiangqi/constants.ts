@@ -9,8 +9,13 @@ export const PIECE = 52;
 export const BOARD_W = (COLS - 1) * CELL + PAD * 2;
 export const BOARD_H = (ROWS - 1) * CELL + PAD * 2;
 
-export const px = (x: number) => PAD + x * CELL;
-export const py = (y: number) => PAD + (ROWS - 1 - y) * CELL;
+/** Tọa độ pixel X (không đổi khi lật bàn cờ) */
+export const px = (x: number, flipped = false) =>
+  flipped ? PAD + (COLS - 1 - x) * CELL : PAD + x * CELL;
+
+/** Tọa độ pixel Y. Khi flipped=true, y=0 ở trên (Đỏ), y=9 ở dưới (Đen) */
+export const py = (y: number, flipped = false) =>
+  flipped ? PAD + y * CELL : PAD + (ROWS - 1 - y) * CELL;
 
 export const pieceNames: Record<PieceType, { red: string; black: string }> = {
   general: { red: '帥', black: '將' },

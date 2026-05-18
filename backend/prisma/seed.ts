@@ -1,9 +1,14 @@
 import { PrismaClient, Role, GameStatus } from "@prisma/client";
-
+import { hashPassword } from "../src/utils/bcrypt";
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("Seeding database...");
+
+  console.log("Cleaning up existing data...");
+  await prisma.game.deleteMany();
+  await prisma.profile.deleteMany();
+  await prisma.user.deleteMany();
 
   // 1. Create an Admin User with a Profile
   const admin = await prisma.user.upsert({
@@ -11,7 +16,7 @@ async function main() {
     update: {}, // Do nothing if it already exists
     create: {
       email: "admin@xiangqi.com",
-      password: "hashed_password_here", // Note: In a real app, hash this beforehand!
+      password: await hashPassword("12345678"), // Note: In a real app, hash this beforehand!
       role: Role.ADMIN,
       profile: {
         create: {
@@ -29,7 +34,7 @@ async function main() {
     update: {},
     create: {
       email: "player1@test.com",
-      password: "hashed_password_here",
+      password: await hashPassword("12345678"),
       role: Role.USER,
       profile: {
         create: {
@@ -47,6 +52,7 @@ async function main() {
     update: {},
     create: {
       email: "bot@xiangqi.com",
+      password: await hashPassword("12345678"),
       role: Role.BOT,
       profile: {
         create: {

@@ -18,6 +18,8 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.7.0",
+    "@types/socket.io": "^3.0.1",
+    "@types/uuid": "^10.0.0",
     "prisma": "^6.19.3",
     "tsc": "^2.0.4",
     "tsx": "^4.21.0",
@@ -29,7 +31,9 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "socket.io": "^4.8.3",
+    "uuid": "^14.0.0"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

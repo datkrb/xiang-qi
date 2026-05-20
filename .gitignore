@@ -135,3 +135,8 @@ dist
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Bruno API requests
+*.bru
+backend/bruno/
+bruno/

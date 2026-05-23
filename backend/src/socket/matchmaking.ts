@@ -92,6 +92,7 @@ function createMatch(
     fen: startPos,
     isRanked: options.isRanked,
     isGuest: options.isGuest,
+    matchUrl: `/match/${roomId}`,
     createdAt: Date.now(),
   };
 

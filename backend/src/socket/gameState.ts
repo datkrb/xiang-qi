@@ -15,6 +15,7 @@ export interface GameRoom {
   fen: string;
   isRanked: boolean;
   isGuest: boolean;
+  matchUrl?: string;
   createdAt: number;
 }
 

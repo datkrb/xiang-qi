@@ -9,9 +9,15 @@ interface AIGameModeScreenProps {
 
 export const AIGameModeScreen: React.FC<AIGameModeScreenProps> = React.memo(
   ({ onBack, onStartGame }) => {
-    const [playerColor, setPlayerColor] = useState<"red" | "black" | "random">("random");
-    const [aiDifficulty, setAiDifficulty] = useState<"easy" | "medium" | "hard" | "expert">("medium");
-    const [timeLimit, setTimeLimit] = useState<"unlimited" | "10" | "15" | "30">("unlimited");
+    const [playerColor, setPlayerColor] = useState<"red" | "black" | "random">(
+      "random",
+    );
+    const [aiDifficulty, setAiDifficulty] = useState<
+      "easy" | "medium" | "hard" | "expert"
+    >("medium");
+    const [timeLimit, setTimeLimit] = useState<
+      "unlimited" | "10" | "15" | "30"
+    >("unlimited");
 
     const handleStartGame = () => {
       const config: GameConfig = {
@@ -24,20 +30,22 @@ export const AIGameModeScreen: React.FC<AIGameModeScreenProps> = React.memo(
     };
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-950 via-red-900 to-amber-950 p-8 text-amber-100 animate-in fade-in duration-300">
+      <div className="min-h-screen bg-surface p-8 text-muted animate-in fade-in duration-300">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-4 mb-8">
             <button
               onClick={onBack}
-              className="p-3 bg-red-800/80 hover:bg-red-700/90 rounded-xl transition-all shadow-md hover:shadow-lg border border-red-700/50 cursor-pointer"
+              className="p-3 bg-surface-opaque rounded-xl transition-all shadow-md hover:shadow-lg border border-surface cursor-pointer"
             >
               <ArrowLeft className="w-6 h-6 text-white" />
             </button>
-            <h1 className="text-4xl font-extrabold text-amber-200 tracking-tight">VS Computer Match Settings</h1>
+            <h1 className="text-4xl font-extrabold text-primary tracking-tight">
+              VS Computer Match Settings
+            </h1>
           </div>
 
-          <div className="bg-red-900/30 backdrop-blur-md rounded-3xl p-8 border border-amber-500/20 shadow-2xl space-y-8 animate-in zoom-in-95 duration-200">
+          <div className="bg-surface-opaque backdrop-blur-md rounded-3xl p-8 border border-surface shadow-2xl space-y-8 animate-in zoom-in-95 duration-200">
             {/* Player Color */}
             <div>
               <label className="block text-amber-100 text-lg font-semibold mb-4">
@@ -50,8 +58,8 @@ export const AIGameModeScreen: React.FC<AIGameModeScreenProps> = React.memo(
                     onClick={() => setPlayerColor(color)}
                     className={`p-4 rounded-xl border-2 transition-all cursor-pointer font-bold ${
                       playerColor === color
-                        ? "bg-amber-400 border-amber-300 text-red-900 shadow-lg shadow-amber-400/20"
-                        : "bg-red-700/50 border-red-600/30 text-amber-100 hover:bg-red-700"
+                        ? "bg-primary border-primary text-on-primary shadow-lg"
+                        : "bg-surface-opaque border-surface text-muted hover:bg-surface-opaque"
                     }`}
                   >
                     <span className="capitalize font-semibold">{color}</span>
@@ -62,23 +70,27 @@ export const AIGameModeScreen: React.FC<AIGameModeScreenProps> = React.memo(
 
             {/* AI Difficulty */}
             <div>
-              <label className="block text-amber-100 text-lg font-semibold mb-4">
+              <label className="block text-muted text-lg font-semibold mb-4">
                 AI Difficulty
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {(["easy", "medium", "hard", "expert"] as const).map((difficulty) => (
-                  <button
-                    key={difficulty}
-                    onClick={() => setAiDifficulty(difficulty)}
-                    className={`p-4 rounded-xl border-2 transition-all cursor-pointer font-bold ${
-                      aiDifficulty === difficulty
-                        ? "bg-amber-400 border-amber-300 text-red-900 shadow-lg shadow-amber-400/20"
-                        : "bg-red-700/50 border-red-600/30 text-amber-100 hover:bg-red-700"
-                    }`}
-                  >
-                    <span className="capitalize font-semibold">{difficulty}</span>
-                  </button>
-                ))}
+                {(["easy", "medium", "hard", "expert"] as const).map(
+                  (difficulty) => (
+                    <button
+                      key={difficulty}
+                      onClick={() => setAiDifficulty(difficulty)}
+                      className={`p-4 rounded-xl border-2 transition-all cursor-pointer font-bold ${
+                        aiDifficulty === difficulty
+                          ? "bg-primary border-primary text-on-primary shadow-lg"
+                          : "bg-surface-opaque border-surface text-muted hover:bg-surface-opaque"
+                      }`}
+                    >
+                      <span className="capitalize font-semibold">
+                        {difficulty}
+                      </span>
+                    </button>
+                  ),
+                )}
               </div>
             </div>
 
@@ -94,8 +106,8 @@ export const AIGameModeScreen: React.FC<AIGameModeScreenProps> = React.memo(
                     onClick={() => setTimeLimit(time)}
                     className={`p-4 rounded-xl border-2 transition-all cursor-pointer font-bold ${
                       timeLimit === time
-                        ? "bg-amber-400 border-amber-300 text-red-900 shadow-lg shadow-amber-400/20"
-                        : "bg-red-700/50 border-red-600/30 text-amber-100 hover:bg-red-700"
+                        ? "bg-primary border-primary text-on-primary shadow-lg"
+                        : "bg-surface-opaque border-surface text-muted hover:bg-surface-opaque"
                     }`}
                   >
                     <span className="font-semibold">
@@ -110,16 +122,13 @@ export const AIGameModeScreen: React.FC<AIGameModeScreenProps> = React.memo(
             <div className="flex gap-4 pt-4">
               <button
                 onClick={onBack}
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl
-                         transition-all font-semibold text-lg cursor-pointer shadow-md"
+                className="flex-1 bg-surface-opaque text-muted p-4 rounded-xl transition-all font-semibold text-lg cursor-pointer shadow-md"
               >
                 Back
               </button>
               <button
                 onClick={handleStartGame}
-                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400
-                         hover:to-amber-500 text-red-950 p-4 rounded-xl transition-all font-black text-lg
-                         shadow-lg hover:shadow-xl transform hover:scale-[1.03] cursor-pointer"
+                className="flex-1 btn-primary p-4 rounded-xl font-black text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.03] cursor-pointer"
               >
                 Start Game
               </button>
@@ -128,7 +137,7 @@ export const AIGameModeScreen: React.FC<AIGameModeScreenProps> = React.memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 AIGameModeScreen.displayName = "AIGameModeScreen";

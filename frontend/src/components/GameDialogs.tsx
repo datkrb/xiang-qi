@@ -8,17 +8,17 @@ interface ResignConfirmDialogProps {
   onConfirm: () => void;
 }
 
-export const ResignConfirmDialog: React.FC<ResignConfirmDialogProps> = React.memo(
-  ({ isOpen, onCancel, onConfirm }) => {
+export const ResignConfirmDialog: React.FC<ResignConfirmDialogProps> =
+  React.memo(({ isOpen, onCancel, onConfirm }) => {
     if (!isOpen) return null;
 
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 animate-in fade-in duration-200">
-        <div className="bg-white rounded-2xl p-8 max-w-md shadow-2xl animate-in zoom-in-95 duration-200">
+        <div className="bg-surface rounded-2xl p-8 max-w-md shadow-2xl animate-in zoom-in-95 duration-200 border border-surface">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Confirm Resignation
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-muted mb-6">
             Are you sure you want to resign? This will end the game.
           </p>
           <div className="flex gap-4">
@@ -30,7 +30,7 @@ export const ResignConfirmDialog: React.FC<ResignConfirmDialogProps> = React.mem
             </button>
             <button
               onClick={onConfirm}
-              className="flex-1 p-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+              className="flex-1 p-3 bg-danger hover:bg-red-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
             >
               Confirm
             </button>
@@ -38,8 +38,7 @@ export const ResignConfirmDialog: React.FC<ResignConfirmDialogProps> = React.mem
         </div>
       </div>
     );
-  }
-);
+  });
 ResignConfirmDialog.displayName = "ResignConfirmDialog";
 
 // --- DRAW OFFER DIALOG ---
@@ -55,23 +54,21 @@ export const DrawOfferDialog: React.FC<DrawOfferDialogProps> = React.memo(
 
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 animate-in fade-in duration-200">
-        <div className="bg-white rounded-2xl p-8 max-w-md shadow-2xl animate-in zoom-in-95 duration-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Draw Offer
-          </h2>
-          <p className="text-gray-600 mb-6">
+        <div className="bg-surface rounded-2xl p-8 max-w-md shadow-2xl animate-in zoom-in-95 duration-200 border border-surface">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Draw Offer</h2>
+          <p className="text-muted mb-6">
             Your opponent offers a draw. Do you accept?
           </p>
           <div className="flex gap-4">
             <button
               onClick={onDecline}
-              className="flex-1 p-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+              className="flex-1 p-3 bg-danger hover:bg-red-600 text-white rounded-lg font-semibold transition-colors cursor-pointer"
             >
               Decline
             </button>
             <button
               onClick={onAccept}
-              className="flex-1 p-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+              className="flex-1 p-3 bg-success hover:bg-green-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
             >
               Accept
             </button>
@@ -79,7 +76,7 @@ export const DrawOfferDialog: React.FC<DrawOfferDialogProps> = React.memo(
         </div>
       </div>
     );
-  }
+  },
 );
 DrawOfferDialog.displayName = "DrawOfferDialog";
 
@@ -98,8 +95,10 @@ export const PauseMenuDialog: React.FC<PauseMenuDialogProps> = React.memo(
 
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 animate-in fade-in duration-200">
-        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl space-y-3 animate-in zoom-in-95 duration-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">Paused</h2>
+        <div className="bg-surface rounded-2xl p-8 max-w-md w-full shadow-2xl space-y-3 animate-in zoom-in-95 duration-200 border border-surface">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
+            Paused
+          </h2>
 
           <button
             onClick={onResume}
@@ -110,7 +109,7 @@ export const PauseMenuDialog: React.FC<PauseMenuDialogProps> = React.memo(
 
           <button
             onClick={onSave}
-            className="w-full p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+            className="w-full p-3 btn-primary rounded-lg font-semibold transition-colors cursor-pointer"
           >
             Save Game
           </button>
@@ -124,14 +123,14 @@ export const PauseMenuDialog: React.FC<PauseMenuDialogProps> = React.memo(
 
           <button
             onClick={onExit}
-            className="w-full p-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+            className="w-full p-3 bg-danger hover:bg-red-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
           >
             Exit to Menu
           </button>
         </div>
       </div>
     );
-  }
+  },
 );
 PauseMenuDialog.displayName = "PauseMenuDialog";
 
@@ -151,14 +150,21 @@ interface GameResultDialogProps {
 }
 
 export const GameResultDialog: React.FC<GameResultDialogProps> = React.memo(
-  ({ isOpen, isGameOver, gameResult, moveHistoryLength, onRestart, onExit }) => {
+  ({
+    isOpen,
+    isGameOver,
+    gameResult,
+    moveHistoryLength,
+    onRestart,
+    onExit,
+  }) => {
     if (!isOpen || !isGameOver) return null;
 
     const isStalemate = gameResult.type === "stalemate";
 
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 animate-in fade-in duration-300">
-        <div className="bg-gradient-to-b from-white to-amber-50 rounded-3xl p-10 max-w-lg shadow-2xl border-4 border-amber-400 animate-in zoom-in-95 duration-300">
+        <div className="bg-surface rounded-3xl p-10 max-w-lg shadow-2xl border-4 border-surface animate-in zoom-in-95 duration-300">
           {/* Icon */}
           <div className="flex justify-center mb-4">
             {isStalemate ? (
@@ -166,8 +172,8 @@ export const GameResultDialog: React.FC<GameResultDialogProps> = React.memo(
                 <Swords className="w-10 h-10 text-gray-600" />
               </div>
             ) : (
-              <div className="w-20 h-20 bg-amber-400 rounded-full flex items-center justify-center shadow-lg animate-bounce duration-1000">
-                <Trophy className="w-10 h-10 text-amber-900" />
+              <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-lg animate-bounce duration-1000">
+                <Trophy className="w-10 h-10 text-on-primary" />
               </div>
             )}
           </div>
@@ -186,9 +192,7 @@ export const GameResultDialog: React.FC<GameResultDialogProps> = React.memo(
             <p className="text-center text-xl mb-4">
               <span
                 className={`font-bold ${
-                  gameResult.winner === "red"
-                    ? "text-red-600"
-                    : "text-gray-800"
+                  gameResult.winner === "red" ? "text-red-600" : "text-gray-800"
                 }`}
               >
                 {gameResult.winner === "red" ? "Quân Đỏ" : "Quân Đen"}
@@ -198,12 +202,16 @@ export const GameResultDialog: React.FC<GameResultDialogProps> = React.memo(
           ) : null}
 
           {/* Details */}
-          <div className="bg-white rounded-xl p-4 mb-6 space-y-2 text-gray-700 border border-amber-200">
+          <div className="bg-surface rounded-xl p-4 mb-6 space-y-2 text-muted border border-surface">
             <p>
               <strong>Kết quả:</strong>{" "}
               {gameResult.type === "checkmate" ? "Chiếu hết (Checkmate)" : null}
-              {gameResult.type === "captured" ? "Ăn Tướng (đối phương mất Tướng)" : null}
-              {gameResult.type === "stalemate" ? "Bế tắc (Stalemate) - Hòa cờ" : null}
+              {gameResult.type === "captured"
+                ? "Ăn Tướng (đối phương mất Tướng)"
+                : null}
+              {gameResult.type === "stalemate"
+                ? "Bế tắc (Stalemate) - Hòa cờ"
+                : null}
             </p>
             <p>
               <strong>Tổng số nước đi:</strong> {moveHistoryLength}
@@ -214,9 +222,7 @@ export const GameResultDialog: React.FC<GameResultDialogProps> = React.memo(
           <div className="grid grid-cols-2 gap-4">
             <button
               onClick={onRestart}
-              className="p-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500
-                       text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all
-                       transform hover:scale-[1.03] cursor-pointer"
+              className="p-4 btn-primary rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.03] cursor-pointer"
             >
               Chơi lại
             </button>
@@ -231,6 +237,6 @@ export const GameResultDialog: React.FC<GameResultDialogProps> = React.memo(
         </div>
       </div>
     );
-  }
+  },
 );
 GameResultDialog.displayName = "GameResultDialog";

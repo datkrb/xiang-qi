@@ -178,7 +178,7 @@ export default function MainGameScreen({
   // Check if a player is the AI
   const isAIPlayer = useCallback(
     (player: Player) => isAIMode && player.color === ai.aiColor,
-    [isAIMode, ai.aiColor]
+    [isAIMode, ai.aiColor],
   );
 
   // Dialog Event Handlers with stabilized references using useCallback
@@ -232,7 +232,7 @@ export default function MainGameScreen({
   }, [onExit]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-100 via-amber-50 to-orange-100 p-4 animate-in fade-in duration-300">
+    <div className="min-h-screen bg-surface p-4 animate-in fade-in duration-300">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4">
           {/* Main board area */}
@@ -251,7 +251,9 @@ export default function MainGameScreen({
               isAI={isAIPlayer(player2)}
               isThinking={isAIPlayer(player2) && ai.isThinking}
               aiDifficulty={config.aiDifficulty}
-              capturedPieces={game.captured[player2.color === "red" ? "black" : "red"]}
+              capturedPieces={
+                game.captured[player2.color === "red" ? "black" : "red"]
+              }
               capturedColor={player2.color === "red" ? "black" : "red"}
             />
 
@@ -268,7 +270,9 @@ export default function MainGameScreen({
               isAI={isAIPlayer(player1)}
               isThinking={isAIPlayer(player1) && ai.isThinking}
               aiDifficulty={config.aiDifficulty}
-              capturedPieces={game.captured[player1.color === "red" ? "black" : "red"]}
+              capturedPieces={
+                game.captured[player1.color === "red" ? "black" : "red"]
+              }
               capturedColor={player1.color === "red" ? "black" : "red"}
             />
 

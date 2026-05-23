@@ -5,6 +5,7 @@ import { GuestStorage } from "./utils/GuestStorage";
 import "./App.css";
 import { GameProvider, useGame } from "./context/GameContext";
 import { GameConfig } from "./components/GameModeScreen";
+import AppSidebar from "./components/AppSidebar";
 
 // Define Screen types
 type Screen =
@@ -61,7 +62,7 @@ const LeaderboardScreen = lazy(() =>
 
 // Fallback Loading Screen for lazy components
 const ScreenFallback = () => (
-  <div className="min-h-screen bg-gradient-to-br from-red-955 via-red-900 to-amber-955 flex flex-col items-center justify-center text-amber-100 gap-4">
+  <div className="min-h-screen bg-linear-to-br from-red-955 via-red-900 to-amber-955 flex flex-col items-center justify-center text-amber-100 gap-4">
     <div className="w-16 h-16 border-4 border-amber-400 border-t-transparent rounded-full animate-spin shadow-lg" />
     <p className="text-xl font-bold animate-pulse text-amber-300">
       Loading Battleground...
@@ -129,8 +130,15 @@ export default function App() {
   }, []);
 
   const handleLogout = useCallback(() => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("authUserId");
     console.log("Logout");
     setCurrentScreen("login");
+  }, []);
+
+  const handleGuestPlay = useCallback(() => {
+    GuestStorage.getOrCreateGuest();
+    setCurrentScreen("home");
   }, []);
 
   const handleStartGame = useCallback((config: GameConfig) => {
@@ -191,6 +199,7 @@ export default function App() {
           {currentScreen === "login" ? (
             <LoginScreen
               onLogin={handleLogin}
+              onGuestPlay={handleGuestPlay}
               onNavigate={handleNavigateToForgotOrRegister}
             />
           ) : null}
@@ -206,65 +215,76 @@ export default function App() {
             <ForgotPasswordScreen onNavigate={handleNavigate} />
           ) : null}
 
-          {currentScreen === "profile" ? (
-            <ProfileScreen onBack={handleBackToHome} />
-          ) : null}
+          {currentScreen !== "login" && currentScreen !== "register" && currentScreen !== "forgot" ? (
+            <div className="flex min-h-screen bg-slate-950">
+              <AppSidebar
+                currentScreen={currentScreen}
+                onNavigate={handleNavigate}
+                onLogout={handleLogout}
+              />
+              <main className="flex-1 min-w-0">
+                {currentScreen === "profile" ? (
+                  <ProfileScreen onBack={handleBackToHome} />
+                ) : null}
 
-          {currentScreen === "friends" ? (
-            <FriendsScreen onBack={handleBackToHome} />
-          ) : null}
+                {currentScreen === "friends" ? (
+                  <FriendsScreen onBack={handleBackToHome} />
+                ) : null}
 
-          {currentScreen === "settings" ? (
-            <SettingsScreen onBack={handleBackToHome} onLogout={handleLogout} />
-          ) : null}
+                {currentScreen === "settings" ? (
+                  <SettingsScreen onBack={handleBackToHome} onLogout={handleLogout} />
+                ) : null}
 
-          {currentScreen === "home" ? (
-            <HomeScreen onNavigate={handleNavigate} />
-          ) : null}
+                {currentScreen === "home" ? (
+                  <HomeScreen onNavigate={handleNavigate} />
+                ) : null}
 
-          {currentScreen === "offline" ? (
-            <OfflineGameModeScreen
-              onBack={handleBackToHome}
-              onStartGame={handleStartGame}
-            />
-          ) : null}
+                {currentScreen === "offline" ? (
+                  <OfflineGameModeScreen
+                    onBack={handleBackToHome}
+                    onStartGame={handleStartGame}
+                  />
+                ) : null}
 
-          {currentScreen === "online" ? (
-            <OnlineGameScreen
-              onBack={handleBackToHome}
-              onStartGame={handleStartOnlineGame}
-              userData={{
-                userId,
-                username: "Player",
-                elo: 1000,
-              }}
-            />
-          ) : null}
+                {currentScreen === "online" ? (
+                  <OnlineGameScreen
+                    onBack={handleBackToHome}
+                    onStartGame={handleStartOnlineGame}
+                    userData={{
+                      userId,
+                      username: "Player",
+                      elo: 1000,
+                    }}
+                  />
+                ) : null}
 
-          {currentScreen === "ai" ? (
-            <AIGameModeScreen
-              onBack={handleBackToHome}
-              onStartGame={handleStartGame}
-            />
-          ) : null}
+                {currentScreen === "ai" ? (
+                  <AIGameModeScreen
+                    onBack={handleBackToHome}
+                    onStartGame={handleStartGame}
+                  />
+                ) : null}
 
-          {currentScreen === "game" ? (
-            <MainGameScreen config={gameConfig!} onExit={handleBackToHome} />
-          ) : null}
+                {currentScreen === "game" ? (
+                  <MainGameScreen config={gameConfig!} onExit={handleBackToHome} />
+                ) : null}
 
-          {currentScreen === "load" ? (
-            <LoadGameScreen
-              onBack={handleBackToHome}
-              onLoadGame={handleLoadGame}
-            />
-          ) : null}
+                {currentScreen === "load" ? (
+                  <LoadGameScreen
+                    onBack={handleBackToHome}
+                    onLoadGame={handleLoadGame}
+                  />
+                ) : null}
 
-          {currentScreen === "tutorial" ? (
-            <TutorialScreen onBack={handleBackToHome} />
-          ) : null}
+                {currentScreen === "tutorial" ? (
+                  <TutorialScreen onBack={handleBackToHome} />
+                ) : null}
 
-          {currentScreen === "leaderboard" ? (
-            <LeaderboardScreen onBack={handleBackToHome} />
+                {currentScreen === "leaderboard" ? (
+                  <LeaderboardScreen onBack={handleBackToHome} />
+                ) : null}
+              </main>
+            </div>
           ) : null}
         </Suspense>
       </div>

@@ -4,12 +4,14 @@ import { Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
 interface LoginScreenProps {
   onBack?: () => void;
   onLogin?: (payload: { email: string; password: string } | string) => void;
+  onGuestPlay?: () => void;
   onNavigate?: (screen: "register" | "forgot") => void;
 }
 
 export default function LoginScreen({
   onBack,
   onLogin,
+  onGuestPlay,
   onNavigate,
 }: LoginScreenProps) {
   const [email, setEmail] = useState("");
@@ -94,6 +96,13 @@ export default function LoginScreen({
             className="w-full flex items-center justify-center gap-2 py-3 bg-blue-700 hover:bg-blue-800 text-blue-50 rounded-lg font-bold shadow-lg"
           >
             <LogIn className="w-5 h-5" /> Đăng nhập
+          </button>
+
+          <button
+            onClick={() => onGuestPlay?.()}
+            className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold shadow-lg"
+          >
+            Chơi với tư cách khách
           </button>
 
           <div className="flex items-center gap-2 my-2">

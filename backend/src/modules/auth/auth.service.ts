@@ -12,29 +12,46 @@ export const register = async (email: string, password: string) => {
   //Hash password
   const hashedPassword = await hashPassword(password);
 
-  //Save user to database
-  const user = await prisma.user.create({
-    data: {
-      email,
-      password: hashedPassword,
-      role: "USER",
-      profile: {
-        create: {
-          username: "Need to update",
-          elo: 1200,
-        },
+  //Save user to database, then create a unique profile username from the user id
+  const user = await prisma.$transaction(async (tx) => {
+    const createdUser = await tx.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        role: "USER",
       },
-    },
-    select: {
-      id: true,
-      email: true,
-      role: true,
-    },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+      },
+    });
+
+    await tx.profile.create({
+      data: {
+        userId: createdUser.id,
+        username: `user_${createdUser.id.slice(0, 8)}`,
+        elo: 1200,
+      },
+    });
+
+    return createdUser;
   });
+
+  const accessToken = generateAccessToken(user.id, user.role);
+  const refreshToken = generateRefreshToken(user.id);
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { refreshToken },
+  });
+
   return {
     id: user.id,
     email: user.email,
     role: user.role,
+    accessToken,
+    refreshToken,
   };
 };
 

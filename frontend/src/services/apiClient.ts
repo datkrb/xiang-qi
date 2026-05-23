@@ -1,4 +1,5 @@
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || "http://localhost:8080";
+const API_BASE =
+  (import.meta as any).env?.VITE_API_BASE || "http://localhost:8080";
 
 async function request(path: string, opts: RequestInit = {}) {
   const url = API_BASE + path;
@@ -26,7 +27,11 @@ export async function login(email: string, password: string) {
   });
 }
 
-export async function register(username: string, email: string, password: string) {
+export async function register(
+  username: string,
+  email: string,
+  password: string,
+) {
   return request("/auth/register", {
     method: "POST",
     body: JSON.stringify({ username, email, password }),

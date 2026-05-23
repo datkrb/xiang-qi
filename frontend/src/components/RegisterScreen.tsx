@@ -3,7 +3,11 @@ import { User, Mail, Lock, UserPlus } from "lucide-react";
 
 interface RegisterScreenProps {
   onBack?: () => void;
-  onRegister?: (data: { username: string; email: string; password: string }) => void;
+  onRegister?: (data: {
+    username: string;
+    email: string;
+    password: string;
+  }) => void;
   onNavigate?: (screen: "login") => void;
 }
 

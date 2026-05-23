@@ -88,34 +88,35 @@ export default function App() {
     setCurrentScreen(screen === "register" ? "register" : "forgot");
   }, []);
 
-  const handleLogin = useCallback(
-    async (emailOrPayload: any) => {
-      try {
-        // expected payload: { email, password }
-        const { email, password } =
-          typeof emailOrPayload === "string"
-            ? { email: emailOrPayload, password: "" }
-            : emailOrPayload;
-        const res = await api.login(email, password);
-        // res should include accessToken and user info
-        if (res?.accessToken) {
-          localStorage.setItem("authToken", res.accessToken);
-        }
-        if (res?.user?.id) {
-          localStorage.setItem("authUserId", res.user.id);
-        }
-        setCurrentScreen("home");
-      } catch (err: any) {
-        console.error("Login failed:", err);
-        alert(err.message || "Login failed");
+  const handleLogin = useCallback(async (emailOrPayload: any) => {
+    try {
+      // expected payload: { email, password }
+      const { email, password } =
+        typeof emailOrPayload === "string"
+          ? { email: emailOrPayload, password: "" }
+          : emailOrPayload;
+      const res = await api.login(email, password);
+      // res should include accessToken and user info
+      if (res?.accessToken) {
+        localStorage.setItem("authToken", res.accessToken);
       }
-    },
-    [],
-  );
+      if (res?.user?.id) {
+        localStorage.setItem("authUserId", res.user.id);
+      }
+      setCurrentScreen("home");
+    } catch (err: any) {
+      console.error("Login failed:", err);
+      alert(err.message || "Login failed");
+    }
+  }, []);
 
   const handleRegister = useCallback(async (data: any) => {
     try {
-      const res = await api.register(data.username, data.email, data.password || "");
+      const res = await api.register(
+        data.username,
+        data.email,
+        data.password || "",
+      );
       if (res?.accessToken) {
         localStorage.setItem("authToken", res.accessToken);
       }
@@ -323,7 +324,8 @@ function MatchRouteHandler({
           }
         } else {
           const spectatorId =
-            authUserId || (guestToken ? `guest-${guestToken.slice(0, 8)}` : "spectator");
+            authUserId ||
+            (guestToken ? `guest-${guestToken.slice(0, 8)}` : "spectator");
           spectateRoom(roomId, {
             userId: spectatorId,
             role: authUserId ? "USER" : "GUEST",

@@ -29,6 +29,7 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
       playerBlack: !creatorIsRed ? player : null,
       fen: startPos,
       isRanked: false,
+      isGuest: player.role === "GUEST",
       createdAt: Date.now(),
     });
 

@@ -21,6 +21,7 @@
     "@types/socket.io": "^3.0.1",
     "@types/uuid": "^10.0.0",
     "prisma": "^6.19.3",
+    "socket.io-client": "^4.8.3",
     "tsc": "^2.0.4",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3"

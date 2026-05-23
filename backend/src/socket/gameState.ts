@@ -1,8 +1,10 @@
 export interface Player {
   socketId: string;
-  userId: string;
-  // username: string;
+  userId?: string;
+  guestId?: string;
+  displayName?: string;
   elo: number;
+  role: "USER" | "GUEST";
 }
 
 export interface GameRoom {
@@ -12,9 +14,28 @@ export interface GameRoom {
   spectators?: Player[];
   fen: string;
   isRanked: boolean;
+  isGuest: boolean;
   createdAt: number;
 }
-// use redis later
-export const matchmakingQueue: Player[] = [];
+
+export interface MatchmakingQueues {
+  guestQueue: Player[];
+  userQueue: Player[];
+}
+
+// Separated matchmaking queues
+export const matchmakingQueues: MatchmakingQueues = {
+  guestQueue: [],
+  userQueue: [],
+};
 
 export const activeRooms = new Map<string, GameRoom>();
+
+// For tracking grace periods
+interface DisconnectTimer {
+  roomId: string;
+  playerRole: "red" | "black";
+  timer: NodeJS.Timeout;
+}
+
+export const gracePeriodTimers: Map<string, DisconnectTimer> = new Map();

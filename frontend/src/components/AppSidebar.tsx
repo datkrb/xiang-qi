@@ -53,13 +53,13 @@ export default function AppSidebar({
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-80 shrink-0 flex-col bg-slate-950/95 border-r border-white/10 text-white min-h-screen transform transition-transform duration-300 lg:sticky lg:top-0 lg:flex lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-80 shrink-0 flex-col bg-surface-opaque border-r border-surface min-h-screen transform transition-transform duration-300 lg:sticky lg:top-0 lg:flex lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
-        <div className="flex items-center justify-between px-4 py-4 border-b border-white/10 lg:hidden">
+        <div className="flex items-center justify-between px-4 py-4 border-b border-surface lg:hidden">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-linear-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black text-lg">
+            <div className="w-10 h-10 rounded-2xl bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center text-slate-950 font-black text-lg">
               將
             </div>
             <div>
@@ -78,9 +78,9 @@ export default function AppSidebar({
           </button>
         </div>
 
-        <div className="px-6 py-6 border-b border-white/10 hidden lg:block">
+        <div className="px-6 py-6 border-b border-surface hidden lg:block">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black text-xl">
+            <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center text-slate-950 font-black text-xl">
               將
             </div>
             <div>
@@ -107,7 +107,7 @@ export default function AppSidebar({
           />
         </div>
 
-        <div className="px-4 py-5 border-t border-white/10 space-y-3">
+        <div className="px-4 py-5 border-t border-surface space-y-3">
           <button
             onClick={() => onNavigate("tutorial")}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-sm font-medium transition-colors"
@@ -141,7 +141,7 @@ function NavSection({
 }) {
   return (
     <div>
-      <div className="px-3 pb-2 text-[11px] uppercase tracking-[0.3em] text-slate-500">
+      <div className="px-3 pb-2 text-[11px] uppercase tracking-[0.3em] text-muted">
         {label}
       </div>
       <div className="space-y-1">
@@ -154,7 +154,7 @@ function NavSection({
               onClick={() => onNavigate(item.id)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                 active
-                  ? "bg-amber-400 text-slate-950"
+                  ? "bg-primary text-on-primary"
                   : "text-slate-200 hover:bg-white/8 hover:text-white"
               }`}
             >

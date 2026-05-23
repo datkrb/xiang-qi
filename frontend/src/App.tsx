@@ -4,6 +4,7 @@ import api from "./services/apiClient";
 import { GuestStorage } from "./utils/GuestStorage";
 import "./App.css";
 import { GameProvider, useGame } from "./context/GameContext";
+import ThemeProvider from "./theme/ThemeProvider";
 import { GameConfig } from "./components/GameModeScreen";
 import AppSidebar from "./components/AppSidebar";
 import { Menu } from "lucide-react";
@@ -190,142 +191,144 @@ export default function App() {
   }, []);
 
   return (
-    <GameProvider>
-      {/* Ensure guest token exists for anonymous users */}
-      {/* Initialize guest token on app mount */}
-      <GuestInitializer />
-      {deepLinkRoomId ? (
-        <MatchRouteHandler
-          roomId={deepLinkRoomId}
-          onReady={handleMatchDeepLinkReady}
-        />
-      ) : null}
-      <div className="size-full">
-        <Suspense fallback={<ScreenFallback />}>
-          {currentScreen === "login" ? (
-            <LoginScreen
-              onLogin={handleLogin}
-              onGuestPlay={handleGuestPlay}
-              onNavigate={handleNavigateToForgotOrRegister}
-            />
-          ) : null}
-
-          {currentScreen === "register" ? (
-            <RegisterScreen
-              onRegister={handleRegister}
-              onNavigate={handleNavigate}
-            />
-          ) : null}
-
-          {currentScreen === "forgot" ? (
-            <ForgotPasswordScreen onNavigate={handleNavigate} />
-          ) : null}
-
-          {currentScreen !== "login" &&
-          currentScreen !== "register" &&
-          currentScreen !== "forgot" ? (
-            <div className="relative flex min-h-screen bg-slate-950">
-              <AppSidebar
-                currentScreen={currentScreen}
-                onNavigate={handleNavigate}
-                onLogout={handleLogout}
-                isOpen={isSidebarOpen}
-                onClose={() => setIsSidebarOpen(false)}
+    <ThemeProvider>
+      <GameProvider>
+        {/* Ensure guest token exists for anonymous users */}
+        {/* Initialize guest token on app mount */}
+        <GuestInitializer />
+        {deepLinkRoomId ? (
+          <MatchRouteHandler
+            roomId={deepLinkRoomId}
+            onReady={handleMatchDeepLinkReady}
+          />
+        ) : null}
+        <div className="size-full">
+          <Suspense fallback={<ScreenFallback />}>
+            {currentScreen === "login" ? (
+              <LoginScreen
+                onLogin={handleLogin}
+                onGuestPlay={handleGuestPlay}
+                onNavigate={handleNavigateToForgotOrRegister}
               />
-              <main className="flex-1 min-w-0 w-full lg:ml-0">
-                <div className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-white/10 bg-slate-950/95 px-4 py-3 text-white backdrop-blur lg:hidden">
-                  <button
-                    onClick={() => setIsSidebarOpen(true)}
-                    className="inline-flex items-center justify-center rounded-lg bg-white/5 p-2 hover:bg-white/10"
-                    aria-label="Open navigation"
-                  >
-                    <Menu className="h-5 w-5" />
-                  </button>
-                  <div className="text-center">
-                    <p className="text-sm font-semibold leading-tight">
-                      Xiangqi Arena
-                    </p>
-                    <p className="text-[11px] text-slate-400 capitalize">
-                      {currentScreen}
-                    </p>
+            ) : null}
+
+            {currentScreen === "register" ? (
+              <RegisterScreen
+                onRegister={handleRegister}
+                onNavigate={handleNavigate}
+              />
+            ) : null}
+
+            {currentScreen === "forgot" ? (
+              <ForgotPasswordScreen onNavigate={handleNavigate} />
+            ) : null}
+
+            {currentScreen !== "login" &&
+            currentScreen !== "register" &&
+            currentScreen !== "forgot" ? (
+              <div className="relative flex min-h-screen bg-surface">
+                <AppSidebar
+                  currentScreen={currentScreen}
+                  onNavigate={handleNavigate}
+                  onLogout={handleLogout}
+                  isOpen={isSidebarOpen}
+                  onClose={() => setIsSidebarOpen(false)}
+                />
+                <main className="flex-1 min-w-0 w-full lg:ml-0">
+                  <div className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-surface bg-surface-opaque px-4 py-3 backdrop-blur lg:hidden">
+                    <button
+                      onClick={() => setIsSidebarOpen(true)}
+                      className="inline-flex items-center justify-center rounded-lg bg-white/5 p-2 hover:bg-white/10"
+                      aria-label="Open navigation"
+                    >
+                      <Menu className="h-5 w-5" />
+                    </button>
+                    <div className="text-center">
+                      <p className="text-sm font-semibold leading-tight">
+                        Xiangqi Arena
+                      </p>
+                      <p className="text-[11px] text-muted capitalize">
+                        {currentScreen}
+                      </p>
+                    </div>
+                    <div className="w-9" />
                   </div>
-                  <div className="w-9" />
-                </div>
 
-                <div className="mx-auto w-full max-w-400">
-                  {currentScreen === "profile" ? (
-                    <ProfileScreen onBack={handleBackToHome} />
-                  ) : null}
+                  <div className="mx-auto w-full max-w-400">
+                    {currentScreen === "profile" ? (
+                      <ProfileScreen onBack={handleBackToHome} />
+                    ) : null}
 
-                  {currentScreen === "friends" ? (
-                    <FriendsScreen onBack={handleBackToHome} />
-                  ) : null}
+                    {currentScreen === "friends" ? (
+                      <FriendsScreen onBack={handleBackToHome} />
+                    ) : null}
 
-                  {currentScreen === "settings" ? (
-                    <SettingsScreen
-                      onBack={handleBackToHome}
-                      onLogout={handleLogout}
-                    />
-                  ) : null}
+                    {currentScreen === "settings" ? (
+                      <SettingsScreen
+                        onBack={handleBackToHome}
+                        onLogout={handleLogout}
+                      />
+                    ) : null}
 
-                  {currentScreen === "home" ? (
-                    <HomeScreen onNavigate={handleNavigate} />
-                  ) : null}
+                    {currentScreen === "home" ? (
+                      <HomeScreen onNavigate={handleNavigate} />
+                    ) : null}
 
-                  {currentScreen === "offline" ? (
-                    <OfflineGameModeScreen
-                      onBack={handleBackToHome}
-                      onStartGame={handleStartGame}
-                    />
-                  ) : null}
+                    {currentScreen === "offline" ? (
+                      <OfflineGameModeScreen
+                        onBack={handleBackToHome}
+                        onStartGame={handleStartGame}
+                      />
+                    ) : null}
 
-                  {currentScreen === "online" ? (
-                    <OnlineGameScreen
-                      onBack={handleBackToHome}
-                      onStartGame={handleStartOnlineGame}
-                      userData={{
-                        userId,
-                        username: "Player",
-                        elo: 1000,
-                      }}
-                    />
-                  ) : null}
+                    {currentScreen === "online" ? (
+                      <OnlineGameScreen
+                        onBack={handleBackToHome}
+                        onStartGame={handleStartOnlineGame}
+                        userData={{
+                          userId,
+                          username: "Player",
+                          elo: 1000,
+                        }}
+                      />
+                    ) : null}
 
-                  {currentScreen === "ai" ? (
-                    <AIGameModeScreen
-                      onBack={handleBackToHome}
-                      onStartGame={handleStartGame}
-                    />
-                  ) : null}
+                    {currentScreen === "ai" ? (
+                      <AIGameModeScreen
+                        onBack={handleBackToHome}
+                        onStartGame={handleStartGame}
+                      />
+                    ) : null}
 
-                  {currentScreen === "game" ? (
-                    <MainGameScreen
-                      config={gameConfig!}
-                      onExit={handleBackToHome}
-                    />
-                  ) : null}
+                    {currentScreen === "game" ? (
+                      <MainGameScreen
+                        config={gameConfig!}
+                        onExit={handleBackToHome}
+                      />
+                    ) : null}
 
-                  {currentScreen === "load" ? (
-                    <LoadGameScreen
-                      onBack={handleBackToHome}
-                      onLoadGame={handleLoadGame}
-                    />
-                  ) : null}
+                    {currentScreen === "load" ? (
+                      <LoadGameScreen
+                        onBack={handleBackToHome}
+                        onLoadGame={handleLoadGame}
+                      />
+                    ) : null}
 
-                  {currentScreen === "tutorial" ? (
-                    <TutorialScreen onBack={handleBackToHome} />
-                  ) : null}
+                    {currentScreen === "tutorial" ? (
+                      <TutorialScreen onBack={handleBackToHome} />
+                    ) : null}
 
-                  {currentScreen === "leaderboard" ? (
-                    <LeaderboardScreen onBack={handleBackToHome} />
-                  ) : null}
-                </div>
-              </main>
-            </div>
-          ) : null}
-        </Suspense>
-      </div>
-    </GameProvider>
+                    {currentScreen === "leaderboard" ? (
+                      <LeaderboardScreen onBack={handleBackToHome} />
+                    ) : null}
+                  </div>
+                </main>
+              </div>
+            ) : null}
+          </Suspense>
+        </div>
+      </GameProvider>
+    </ThemeProvider>
   );
 }
 

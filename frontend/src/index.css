@@ -1,5 +1,62 @@
 @import "tailwindcss";
 
+:root {
+  /* Primary blue theme tokens (default) */
+  --color-primary: #2563eb; /* blue-600 */
+  --color-primary-foreground: #ffffff;
+
+  --color-surface: #0f172a; /* slate-950 */
+  --color-surface-opaque: rgba(15, 23, 42, 0.95);
+  --color-border: rgba(255, 255, 255, 0.08);
+
+  --color-text: #ffffff;
+  --color-muted: #94a3b8; /* slate-400 */
+
+  --color-success: #10b981;
+  --color-danger: #fb7185;
+}
+
+/* Theme variants (for future runtime switching) */
+.theme-blue {
+  --color-primary: #2563eb;
+  --color-primary-foreground: #ffffff;
+}
+
+/* Utility mappings for theme tokens */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.text-primary {
+  color: var(--color-primary);
+}
+.text-on-primary {
+  color: var(--color-primary-foreground);
+}
+.bg-surface {
+  background-color: var(--color-surface);
+}
+.bg-surface-opaque {
+  background-color: var(--color-surface-opaque);
+}
+.border-surface {
+  border-color: var(--color-border);
+}
+.text-muted {
+  color: var(--color-muted);
+}
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+/* ensure default text color follows theme */
+body {
+  color: var(--color-text);
+}
+
 @layer utilities {
   .content-stretch {
     align-content: stretch;

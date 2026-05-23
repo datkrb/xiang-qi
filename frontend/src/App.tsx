@@ -112,11 +112,7 @@ export default function App() {
 
   const handleRegister = useCallback(async (data: any) => {
     try {
-      const res = await api.register(
-        data.username,
-        data.email,
-        data.password || "",
-      );
+      const res = await api.register(data.email, data.password || "");
       if (res?.accessToken) {
         localStorage.setItem("authToken", res.accessToken);
       }

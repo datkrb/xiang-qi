@@ -27,14 +27,10 @@ export async function login(email: string, password: string) {
   });
 }
 
-export async function register(
-  username: string,
-  email: string,
-  password: string,
-) {
+export async function register(email: string, password: string) {
   return request("/auth/register", {
     method: "POST",
-    body: JSON.stringify({ username, email, password }),
+    body: JSON.stringify({ email, password }),
   });
 }
 

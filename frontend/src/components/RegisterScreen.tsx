@@ -1,13 +1,9 @@
 import { useState } from "react";
-import { User, Mail, Lock, UserPlus } from "lucide-react";
+import { Mail, Lock, UserPlus } from "lucide-react";
 
 interface RegisterScreenProps {
   onBack?: () => void;
-  onRegister?: (data: {
-    username: string;
-    email: string;
-    password: string;
-  }) => void;
+  onRegister?: (data: { email: string; password: string }) => void;
   onNavigate?: (screen: "login") => void;
 }
 
@@ -16,14 +12,13 @@ export default function RegisterScreen({
   onRegister,
   onNavigate,
 }: RegisterScreenProps) {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [agree, setAgree] = useState(false);
 
   const pwdMatch = password.length > 0 && password === confirm;
-  const canSubmit = username && email && pwdMatch && agree;
+  const canSubmit = email && pwdMatch && agree;
 
   const strength =
     password.length >= 10
@@ -51,18 +46,6 @@ export default function RegisterScreen({
         </div>
 
         <div className="space-y-4">
-          <Field
-            icon={<User className="w-4 h-4 text-blue-700" />}
-            label="Tên người chơi"
-          >
-            <input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="cao_thu_2026"
-              className="flex-1 outline-none bg-transparent text-blue-900"
-            />
-          </Field>
-
           <Field
             icon={<Mail className="w-4 h-4 text-blue-700" />}
             label="Email"
@@ -144,9 +127,7 @@ export default function RegisterScreen({
 
           <button
             disabled={!canSubmit}
-            onClick={() =>
-              canSubmit && onRegister?.({ username, email, password })
-            }
+            onClick={() => canSubmit && onRegister?.({ email, password })}
             className="w-full flex items-center justify-center gap-2 py-3 bg-blue-700 hover:bg-blue-800 disabled:bg-blue-300 disabled:text-blue-700 text-blue-50 rounded-lg font-bold shadow-lg"
           >
             <UserPlus className="w-5 h-5" /> Tạo tài khoản

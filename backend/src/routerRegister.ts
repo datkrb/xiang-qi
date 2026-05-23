@@ -4,15 +4,11 @@ import { Router } from "express";
 import { activeRooms } from "./socket/gameState";
 import { Request, Response } from "express";
 import { GameRoom } from "./socket/gameState";
-import devRouter from "./modules/dev/dev.routes";
 
 const router = Router();
 
 router.use("/auth", authRouter);
 router.use("/users", usersRouter);
-
-// Dev endpoints (testing helpers)
-router.use("/dev", devRouter);
 
 // GET /match/:roomId - return in-memory room snapshot (useful for shareable links)
 router.get("/match/:roomId", (req: Request, res: Response) => {

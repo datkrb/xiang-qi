@@ -6,6 +6,7 @@ import "./App.css";
 import { GameProvider, useGame } from "./context/GameContext";
 import { GameConfig } from "./components/GameModeScreen";
 import AppSidebar from "./components/AppSidebar";
+import { Menu } from "lucide-react";
 
 // Define Screen types
 type Screen =
@@ -74,6 +75,7 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("login");
   const [gameConfig, setGameConfig] = useState<GameConfig | null>(null);
   const [deepLinkRoomId, setDeepLinkRoomId] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Correct React State pattern: use useState with lazy initializer instead of useMemo for session userId
   const [userId] = useState(
@@ -83,6 +85,7 @@ export default function App() {
   // Stabilize callbacks using useCallback
   const handleNavigate = useCallback((screen: string) => {
     setCurrentScreen(screen as Screen);
+    setIsSidebarOpen(false);
   }, []);
 
   const handleNavigateToForgotOrRegister = useCallback((screen: string) => {
@@ -133,11 +136,13 @@ export default function App() {
     localStorage.removeItem("authToken");
     localStorage.removeItem("authUserId");
     console.log("Logout");
+    setIsSidebarOpen(false);
     setCurrentScreen("login");
   }, []);
 
   const handleGuestPlay = useCallback(() => {
     GuestStorage.getOrCreateGuest();
+    setIsSidebarOpen(false);
     setCurrentScreen("home");
   }, []);
 
@@ -147,6 +152,7 @@ export default function App() {
   }, []);
 
   const handleBackToHome = useCallback(() => {
+    setIsSidebarOpen(false);
     setCurrentScreen("home");
     setGameConfig(null);
   }, []);
@@ -215,74 +221,105 @@ export default function App() {
             <ForgotPasswordScreen onNavigate={handleNavigate} />
           ) : null}
 
-          {currentScreen !== "login" && currentScreen !== "register" && currentScreen !== "forgot" ? (
-            <div className="flex min-h-screen bg-slate-950">
+          {currentScreen !== "login" &&
+          currentScreen !== "register" &&
+          currentScreen !== "forgot" ? (
+            <div className="relative flex min-h-screen bg-slate-950">
               <AppSidebar
                 currentScreen={currentScreen}
                 onNavigate={handleNavigate}
                 onLogout={handleLogout}
+                isOpen={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
               />
-              <main className="flex-1 min-w-0">
-                {currentScreen === "profile" ? (
-                  <ProfileScreen onBack={handleBackToHome} />
-                ) : null}
+              <main className="flex-1 min-w-0 w-full lg:ml-0">
+                <div className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-white/10 bg-slate-950/95 px-4 py-3 text-white backdrop-blur lg:hidden">
+                  <button
+                    onClick={() => setIsSidebarOpen(true)}
+                    className="inline-flex items-center justify-center rounded-lg bg-white/5 p-2 hover:bg-white/10"
+                    aria-label="Open navigation"
+                  >
+                    <Menu className="h-5 w-5" />
+                  </button>
+                  <div className="text-center">
+                    <p className="text-sm font-semibold leading-tight">
+                      Xiangqi Arena
+                    </p>
+                    <p className="text-[11px] text-slate-400 capitalize">
+                      {currentScreen}
+                    </p>
+                  </div>
+                  <div className="w-9" />
+                </div>
 
-                {currentScreen === "friends" ? (
-                  <FriendsScreen onBack={handleBackToHome} />
-                ) : null}
+                <div className="mx-auto w-full max-w-400">
+                  {currentScreen === "profile" ? (
+                    <ProfileScreen onBack={handleBackToHome} />
+                  ) : null}
 
-                {currentScreen === "settings" ? (
-                  <SettingsScreen onBack={handleBackToHome} onLogout={handleLogout} />
-                ) : null}
+                  {currentScreen === "friends" ? (
+                    <FriendsScreen onBack={handleBackToHome} />
+                  ) : null}
 
-                {currentScreen === "home" ? (
-                  <HomeScreen onNavigate={handleNavigate} />
-                ) : null}
+                  {currentScreen === "settings" ? (
+                    <SettingsScreen
+                      onBack={handleBackToHome}
+                      onLogout={handleLogout}
+                    />
+                  ) : null}
 
-                {currentScreen === "offline" ? (
-                  <OfflineGameModeScreen
-                    onBack={handleBackToHome}
-                    onStartGame={handleStartGame}
-                  />
-                ) : null}
+                  {currentScreen === "home" ? (
+                    <HomeScreen onNavigate={handleNavigate} />
+                  ) : null}
 
-                {currentScreen === "online" ? (
-                  <OnlineGameScreen
-                    onBack={handleBackToHome}
-                    onStartGame={handleStartOnlineGame}
-                    userData={{
-                      userId,
-                      username: "Player",
-                      elo: 1000,
-                    }}
-                  />
-                ) : null}
+                  {currentScreen === "offline" ? (
+                    <OfflineGameModeScreen
+                      onBack={handleBackToHome}
+                      onStartGame={handleStartGame}
+                    />
+                  ) : null}
 
-                {currentScreen === "ai" ? (
-                  <AIGameModeScreen
-                    onBack={handleBackToHome}
-                    onStartGame={handleStartGame}
-                  />
-                ) : null}
+                  {currentScreen === "online" ? (
+                    <OnlineGameScreen
+                      onBack={handleBackToHome}
+                      onStartGame={handleStartOnlineGame}
+                      userData={{
+                        userId,
+                        username: "Player",
+                        elo: 1000,
+                      }}
+                    />
+                  ) : null}
 
-                {currentScreen === "game" ? (
-                  <MainGameScreen config={gameConfig!} onExit={handleBackToHome} />
-                ) : null}
+                  {currentScreen === "ai" ? (
+                    <AIGameModeScreen
+                      onBack={handleBackToHome}
+                      onStartGame={handleStartGame}
+                    />
+                  ) : null}
 
-                {currentScreen === "load" ? (
-                  <LoadGameScreen
-                    onBack={handleBackToHome}
-                    onLoadGame={handleLoadGame}
-                  />
-                ) : null}
+                  {currentScreen === "game" ? (
+                    <MainGameScreen
+                      config={gameConfig!}
+                      onExit={handleBackToHome}
+                    />
+                  ) : null}
 
-                {currentScreen === "tutorial" ? (
-                  <TutorialScreen onBack={handleBackToHome} />
-                ) : null}
+                  {currentScreen === "load" ? (
+                    <LoadGameScreen
+                      onBack={handleBackToHome}
+                      onLoadGame={handleLoadGame}
+                    />
+                  ) : null}
 
-                {currentScreen === "leaderboard" ? (
-                  <LeaderboardScreen onBack={handleBackToHome} />
-                ) : null}
+                  {currentScreen === "tutorial" ? (
+                    <TutorialScreen onBack={handleBackToHome} />
+                  ) : null}
+
+                  {currentScreen === "leaderboard" ? (
+                    <LeaderboardScreen onBack={handleBackToHome} />
+                  ) : null}
+                </div>
               </main>
             </div>
           ) : null}

@@ -134,12 +134,16 @@ function handleDisconnection(io: Server, socket: Socket) {
   for (const [roomId, room] of activeRooms.entries()) {
     if (room.playerRed?.socketId === socket.id) {
       console.log(`   Player Red disconnected from ${roomId}`);
+      // mark player as disconnected so grace-period logic can detect it
+      if (room.playerRed) room.playerRed.socketId = "" as any;
       handlePlayerDisconnection(io, socket, roomId, "red", room);
       return;
     }
 
     if (room.playerBlack?.socketId === socket.id) {
       console.log(`   Player Black disconnected from ${roomId}`);
+      // mark player as disconnected so grace-period logic can detect it
+      if (room.playerBlack) room.playerBlack.socketId = "" as any;
       handlePlayerDisconnection(io, socket, roomId, "black", room);
       return;
     }

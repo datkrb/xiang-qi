@@ -9,6 +9,7 @@ import {
 import { GameState, Position } from "../types";
 import { initialBoard } from "../logic";
 import { useSocket } from "../hooks/useSocket";
+import { GuestStorage } from "../utils/GuestStorage";
 
 interface GameContextType {
   gameState: GameState;
@@ -24,9 +25,11 @@ interface GameContextType {
   findMatch: (userData: any, isPlayRed: boolean) => void;
   createRoom: (userData: any, isPlayRed: boolean | "random") => void;
   joinRoom: (roomId: string, userData: any) => void;
+  spectateRoom: (roomId: string, userData: any) => void;
   makeMove: (move: any, newFen: string) => void;
   endGame: (winnerId: string) => void;
   opponentDisconnected: boolean;
+  isSpectator: boolean;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -40,6 +43,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [playerColor, setPlayerColor] = useState<"red" | "black" | null>(null);
   const [currentFen, setCurrentFen] = useState<string>(INITIAL_FEN);
   const [opponentDisconnected, setOpponentDisconnected] = useState(false);
+  const [isSpectator, setIsSpectator] = useState(false);
 
   const [gameState, setGameState] = useState<GameState>({
     board: initialBoard(),
@@ -62,6 +66,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const handleMatchFound = (roomData: any) => {
       console.log("Match found:", roomData);
       setRoomId(roomData.roomId);
+      // persist current match for guest reconnect
+      if (roomData.matchUrl) {
+        GuestStorage.setCurrentMatch(roomData.roomId);
+      }
       setCurrentFen(roomData.fen || INITIAL_FEN);
 
       // Determine which color this player is
@@ -92,7 +100,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
       const isThisPlayerRed = roomData.playerRed?.socketId === socketId;
       const assignedColor = isThisPlayerRed ? "red" : "black";
       setPlayerColor(assignedColor);
+      setIsSpectator(false);
       console.log(`Player assigned color: ${assignedColor}`);
+    };
+
+    const handleSpectatorJoined = (data: any) => {
+      console.log("Spectator joined room:", data.roomId);
+      setRoomId(data.roomId);
+      setIsSpectator(true);
+      setPlayerColor(null);
     };
 
     const handleMoveMade = (data: any) => {
@@ -128,6 +144,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     on("player_joined", handlePlayerJoined);
     on("move_made", handleMoveMade);
     on("game_over", handleGameOver);
+    on("spectator_joined", handleSpectatorJoined);
     on("opponent_disconnected", handleOpponentDisconnected);
     on("error", handleError);
 
@@ -137,6 +154,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       off("player_joined", handlePlayerJoined);
       off("move_made", handleMoveMade);
       off("game_over", handleGameOver);
+      off("spectator_joined", handleSpectatorJoined);
       off("opponent_disconnected", handleOpponentDisconnected);
       off("error", handleError);
     };
@@ -144,7 +162,18 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const findMatch = useCallback(
     (userData: any, isPlayRed: boolean) => {
-      emit("find_match", userData, isPlayRed);
+      // Use guest-specific event when guestToken is present
+      const guestToken = localStorage.getItem("guestToken");
+      if (guestToken) {
+        const payload = {
+          guestId: userData.guestId || guestToken,
+          displayName: userData.displayName || "Guest",
+          elo: userData.elo ?? 1200,
+        };
+        emit("find_match_guest", payload);
+      } else {
+        emit("find_match_user", userData);
+      }
     },
     [emit],
   );
@@ -158,18 +187,27 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const joinRoom = useCallback(
     (roomIdToJoin: string, userData: any) => {
+      setIsSpectator(false);
       emit("join_room", { roomId: roomIdToJoin, userData });
+    },
+    [emit],
+  );
+
+  const spectateRoom = useCallback(
+    (roomIdToJoin: string, userData: any) => {
+      setIsSpectator(true);
+      emit("spectate_room", { roomId: roomIdToJoin, userData });
     },
     [emit],
   );
 
   const makeMove = useCallback(
     (move: any, newFen: string) => {
-      if (roomId) {
+      if (roomId && !isSpectator) {
         emit("make_move", { roomId, move, newFen });
       }
     },
-    [roomId, emit],
+    [roomId, emit, isSpectator],
   );
 
   const endGame = useCallback(
@@ -203,6 +241,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setSelectedSquare(null);
     setRoomId(null);
     setOpponentDisconnected(false);
+    setIsSpectator(false);
   }, []);
 
   const handleUndo = useCallback(() => {
@@ -225,9 +264,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
     findMatch,
     createRoom,
     joinRoom,
+    spectateRoom,
     makeMove,
     endGame,
     opponentDisconnected,
+    isSpectator,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

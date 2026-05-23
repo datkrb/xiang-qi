@@ -2,6 +2,7 @@ import { ArrowLeft, Zap, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useGame } from "../context/GameContext";
 import { GameRoom } from "./GameRoom";
+import MatchFoundDialog from "./MatchFoundDialog";
 
 interface OnlineGameScreenProps {
   onBack: () => void;
@@ -22,6 +23,7 @@ export default function OnlineGameScreen({
     "menu" | "quickmatch" | "room"
   >("menu");
   const { findMatch, roomId } = useGame();
+  const [showMatchDialog, setShowMatchDialog] = useState(false);
 
   const handleQuickMatch = () => {
     // Randomly assign player color for quick match
@@ -34,7 +36,9 @@ export default function OnlineGameScreen({
   useEffect(() => {
     if (roomId && selectedMode === "quickmatch") {
       // Match found, transition to game
-      onStartGame();
+      setShowMatchDialog(true);
+      // short delay before transitioning so user sees dialog
+      setTimeout(() => onStartGame(), 600);
     }
   }, [roomId, selectedMode, onStartGame]);
 
@@ -128,6 +132,13 @@ export default function OnlineGameScreen({
                 Cancel
               </button>
             </div>
+          )}
+
+          {showMatchDialog && roomId && (
+            <MatchFoundDialog
+              roomId={roomId}
+              onClose={() => setShowMatchDialog(false)}
+            />
           )}
 
           {/* Room Selection */}

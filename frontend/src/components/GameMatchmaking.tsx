@@ -21,7 +21,14 @@ export function GameMatchmaking({ userData }: GameMatchmakingProps) {
   const handleFindMatch = () => {
     // Randomly assign player color (or let backend decide)
     const isPlayRed = Math.random() < 0.5;
-    findMatch(userData, isPlayRed);
+    // If userData is missing (guest flow) provide guest payload
+    const guestToken = localStorage.getItem("guestToken");
+    if (!userData && guestToken) {
+      const payload = { guestId: guestToken, displayName: "Guest", elo: 1200 };
+      findMatch(payload, isPlayRed);
+    } else {
+      findMatch(userData, isPlayRed);
+    }
   };
 
   if (roomId) {

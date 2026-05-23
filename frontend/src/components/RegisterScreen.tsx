@@ -3,7 +3,7 @@ import { User, Mail, Lock, UserPlus } from "lucide-react";
 
 interface RegisterScreenProps {
   onBack?: () => void;
-  onRegister?: (data: { username: string; email: string }) => void;
+  onRegister?: (data: { username: string; email: string; password: string }) => void;
   onNavigate?: (screen: "login") => void;
 }
 
@@ -140,7 +140,9 @@ export default function RegisterScreen({
 
           <button
             disabled={!canSubmit}
-            onClick={() => canSubmit && onRegister?.({ username, email })}
+            onClick={() =>
+              canSubmit && onRegister?.({ username, email, password })
+            }
             className="w-full flex items-center justify-center gap-2 py-3 bg-blue-700 hover:bg-blue-800 disabled:bg-blue-300 disabled:text-blue-700 text-blue-50 rounded-lg font-bold shadow-lg"
           >
             <UserPlus className="w-5 h-5" /> Tạo tài khoản

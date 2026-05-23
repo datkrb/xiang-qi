@@ -1,18 +1,30 @@
 import { useEffect, useRef, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
+import { GuestStorage } from "../utils/GuestStorage";
 
-const SOCKET_URL = (import.meta as any).env?.VITE_SOCKET_URL || "http://localhost:8080";
+const SOCKET_URL =
+  (import.meta as any).env?.VITE_SOCKET_URL || "http://localhost:8080";
 
 export const useSocket = () => {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    // Initialize socket connection
+    // Read auth / guest tokens (if present) to include in handshake
+    const guestToken = GuestStorage.getGuestToken();
+    const authToken = localStorage.getItem("authToken");
+
+    const authPayload = authToken
+      ? { role: "USER", token: authToken }
+      : guestToken
+        ? { role: "GUEST", guestToken }
+        : undefined;
+
     socketRef.current = io(SOCKET_URL, {
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       reconnectionAttempts: 5,
+      auth: authPayload,
     });
 
     socketRef.current.on("connect", () => {

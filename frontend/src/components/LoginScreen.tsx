@@ -3,7 +3,7 @@ import { Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
 
 interface LoginScreenProps {
   onBack?: () => void;
-  onLogin?: (email: string) => void;
+  onLogin?: (payload: { email: string; password: string } | string) => void;
   onNavigate?: (screen: "register" | "forgot") => void;
 }
 
@@ -90,7 +90,7 @@ export default function LoginScreen({
           </div>
 
           <button
-            onClick={() => onLogin?.(email)}
+            onClick={() => onLogin?.({ email, password })}
             className="w-full flex items-center justify-center gap-2 py-3 bg-blue-700 hover:bg-blue-800 text-blue-50 rounded-lg font-bold shadow-lg"
           >
             <LogIn className="w-5 h-5" /> Đăng nhập

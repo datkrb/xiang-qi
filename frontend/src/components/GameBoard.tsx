@@ -73,8 +73,8 @@ export function GameBoard() {
   }, [gameState.board, selectedSquare, handleSquareClick]);
 
   return (
-    <div className="bg-gradient-to-b from-amber-100 to-amber-200 rounded-xl p-4 shadow-2xl border-4 border-amber-900">
-      <div className="relative bg-amber-50 rounded-lg p-4">
+    <div className="bg-surface-opaque rounded-xl p-4 shadow-2xl border-4 border-surface">
+      <div className="relative bg-surface rounded-lg p-4">
         <div className="relative aspect-[9/10]">
           <svg
             className="absolute inset-0 h-full w-full"

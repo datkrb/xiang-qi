@@ -64,9 +64,9 @@ const LeaderboardScreen = lazy(() =>
 
 // Fallback Loading Screen for lazy components
 const ScreenFallback = () => (
-  <div className="min-h-screen bg-linear-to-br from-red-955 via-red-900 to-amber-955 flex flex-col items-center justify-center text-amber-100 gap-4">
-    <div className="w-16 h-16 border-4 border-amber-400 border-t-transparent rounded-full animate-spin shadow-lg" />
-    <p className="text-xl font-bold animate-pulse text-amber-300">
+  <div className="min-h-screen bg-surface flex flex-col items-center justify-center text-muted gap-4">
+    <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin shadow-lg" />
+    <p className="text-xl font-bold animate-pulse text-muted">
       Loading Battleground...
     </p>
   </div>

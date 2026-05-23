@@ -1,4 +1,4 @@
-import { Piece, PieceColor, PieceType } from './types';
+import { Piece, PieceColor, PieceType } from "./types";
 
 /**
  * Xiangqi FEN encoding/decoding.
@@ -15,28 +15,32 @@ import { Piece, PieceColor, PieceType } from './types';
  */
 
 const PIECE_TO_FEN: Record<PieceType, { red: string; black: string }> = {
-  chariot:  { red: 'R', black: 'r' },
-  horse:    { red: 'H', black: 'h' },  // UCI uses N sometimes, but H is standard for xiangqi
-  elephant: { red: 'E', black: 'e' },  // some engines use B, xiangqi standard is E
-  advisor:  { red: 'A', black: 'a' },
-  general:  { red: 'K', black: 'k' },
-  cannon:   { red: 'C', black: 'c' },
-  soldier:  { red: 'P', black: 'p' },
+  chariot: { red: "R", black: "r" },
+  horse: { red: "N", black: "n" }, // Standard Xiangqi FEN uses N for horse (like chess)
+  elephant: { red: "B", black: "b" }, // Standard Xiangqi FEN uses B for elephant (like chess bishop)
+  advisor: { red: "A", black: "a" },
+  general: { red: "K", black: "k" },
+  cannon: { red: "C", black: "c" },
+  soldier: { red: "P", black: "p" },
 };
 
 const FEN_TO_PIECE: Record<string, { type: PieceType; color: PieceColor }> = {};
 for (const [type, chars] of Object.entries(PIECE_TO_FEN)) {
-  FEN_TO_PIECE[chars.red] = { type: type as PieceType, color: 'red' };
-  FEN_TO_PIECE[chars.black] = { type: type as PieceType, color: 'black' };
+  FEN_TO_PIECE[chars.red] = { type: type as PieceType, color: "red" };
+  FEN_TO_PIECE[chars.black] = { type: type as PieceType, color: "black" };
 }
 
 /**
  * Encode Piece[] + current turn → FEN string.
  */
-export function encodeFEN(pieces: Piece[], currentTurn: PieceColor, moveCount = 1): string {
+export function encodeFEN(
+  pieces: Piece[],
+  currentTurn: PieceColor,
+  moveCount = 1,
+): string {
   // Build 10x9 grid (y=0..9, x=0..8)
   const grid: (string | null)[][] = Array.from({ length: 10 }, () =>
-    Array(9).fill(null)
+    Array(9).fill(null),
   );
 
   for (const p of pieces) {
@@ -47,7 +51,7 @@ export function encodeFEN(pieces: Piece[], currentTurn: PieceColor, moveCount = 
   // FEN ranks: y=9 (top, Black back rank) → y=0 (bottom, Red back rank)
   const ranks: string[] = [];
   for (let y = 9; y >= 0; y--) {
-    let rank = '';
+    let rank = "";
     let emptyCount = 0;
     for (let x = 0; x < 9; x++) {
       const cell = grid[y][x];
@@ -65,17 +69,20 @@ export function encodeFEN(pieces: Piece[], currentTurn: PieceColor, moveCount = 
     ranks.push(rank);
   }
 
-  const activeColor = currentTurn === 'red' ? 'w' : 'b';
-  return `${ranks.join('/')} ${activeColor} - - 0 ${moveCount}`;
+  const activeColor = currentTurn === "red" ? "w" : "b";
+  return `${ranks.join("/")} ${activeColor} - - 0 ${moveCount}`;
 }
 
 /**
  * Decode FEN string → { pieces, currentTurn }.
  */
-export function decodeFEN(fen: string): { pieces: Piece[]; currentTurn: PieceColor } {
-  const parts = fen.split(' ');
-  const rankStrings = parts[0].split('/');
-  const currentTurn: PieceColor = parts[1] === 'b' ? 'black' : 'red';
+export function decodeFEN(fen: string): {
+  pieces: Piece[];
+  currentTurn: PieceColor;
+} {
+  const parts = fen.split(" ");
+  const rankStrings = parts[0].split("/");
+  const currentTurn: PieceColor = parts[1] === "b" ? "black" : "red";
 
   const pieces: Piece[] = [];
 
@@ -84,7 +91,7 @@ export function decodeFEN(fen: string): { pieces: Piece[]; currentTurn: PieceCol
     const y = 9 - ri;
     let x = 0;
     for (const ch of rankStrings[ri]) {
-      if (ch >= '1' && ch <= '9') {
+      if (ch >= "1" && ch <= "9") {
         x += parseInt(ch);
       } else {
         const info = FEN_TO_PIECE[ch];
@@ -106,7 +113,9 @@ export function decodeFEN(fen: string): { pieces: Piece[]; currentTurn: PieceCol
  * file a=0, b=1, ..., i=8
  * rank 0=Red's back rank (our y=0), rank 9=Black's back rank (our y=9)
  */
-export function parseUCIMove(uciMove: string): [number, number, number, number] {
+export function parseUCIMove(
+  uciMove: string,
+): [number, number, number, number] {
   const fromFile = uciMove.charCodeAt(0) - 97; // 'a' = 0
   const fromRank = parseInt(uciMove[1]);
   const toFile = uciMove.charCodeAt(2) - 97;
@@ -117,7 +126,12 @@ export function parseUCIMove(uciMove: string): [number, number, number, number] 
 /**
  * Convert board coordinates [fromX, fromY, toX, toY] → UCI move string.
  */
-export function toUCIMove(fromX: number, fromY: number, toX: number, toY: number): string {
+export function toUCIMove(
+  fromX: number,
+  fromY: number,
+  toX: number,
+  toY: number,
+): string {
   return (
     String.fromCharCode(97 + fromX) +
     fromY +
@@ -127,4 +141,5 @@ export function toUCIMove(fromX: number, fromY: number, toX: number, toY: number
 }
 
 /** Starting FEN for Xiangqi */
-export const STARTING_FEN = 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1';
+export const STARTING_FEN =
+  "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1";

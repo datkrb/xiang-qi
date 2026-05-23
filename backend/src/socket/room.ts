@@ -15,10 +15,18 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
       ...userData,
     };
 
+    // Handle random color assignment
+    let creatorIsRed: boolean;
+    if (isPlayRed === "random") {
+      creatorIsRed = Math.random() < 0.5;
+    } else {
+      creatorIsRed = isPlayRed;
+    }
+
     activeRooms.set(roomId, {
       roomId,
-      playerRed: isPlayRed ? player : null,
-      playerBlack: !isPlayRed ? player : null,
+      playerRed: creatorIsRed ? player : null,
+      playerBlack: !creatorIsRed ? player : null,
       fen: startPos,
       isRanked: false,
       createdAt: Date.now(),
@@ -41,13 +49,18 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
       ...userData,
     };
 
+    // Auto-assign to the empty seat
     if (!room.playerRed) {
       room.playerRed = player;
     } else if (!room.playerBlack) {
       room.playerBlack = player;
     } else {
+      // Both seats taken, join as spectator
       room.spectators?.push(player);
-      socket.emit("Room full, joined_as_spectator", { roomId });
+      socket.join(roomId);
+      socket.emit("error", { message: "Room full, joined as spectator" });
+      socket.emit("spectator_joined", { roomId });
+      socket.to(roomId).emit("new_spectator", { userId: player.userId });
       return;
     }
 

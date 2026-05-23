@@ -1,4 +1,4 @@
-import { Coord, Piece } from './types';
+import { Coord, Piece, PieceColor } from './types';
 
 export type GetPieceAt = (x: number, y: number) => Piece | null;
 

@@ -1,4 +1,4 @@
-import { GameState, Piece, Position, Color, Move, PieceType } from "./types";
+import { GameState, Piece, Position, Color, Move } from "./types";
 
 export function initialBoard(): (Piece | null)[][] {
   const board: (Piece | null)[][] = Array(10)
@@ -114,43 +114,56 @@ export function applyMove(
 
   if (!piece) return gameState;
 
+  const newCapturedPieces = {
+    red: [...gameState.capturedPieces.red],
+    black: [...gameState.capturedPieces.black],
+  };
+
   // Capture piece if exists
   if (newBoard[to.y][to.x]) {
     const captured = newBoard[to.y][to.x]!;
-    gameState.capturedPieces[captured.color].push(captured);
+    newCapturedPieces[captured.color] = [
+      ...newCapturedPieces[captured.color],
+      captured,
+    ];
   }
 
-  newBoard[to.y][to.x] = piece;
+  const updatedPiece = {
+    ...piece,
+    position: to,
+  };
+
+  newBoard[to.y][to.x] = updatedPiece;
   newBoard[from.y][from.x] = null;
-  piece.position = to;
 
   return {
     ...gameState,
     board: newBoard,
+    capturedPieces: newCapturedPieces,
     currentPlayer: gameState.currentPlayer === "red" ? "black" : "red",
     moveHistory: [...gameState.moveHistory, { from, to }],
   };
 }
 
 export function isInCheck(
-  board: (Piece | null)[][],
-  kingColor: Color,
+  _board: (Piece | null)[][],
+  _kingColor: Color,
 ): boolean {
   // Placeholder
   return false;
 }
 
-export function isCheckmate(gameState: GameState, kingColor: Color): boolean {
+export function isCheckmate(_gameState: GameState, _kingColor: Color): boolean {
   // Placeholder
   return false;
 }
 
-export function evaluateBoard(board: (Piece | null)[][]): number {
+export function evaluateBoard(_board: (Piece | null)[][]): number {
   // Placeholder AI evaluation
   return 0;
 }
 
-export function getAIMoveAdaptive(gameState: GameState): Move | null {
+export function getAIMoveAdaptive(_gameState: GameState): Move | null {
   // Placeholder AI move generation
   return null;
 }

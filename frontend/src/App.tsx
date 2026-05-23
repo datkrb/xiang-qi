@@ -1,142 +1,206 @@
-import { useState } from 'react';
+import { useState, useCallback, Suspense, lazy } from "react";
 import "./App.css";
-import HomeScreen from './components/HomeScreen';
-import GameModeScreen, { GameConfig } from './components/GameModeScreen';
-import MainGameScreen from './components/MainGameScreen';
-import LoadGameScreen from './components/LoadGameScreen';
-import AllScreensShowcase from './components/AllScreensShowcase';
+import { GameProvider } from "./context/GameContext";
+import { GameConfig } from "./components/GameModeScreen";
 
-type Screen = 'home' | 'offline' | 'online' | 'ai' | 'game' | 'load' | 'tutorial' | 'leaderboard';
+// Define Screen types
+type Screen =
+  | "login"
+  | "register"
+  | "forgot"
+  | "home"
+  | "offline"
+  | "online"
+  | "ai"
+  | "game"
+  | "load"
+  | "tutorial"
+  | "leaderboard"
+  | "profile"
+  | "friends"
+  | "settings";
+
+// Lazy-loaded screen components for code-splitting
+const LoginScreen = lazy(() => import("./components/LoginScreen"));
+const RegisterScreen = lazy(() => import("./components/RegisterScreen"));
+const ForgotPasswordScreen = lazy(() => import("./components/ForgotPasswordScreen"));
+const ProfileScreen = lazy(() => import("./components/ProfileScreen"));
+const FriendsScreen = lazy(() => import("./components/FriendsScreen"));
+const SettingsScreen = lazy(() => import("./components/SettingsScreen"));
+const HomeScreen = lazy(() => import("./components/HomeScreen"));
+const OnlineGameScreen = lazy(() => import("./components/OnlineGameScreen"));
+const MainGameScreen = lazy(() => import("./components/MainGameScreen"));
+const LoadGameScreen = lazy(() => import("./components/LoadGameScreen"));
+
+// Named exports loaded via dynamic imports
+const OfflineGameModeScreen = lazy(() =>
+  import("./components/OfflineGameModeScreen").then((m) => ({
+    default: m.OfflineGameModeScreen,
+  }))
+);
+const AIGameModeScreen = lazy(() =>
+  import("./components/AIGameModeScreen").then((m) => ({
+    default: m.AIGameModeScreen,
+  }))
+);
+const TutorialScreen = lazy(() =>
+  import("./components/TutorialScreen").then((m) => ({
+    default: m.TutorialScreen,
+  }))
+);
+const LeaderboardScreen = lazy(() =>
+  import("./components/LeaderboardScreen").then((m) => ({
+    default: m.LeaderboardScreen,
+  }))
+);
+
+// Fallback Loading Screen for lazy components
+const ScreenFallback = () => (
+  <div className="min-h-screen bg-gradient-to-br from-red-955 via-red-900 to-amber-955 flex flex-col items-center justify-center text-amber-100 gap-4">
+    <div className="w-16 h-16 border-4 border-amber-400 border-t-transparent rounded-full animate-spin shadow-lg" />
+    <p className="text-xl font-bold animate-pulse text-amber-300">Loading Battleground...</p>
+  </div>
+);
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState<Screen>('home');
+  const [currentScreen, setCurrentScreen] = useState<Screen>("login");
   const [gameConfig, setGameConfig] = useState<GameConfig | null>(null);
-  const [showAll, setShowAll] = useState(false);
 
-  const handleNavigate = (screen: string) => {
+  // Correct React State pattern: use useState with lazy initializer instead of useMemo for session userId
+  const [userId] = useState(() => `user-${Math.random().toString(36).substring(2, 9)}`);
+
+  // Stabilize callbacks using useCallback
+  const handleNavigate = useCallback((screen: string) => {
     setCurrentScreen(screen as Screen);
-  };
+  }, []);
 
-  const handleStartGame = (config: GameConfig) => {
+  const handleNavigateToForgotOrRegister = useCallback((screen: string) => {
+    setCurrentScreen(screen === "register" ? "register" : "forgot");
+  }, []);
+
+  const handleLogin = useCallback((email: string) => {
+    console.log("Login:", email);
+    setCurrentScreen("home");
+  }, []);
+
+  const handleRegister = useCallback((data: { username: string; email: string }) => {
+    console.log("Register:", data);
+    setCurrentScreen("home");
+  }, []);
+
+  const handleLogout = useCallback(() => {
+    console.log("Logout");
+    setCurrentScreen("login");
+  }, []);
+
+  const handleStartGame = useCallback((config: GameConfig) => {
     setGameConfig(config);
-    setCurrentScreen('game');
-  };
+    setCurrentScreen("game");
+  }, []);
 
-  const handleBackToHome = () => {
-    setCurrentScreen('home');
+  const handleBackToHome = useCallback(() => {
+    setCurrentScreen("home");
     setGameConfig(null);
-  };
+  }, []);
 
-  const handleLoadGame = (gameId: string) => {
-    // In a real implementation, this would load the game state
-    console.log('Loading game:', gameId);
-    setCurrentScreen('game');
-  };
+  const handleStartOnlineGame = useCallback(() => {
+    setGameConfig({
+      mode: "online",
+      playerColor: "random",
+      timeLimit: "unlimited",
+    });
+    setCurrentScreen("game");
+  }, []);
+
+  const handleLoadGame = useCallback((gameId: string) => {
+    console.log("Loading game:", gameId);
+    setCurrentScreen("game");
+  }, []);
 
   return (
-    <div className="size-full">
-      <button
-        onClick={() => setShowAll((v) => !v)}
-        className="fixed bottom-4 right-4 z-50 px-4 py-2 bg-amber-900 hover:bg-amber-800 text-amber-50 rounded-full shadow-lg font-semibold"
-      >
-        {showAll ? 'Exit Showcase' : 'Show All Screens'}
-      </button>
+    <GameProvider>
+      <div className="size-full">
+        <Suspense fallback={<ScreenFallback />}>
+          {currentScreen === "login" ? (
+            <LoginScreen
+              onLogin={handleLogin}
+              onNavigate={handleNavigateToForgotOrRegister}
+            />
+          ) : null}
 
-      {showAll && <AllScreensShowcase />}
+          {currentScreen === "register" ? (
+            <RegisterScreen
+              onRegister={handleRegister}
+              onNavigate={handleNavigate}
+            />
+          ) : null}
 
-      {!showAll && currentScreen === 'home' && <HomeScreen onNavigate={handleNavigate} />}
+          {currentScreen === "forgot" ? (
+            <ForgotPasswordScreen onNavigate={handleNavigate} />
+          ) : null}
 
-      {!showAll && currentScreen === 'offline' && (
-        <GameModeScreen
-          mode="offline"
-          onBack={handleBackToHome}
-          onStartGame={handleStartGame}
-        />
-      )}
+          {currentScreen === "profile" ? (
+            <ProfileScreen onBack={handleBackToHome} />
+          ) : null}
 
-      {!showAll && currentScreen === 'online' && (
-        <GameModeScreen
-          mode="online"
-          onBack={handleBackToHome}
-          onStartGame={handleStartGame}
-        />
-      )}
+          {currentScreen === "friends" ? (
+            <FriendsScreen onBack={handleBackToHome} />
+          ) : null}
 
-      {!showAll && currentScreen === 'ai' && (
-        <GameModeScreen
-          mode="ai"
-          onBack={handleBackToHome}
-          onStartGame={handleStartGame}
-        />
-      )}
+          {currentScreen === "settings" ? (
+            <SettingsScreen onBack={handleBackToHome} onLogout={handleLogout} />
+          ) : null}
 
-      {!showAll && currentScreen === 'game' && gameConfig && (
-        <MainGameScreen config={gameConfig} onExit={handleBackToHome} />
-      )}
+          {currentScreen === "home" ? (
+            <HomeScreen onNavigate={handleNavigate} />
+          ) : null}
 
-      {!showAll && currentScreen === 'load' && (
-        <LoadGameScreen onBack={handleBackToHome} onLoadGame={handleLoadGame} />
-      )}
+          {currentScreen === "offline" ? (
+            <OfflineGameModeScreen
+              onBack={handleBackToHome}
+              onStartGame={handleStartGame}
+            />
+          ) : null}
 
-      {!showAll && currentScreen === 'tutorial' && (
-        <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-amber-900 p-8">
-          <div className="max-w-4xl mx-auto">
-            <button
-              onClick={handleBackToHome}
-              className="mb-8 px-6 py-3 bg-red-700 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors"
-            >
-              ← Back to Menu
-            </button>
-            <div className="bg-red-800/50 backdrop-blur-sm rounded-2xl p-8 border border-red-700/50">
-              <h1 className="text-4xl font-bold text-amber-100 mb-6">Xiangqi Tutorial</h1>
-              <div className="space-y-4 text-amber-100">
-                <p className="text-lg">Welcome to Xiangqi (Chinese Chess)!</p>
-                <p>This tutorial will guide you through the rules and strategies of this ancient game.</p>
-                <p className="text-amber-200/70 italic">Tutorial content coming soon...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+          {currentScreen === "online" ? (
+            <OnlineGameScreen
+              onBack={handleBackToHome}
+              onStartGame={handleStartOnlineGame}
+              userData={{
+                userId,
+                username: "Player",
+                elo: 1000,
+              }}
+            />
+          ) : null}
 
-      {!showAll && currentScreen === 'leaderboard' && (
-        <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-amber-900 p-8">
-          <div className="max-w-4xl mx-auto">
-            <button
-              onClick={handleBackToHome}
-              className="mb-8 px-6 py-3 bg-red-700 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors"
-            >
-              ← Back to Menu
-            </button>
-            <div className="bg-red-800/50 backdrop-blur-sm rounded-2xl p-8 border border-red-700/50">
-              <h1 className="text-4xl font-bold text-amber-100 mb-6">Leaderboard</h1>
-              <div className="space-y-3">
-                {[
-                  { rank: 1, name: 'Master Chen', score: 2850, wins: 145 },
-                  { rank: 2, name: 'Dragon King', score: 2720, wins: 128 },
-                  { rank: 3, name: 'Phoenix Rider', score: 2690, wins: 112 },
-                  { rank: 4, name: 'Wise Monk', score: 2580, wins: 98 },
-                  { rank: 5, name: 'Swift Knight', score: 2450, wins: 87 },
-                ].map((player) => (
-                  <div
-                    key={player.rank}
-                    className="flex items-center justify-between p-4 bg-red-700/50 rounded-lg"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="text-2xl font-bold text-amber-400 w-8">#{player.rank}</span>
-                      <span className="text-xl text-amber-100 font-semibold">{player.name}</span>
-                    </div>
-                    <div className="flex gap-8 text-amber-200">
-                      <span>Score: <strong>{player.score}</strong></span>
-                      <span>Wins: <strong>{player.wins}</strong></span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+          {currentScreen === "ai" ? (
+            <AIGameModeScreen
+              onBack={handleBackToHome}
+              onStartGame={handleStartGame}
+            />
+          ) : null}
+
+          {currentScreen === "game" ? (
+            <MainGameScreen config={gameConfig!} onExit={handleBackToHome} />
+          ) : null}
+
+          {currentScreen === "load" ? (
+            <LoadGameScreen
+              onBack={handleBackToHome}
+              onLoadGame={handleLoadGame}
+            />
+          ) : null}
+
+          {currentScreen === "tutorial" ? (
+            <TutorialScreen onBack={handleBackToHome} />
+          ) : null}
+
+          {currentScreen === "leaderboard" ? (
+            <LeaderboardScreen onBack={handleBackToHome} />
+          ) : null}
+        </Suspense>
+      </div>
+    </GameProvider>
   );
 }

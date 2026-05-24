@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../../types/ApiResponse";
-import * as profilesService from "./profiles.service";
+import * as profilesService from "./profile.service";
 
 const buildErrorMessage = (error: unknown) =>
   error instanceof Error ? error.message : "Unknown error";

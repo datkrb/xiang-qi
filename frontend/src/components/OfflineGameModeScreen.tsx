@@ -54,8 +54,8 @@ export const OfflineGameModeScreen: React.FC<OfflineGameModeScreenProps> =
                     onClick={() => setPlayerColor(color)}
                     className={`p-4 rounded-xl border-2 transition-all cursor-pointer font-bold ${
                       playerColor === color
-                        ? "bg-primary border-primary text-primary-foreground shadow-[0_0_15px_rgba(14,165,233,0.3)]"
-                        : "bg-surface-opaque border-transparent hover:border-primary text-muted hover:text-main"
+                        ? "bg-primary border-primary text-white shadow-[0_0_15px_rgba(14,165,233,0.5)] scale-105"
+                        : "bg-surface-opaque border-border hover:border-primary text-muted hover:text-main"
                     }`}
                   >
                     <span className="capitalize font-semibold">{color}</span>
@@ -76,8 +76,8 @@ export const OfflineGameModeScreen: React.FC<OfflineGameModeScreenProps> =
                     onClick={() => setTimeLimit(time)}
                     className={`p-4 rounded-xl border-2 transition-all cursor-pointer font-bold ${
                       timeLimit === time
-                        ? "bg-primary border-primary text-primary-foreground shadow-[0_0_15px_rgba(14,165,233,0.3)]"
-                        : "bg-surface-opaque border-transparent hover:border-primary text-muted hover:text-main"
+                        ? "bg-primary border-primary text-white shadow-[0_0_15px_rgba(14,165,233,0.5)] scale-105"
+                        : "bg-surface-opaque border-border hover:border-primary text-muted hover:text-main"
                     }`}
                   >
                     <span className="font-semibold">

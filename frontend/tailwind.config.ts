@@ -5,8 +5,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        heading: ['Outfit', 'sans-serif'],
+        sans: ['"Chakra Petch"', 'sans-serif'],
+        heading: ['"Russo One"', 'sans-serif'],
       },
       colors: {
         xiangqi: {

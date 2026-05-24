@@ -48,7 +48,7 @@ export const GameControlPanel: React.FC<GameControlPanelProps> = React.memo(
 
         <button
           onClick={onUndo}
-          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:border-primary hover:shadow-[0_0_15px_rgba(14,165,233,0.3)] border border-border text-main rounded-xl transition-all duration-300 group"
         >
           <Undo2 className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
           <span className="font-semibold">Undo</span>
@@ -56,7 +56,7 @@ export const GameControlPanel: React.FC<GameControlPanelProps> = React.memo(
 
         <button
           onClick={onRedo}
-          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:border-primary hover:shadow-[0_0_15px_rgba(14,165,233,0.3)] border border-border text-main rounded-xl transition-all duration-300 group"
         >
           <Redo2 className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
           <span className="font-semibold">Redo</span>
@@ -64,7 +64,7 @@ export const GameControlPanel: React.FC<GameControlPanelProps> = React.memo(
 
         <button
           onClick={onHint}
-          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:border-primary hover:shadow-[0_0_15px_rgba(14,165,233,0.3)] border border-border text-main rounded-xl transition-all duration-300 group"
         >
           <Lightbulb className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
           <span className="font-semibold">Hint</span>
@@ -74,7 +74,7 @@ export const GameControlPanel: React.FC<GameControlPanelProps> = React.memo(
 
         <button
           onClick={onSave}
-          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:border-primary hover:shadow-[0_0_15px_rgba(14,165,233,0.3)] border border-border text-main rounded-xl transition-all duration-300 group"
         >
           <Save className="w-5 h-5 text-muted group-hover:text-success transition-colors" />
           <span className="font-semibold">Save Game</span>
@@ -82,7 +82,7 @@ export const GameControlPanel: React.FC<GameControlPanelProps> = React.memo(
 
         <button
           onClick={onLoad}
-          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:border-primary hover:shadow-[0_0_15px_rgba(14,165,233,0.3)] border border-border text-main rounded-xl transition-all duration-300 group"
         >
           <FolderOpen className="w-5 h-5 text-muted group-hover:text-success transition-colors" />
           <span className="font-semibold">Load Game</span>
@@ -90,7 +90,7 @@ export const GameControlPanel: React.FC<GameControlPanelProps> = React.memo(
 
         <button
           onClick={onRestart}
-          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:border-primary hover:shadow-[0_0_15px_rgba(14,165,233,0.3)] border border-border text-main rounded-xl transition-all duration-300 group"
         >
           <RotateCcw className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
           <span className="font-semibold">Restart</span>
@@ -100,7 +100,7 @@ export const GameControlPanel: React.FC<GameControlPanelProps> = React.memo(
 
         <button
           onClick={onDrawOffer}
-          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:border-primary hover:shadow-[0_0_15px_rgba(14,165,233,0.3)] border border-border text-main rounded-xl transition-all duration-300 group"
         >
           <Handshake className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
           <span className="font-semibold">Offer Draw</span>
@@ -128,7 +128,7 @@ export const GameControlPanel: React.FC<GameControlPanelProps> = React.memo(
 
         <button
           onClick={onPause}
-          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:border-primary hover:shadow-[0_0_15px_rgba(14,165,233,0.3)] border border-border text-main rounded-xl transition-all duration-300 group"
         >
           <Pause className="w-5 h-5 text-muted group-hover:text-main transition-colors" />
           <span className="font-semibold">Pause Menu</span>

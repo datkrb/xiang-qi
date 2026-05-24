@@ -114,9 +114,9 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
                   <button
                     key={item.id}
                     onClick={() => onNavigate(item.id)}
-                    className="w-full glass-panel-interactive p-4 rounded-xl flex items-center gap-4 group"
+                    className="w-full glass-panel-interactive hover:border-primary hover:shadow-[0_0_20px_rgba(14,165,233,0.4)] p-4 rounded-xl flex items-center gap-4 group transition-all duration-300"
                   >
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors group-hover:shadow-[0_0_15px_rgba(14,165,233,0.6)]">
                       <Icon className="w-6 h-6" />
                     </div>
                     <span className="text-lg font-semibold text-main group-hover:text-primary transition-colors">{item.label}</span>

@@ -143,3 +143,4 @@ bruno/
 
 # Postman API requests
 backend/postman/
+.agent/

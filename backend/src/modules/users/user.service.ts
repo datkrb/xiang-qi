@@ -30,7 +30,6 @@ export const getUserById = async (id: string) => {
 };
 
 export const createUser = async (
-  name: string,
   email: string,
   password: string,
   role: Role,
@@ -42,7 +41,6 @@ export const createUser = async (
   const hashedPassword = await hashPassword(password);
   const user = await prisma.user.create({
     data: {
-      name,
       email,
       password: hashedPassword,
       role,

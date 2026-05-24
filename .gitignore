@@ -140,3 +140,6 @@ Thumbs.db
 *.bru
 backend/bruno/
 bruno/
+
+# Postman API requests
+backend/postman/

@@ -39,8 +39,8 @@ export const getUserById = async (req: Request, res: Response) => {
 //create user
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, role } = req.body;
-    const user = await userService.createUser(name, email, password, role);
+    const { email, password, role } = req.body;
+    const user = await userService.createUser(email, password, role);
     const response: ApiResponse<any> = {
       code: 201,
       message: "User created successfully",

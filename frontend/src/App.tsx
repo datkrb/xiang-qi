@@ -121,9 +121,7 @@ export default function App() {
       if (res?.accessToken) {
         localStorage.setItem("authToken", res.accessToken);
       }
-      if (res?.user?.id) {
-        localStorage.setItem("authUserId", res.user.id);
-      } else if (res?.id) {
+      if (res?.id) {
         localStorage.setItem("authUserId", res.id);
       }
       setCurrentScreen("home");
@@ -133,7 +131,12 @@ export default function App() {
     }
   }, []);
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = useCallback(async () => {
+    try {
+      await api.logout();
+    } catch (_) {
+      // Ignore errors — we clear local state regardless
+    }
     localStorage.removeItem("authToken");
     localStorage.removeItem("authUserId");
     console.log("Logout");
@@ -359,25 +362,22 @@ function MatchRouteHandler({
         const authUserId = localStorage.getItem("authUserId");
         const guestToken = GuestStorage.getGuestToken();
 
+        // toPublicRoom returns players.red / players.black with { userId }
         const isPlayer =
-          (!!authUserId &&
-            (room?.playerRed?.userId === authUserId ||
-              room?.playerBlack?.userId === authUserId)) ||
-          (!!guestToken &&
-            (room?.playerRed?.guestId === guestToken ||
-              room?.playerBlack?.guestId === guestToken));
+          !!authUserId &&
+          (room.players?.red?.userId === authUserId ||
+            room.players?.black?.userId === authUserId);
 
-        if (isPlayer) {
-          if (authUserId) {
-            joinRoom(roomId, { userId: authUserId, role: "USER" });
-          } else if (guestToken) {
-            joinRoom(roomId, {
-              guestId: guestToken,
-              displayName: "Guest",
-              elo: GuestStorage.getGuestElo(),
-              role: "GUEST",
-            });
-          }
+        if (isPlayer && authUserId) {
+          joinRoom(roomId, { userId: authUserId, role: "USER" });
+        } else if (guestToken) {
+          // Guest deep-link: try to join — server will sort by guestId
+          joinRoom(roomId, {
+            guestId: guestToken,
+            displayName: "Guest",
+            elo: GuestStorage.getGuestElo(),
+            role: "GUEST",
+          });
         } else {
           const spectatorId =
             authUserId ||

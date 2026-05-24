@@ -66,7 +66,7 @@ const LeaderboardScreen = lazy(() =>
 
 // Fallback Loading Screen for lazy components
 const ScreenFallback = () => (
-  <div className="min-h-screen bg-background flex flex-col items-center justify-center text-muted gap-4">
+  <div className="min-h-screen flex flex-col items-center justify-center text-muted gap-4">
     <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin shadow-lg" />
     <p className="text-xl font-bold font-heading animate-pulse text-muted">
       Loading Battleground...
@@ -283,7 +283,7 @@ export default function App() {
             {currentScreen !== "login" &&
             currentScreen !== "register" &&
             currentScreen !== "forgot" ? (
-              <div className="relative flex min-h-screen bg-background">
+              <div className="relative flex min-h-screen">
                 <AppSidebar
                   currentScreen={currentScreen}
                   onNavigate={handleNavigate}

@@ -32,6 +32,10 @@
 /* Base resets and typography */
 body {
   background-color: var(--color-background);
+  background-image: url('/bg-blue.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: var(--color-text-main);
   font-family: 'Inter', sans-serif;
   margin: 0;
@@ -101,7 +105,6 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 /* Ensure background color is fully painted */
 html, body, #root {
   min-height: 100vh;
-  background-color: var(--color-background);
 }
 
 @layer utilities {

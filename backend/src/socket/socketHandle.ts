@@ -8,21 +8,61 @@ import {
 import { registerMatchmakingHandlers } from "./matchmaking";
 import { registerRoomHandlers } from "./room";
 import { registerGameplayHandlers } from "./gameplay";
+import { verifyAccessToken } from "../utils/token";
 
 export const setUpSocketHandler = (io: Server) => {
   io.on("connection", (socket: Socket) => {
-    console.log(`\n🟢 User connected: ${socket.id}`);
+    console.log(`\n🟢 Socket connected: ${socket.id}`);
 
-    const role = socket.handshake.auth.role || "USER";
-    console.log(`   Role: ${role}`);
+    const role = socket.handshake.auth["role"] || "USER";
 
-    // Check for active session and attempt reconnection
-    if (role === "GUEST") {
-      const guestToken = socket.handshake.auth.guestToken;
-      handleGuestReconnection(io, socket, guestToken);
-    } else if (role === "USER") {
-      const userToken = socket.handshake.auth.userToken;
-      handleUserReconnection(io, socket, userToken);
+    // ===== HANDSHAKE JWT VERIFICATION =====
+    if (role === "USER") {
+      const token: string | undefined = socket.handshake.auth["token"];
+      if (!token) {
+        console.log(`   ❌ No token provided — disconnecting ${socket.id}`);
+        socket.emit("unauthorized", { message: "Access token required" });
+        socket.disconnect(true);
+        return;
+      }
+
+      const payload = verifyAccessToken(token) as {
+        id: string;
+        role: string;
+      } | null;
+
+      if (!payload) {
+        console.log(`   ❌ Invalid token — disconnecting ${socket.id}`);
+        socket.emit("unauthorized", { message: "Invalid or expired token" });
+        socket.disconnect(true);
+        return;
+      }
+
+      // Attach verified identity server-side — do NOT trust client-supplied userId
+      socket.data["userId"] = payload.id;
+      socket.data["role"] = payload.role;
+      console.log(`   ✅ USER authenticated: ${socket.data["userId"]}`);
+    } else if (role === "GUEST") {
+      const guestToken: string | undefined = socket.handshake.auth["guestToken"];
+      if (!guestToken) {
+        socket.emit("unauthorized", { message: "Guest token required" });
+        socket.disconnect(true);
+        return;
+      }
+      socket.data["guestId"] = guestToken;
+      socket.data["role"] = "GUEST";
+      console.log(`   👤 GUEST connected (token redacted)`);
+    } else {
+      socket.emit("unauthorized", { message: "Unknown role" });
+      socket.disconnect(true);
+      return;
+    }
+
+    // ===== RECONNECTION =====
+    if (socket.data["role"] === "GUEST") {
+      handleGuestReconnection(io, socket, socket.data["guestId"] as string);
+    } else if (socket.data["role"] === "USER") {
+      handleUserReconnection(io, socket, socket.data["userId"] as string);
     }
 
     // Register event handlers
@@ -32,7 +72,7 @@ export const setUpSocketHandler = (io: Server) => {
 
     // Handle disconnection
     socket.on("disconnect", () => {
-      console.log(`\n🔴 User disconnected: ${socket.id}`);
+      console.log(`\n🔴 Socket disconnected: ${socket.id}`);
       handleDisconnection(io, socket);
     });
   });
@@ -40,56 +80,49 @@ export const setUpSocketHandler = (io: Server) => {
 
 // ===== RECONNECTION HANDLERS =====
 function handleGuestReconnection(
-  io: Server,
+  _io: Server,
   socket: Socket,
-  guestToken?: string,
+  guestId?: string,
 ) {
-  if (!guestToken) return;
+  if (!guestId) return;
 
-  // Find room where this guest is playing
   for (const [roomId, room] of activeRooms.entries()) {
-    if (room.playerRed?.guestId === guestToken) {
+    if (room.playerRed?.guestId === guestId) {
       console.log(`✅ Guest reconnected (Red) to ${roomId}`);
       room.playerRed.socketId = socket.id;
 
-      // Clear grace period timer if exists
       if (gracePeriodTimers.has(roomId)) {
         clearTimeout(gracePeriodTimers.get(roomId)!.timer);
         gracePeriodTimers.delete(roomId);
       }
 
       socket.join(roomId);
-
       socket.emit("reconnected", {
         roomId,
         currentFen: room.fen,
         playerColor: "red",
-        opponent: room.playerBlack,
+        opponentUsername: room.playerBlack?.displayName ?? null,
       });
-
       socket.to(roomId).emit("opponent_reconnected");
       return;
     }
 
-    if (room.playerBlack?.guestId === guestToken) {
+    if (room.playerBlack?.guestId === guestId) {
       console.log(`✅ Guest reconnected (Black) to ${roomId}`);
       room.playerBlack.socketId = socket.id;
 
-      // Clear grace period timer if exists
       if (gracePeriodTimers.has(roomId)) {
         clearTimeout(gracePeriodTimers.get(roomId)!.timer);
         gracePeriodTimers.delete(roomId);
       }
 
       socket.join(roomId);
-
       socket.emit("reconnected", {
         roomId,
         currentFen: room.fen,
         playerColor: "black",
-        opponent: room.playerRed,
+        opponentUsername: room.playerRed?.displayName ?? null,
       });
-
       socket.to(roomId).emit("opponent_reconnected");
       return;
     }
@@ -99,14 +132,53 @@ function handleGuestReconnection(
 }
 
 function handleUserReconnection(
-  io: Server,
+  _io: Server,
   socket: Socket,
-  userToken?: string,
+  userId?: string,
 ) {
-  if (!userToken) return;
+  if (!userId) return;
 
-  // TODO: Verify token with JWT
-  // For now, find by userId from token decode
+  for (const [roomId, room] of activeRooms.entries()) {
+    if (room.playerRed?.userId === userId) {
+      console.log(`✅ User reconnected (Red) to ${roomId}`);
+      room.playerRed.socketId = socket.id;
+
+      if (gracePeriodTimers.has(roomId)) {
+        clearTimeout(gracePeriodTimers.get(roomId)!.timer);
+        gracePeriodTimers.delete(roomId);
+      }
+
+      socket.join(roomId);
+      socket.emit("reconnected", {
+        roomId,
+        currentFen: room.fen,
+        playerColor: "red",
+        opponentUsername: room.playerBlack?.displayName ?? null,
+      });
+      socket.to(roomId).emit("opponent_reconnected");
+      return;
+    }
+
+    if (room.playerBlack?.userId === userId) {
+      console.log(`✅ User reconnected (Black) to ${roomId}`);
+      room.playerBlack.socketId = socket.id;
+
+      if (gracePeriodTimers.has(roomId)) {
+        clearTimeout(gracePeriodTimers.get(roomId)!.timer);
+        gracePeriodTimers.delete(roomId);
+      }
+
+      socket.join(roomId);
+      socket.emit("reconnected", {
+        roomId,
+        currentFen: room.fen,
+        playerColor: "black",
+        opponentUsername: room.playerRed?.displayName ?? null,
+      });
+      socket.to(roomId).emit("opponent_reconnected");
+      return;
+    }
+  }
 
   socket.emit("no_active_match");
 }
@@ -133,18 +205,16 @@ function handleDisconnection(io: Server, socket: Socket) {
   // Find and handle room disconnection
   for (const [roomId, room] of activeRooms.entries()) {
     if (room.playerRed?.socketId === socket.id) {
-      console.log(`   Player Red disconnected from ${roomId}`);
-      // mark player as disconnected so grace-period logic can detect it
+      console.log(`   Player Red disconnected from room ${roomId}`);
       if (room.playerRed) room.playerRed.socketId = "" as any;
-      handlePlayerDisconnection(io, socket, roomId, "red", room);
+      handlePlayerDisconnection(io, roomId, "red", room);
       return;
     }
 
     if (room.playerBlack?.socketId === socket.id) {
-      console.log(`   Player Black disconnected from ${roomId}`);
-      // mark player as disconnected so grace-period logic can detect it
+      console.log(`   Player Black disconnected from room ${roomId}`);
       if (room.playerBlack) room.playerBlack.socketId = "" as any;
-      handlePlayerDisconnection(io, socket, roomId, "black", room);
+      handlePlayerDisconnection(io, roomId, "black", room);
       return;
     }
   }
@@ -153,19 +223,20 @@ function handleDisconnection(io: Server, socket: Socket) {
 // ===== GRACE PERIOD LOGIC =====
 function handlePlayerDisconnection(
   io: Server,
-  socket: Socket,
   roomId: string,
   playerRole: "red" | "black",
   room: GameRoom,
 ) {
   const GRACE_PERIOD = 90000; // 90 seconds
-  const opponentSocket = io.sockets.sockets.get(
+  const opponentSocketId =
     playerRole === "red"
       ? room.playerBlack?.socketId
-      : room.playerRed?.socketId,
-  );
+      : room.playerRed?.socketId;
 
-  // Notify opponent
+  const opponentSocket = opponentSocketId
+    ? io.sockets.sockets.get(opponentSocketId)
+    : undefined;
+
   if (opponentSocket) {
     opponentSocket.emit("opponent_disconnected", {
       gracePeriod: Math.floor(GRACE_PERIOD / 1000),
@@ -180,23 +251,20 @@ function handlePlayerDisconnection(
     clearTimeout(gracePeriodTimers.get(roomId)!.timer);
   }
 
-  // Start new grace period
   const timer = setTimeout(() => {
     const currentRoom = activeRooms.get(roomId);
-
     if (!currentRoom) {
       console.log(`   Room ${roomId} already deleted`);
       return;
     }
 
-    // Check if player still hasn't reconnected
     const stillDisconnected =
       playerRole === "red"
         ? !currentRoom.playerRed?.socketId
         : !currentRoom.playerBlack?.socketId;
 
     if (stillDisconnected) {
-      console.log(`⏱️  Grace period expired for ${roomId} - Ending game`);
+      console.log(`⏱️  Grace period expired for room ${roomId} — ending game`);
 
       activeRooms.delete(roomId);
       gracePeriodTimers.delete(roomId);
@@ -206,13 +274,9 @@ function handlePlayerDisconnection(
         playerRole,
       });
 
-      // TODO: Update ELO - penalize disconnected player
+      // TODO: Update ELO — penalize disconnected player
     }
   }, GRACE_PERIOD);
 
-  gracePeriodTimers.set(roomId, {
-    roomId,
-    playerRole,
-    timer,
-  });
+  gracePeriodTimers.set(roomId, { roomId, playerRole, timer });
 }

@@ -3,7 +3,7 @@ import * as userService from "./user.service";
 import { ApiResponse } from "../../types/ApiResponse";
 
 //get all users
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (_req: Request, res: Response) => {
   try {
     const users = await userService.getAllUsers();
     const response: ApiResponse<any> = {
@@ -22,7 +22,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 //get user by id
 export const getUserById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params["id"] as string;
     const user = await userService.getUserById(id);
     const response: ApiResponse<any> = {
       code: 200,
@@ -56,7 +56,7 @@ export const createUser = async (req: Request, res: Response) => {
 //update user
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params["id"] as string;
     const newUserData = req.body;
     const updatedUser = await userService.updateUser(id, newUserData);
     const response: ApiResponse<any> = {
@@ -74,7 +74,7 @@ export const updateUser = async (req: Request, res: Response) => {
 //delete user
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params["id"] as string;
     await userService.deleteUser(id);
     const response: ApiResponse<null> = {
       code: 200,

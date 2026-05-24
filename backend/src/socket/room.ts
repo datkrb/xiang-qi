@@ -31,6 +31,7 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
       isRanked: false,
       isGuest: player.role === "GUEST",
       createdAt: Date.now(),
+      moves: [],
     });
 
     socket.join(roomId);

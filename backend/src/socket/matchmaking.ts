@@ -94,6 +94,7 @@ function createMatch(
     isGuest: options.isGuest,
     matchUrl: `/match/${roomId}`,
     createdAt: Date.now(),
+    moves: [],
   };
 
   activeRooms.set(roomId, newGame);

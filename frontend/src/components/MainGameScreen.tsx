@@ -232,14 +232,14 @@ export default function MainGameScreen({
   }, [onExit]);
 
   return (
-    <div className="min-h-screen bg-surface p-4 animate-in fade-in duration-300">
+    <div className="w-full p-4 animate-fade-in">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4">
           {/* Main board area */}
           <div className="space-y-4">
             {/* Check warning banner */}
             {checkMessage ? (
-              <div className="bg-red-600 text-white px-4 py-3 rounded-xl flex items-center gap-3 animate-pulse shadow-lg">
+              <div className="bg-danger/20 text-danger border border-danger/50 px-4 py-3 rounded-xl flex items-center gap-3 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]">
                 <AlertTriangle className="w-6 h-6 flex-shrink-0" />
                 <span className="font-bold text-lg">{checkMessage}</span>
               </div>

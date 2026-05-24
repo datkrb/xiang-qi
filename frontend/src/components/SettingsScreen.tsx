@@ -29,18 +29,18 @@ export default function SettingsScreen({
   const [highlightMoves, setHighlightMoves] = useState(true);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-100 via-blue-50 to-cyan-100 p-4">
-      <div className="max-w-3xl mx-auto space-y-4">
+    <div className="w-full p-4 animate-fade-in">
+      <div className="max-w-3xl mx-auto space-y-6">
         {onBack && (
           <button
             onClick={onBack}
-            className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-blue-50 rounded-lg font-semibold"
+            className="px-4 py-2 bg-surface-opaque hover:bg-surface-hover transition-colors text-muted hover:text-main rounded-xl font-semibold border border-border"
           >
             ← Quay lại
           </button>
         )}
 
-        <h1 className="text-3xl font-bold text-blue-900">Cài đặt</h1>
+        <h1 className="text-3xl font-bold font-heading text-main">Cài đặt</h1>
 
         <Section title="Âm thanh" icon={<Volume2 className="w-5 h-5" />}>
           <Toggle label="Hiệu ứng âm thanh" value={sound} onChange={setSound} />
@@ -107,27 +107,27 @@ export default function SettingsScreen({
           />
         </Section>
 
-        <Section title="Tài khoản" icon={<Shield className="w-5 h-5" />}>
-          <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg font-semibold text-blue-900">
+        <Section title="Tài khoản" icon={<Shield className="w-5 h-5 text-primary" />}>
+          <button className="w-full text-left px-4 py-3 bg-surface-opaque hover:bg-surface-hover transition-colors rounded-xl font-semibold text-main border border-transparent hover:border-border">
             Đổi mật khẩu
           </button>
-          <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg font-semibold text-blue-900">
+          <button className="w-full text-left px-4 py-3 bg-surface-opaque hover:bg-surface-hover transition-colors rounded-xl font-semibold text-main border border-transparent hover:border-border">
             Quản lý dữ liệu
           </button>
           <button
             onClick={onLogout}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-700 hover:bg-blue-800 rounded-lg font-bold text-blue-50"
+            className="w-full btn-danger flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold"
           >
             <LogOut className="w-4 h-4" /> Đăng xuất
           </button>
         </Section>
 
-        <p className="text-center text-xs text-blue-700">Cờ Tướng v1.0.0</p>
+        <p className="text-center text-xs text-muted">Cờ Tướng v1.0.0</p>
       </div>
 
       {!sound && (
-        <div className="fixed bottom-4 left-4 bg-blue-900 text-blue-50 px-3 py-1 rounded-full text-xs flex items-center gap-1">
-          <VolumeX className="w-3 h-3" /> Đã tắt âm thanh
+        <div className="fixed bottom-4 left-4 glass-panel text-muted px-4 py-2 rounded-full text-xs flex items-center gap-2 shadow-lg">
+          <VolumeX className="w-4 h-4 text-danger" /> Đã tắt âm thanh
         </div>
       )}
     </div>
@@ -144,8 +144,8 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-xl border border-blue-200">
-      <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
+    <div className="glass-panel rounded-2xl p-6">
+      <h3 className="text-lg font-bold font-heading text-main mb-4 flex items-center gap-2">
         {icon} {title}
       </h3>
       <div className="space-y-3">{children}</div>
@@ -163,11 +163,11 @@ function Toggle({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <label className="flex items-center justify-between p-3 bg-blue-50 rounded-lg cursor-pointer">
-      <span className="text-blue-900 font-semibold">{label}</span>
+    <label className="flex items-center justify-between p-4 bg-surface-opaque rounded-xl cursor-pointer border border-transparent hover:border-border transition-colors">
+      <span className="text-main font-semibold">{label}</span>
       <button
         onClick={() => onChange(!value)}
-        className={`relative w-12 h-6 rounded-full transition-colors ${value ? "bg-blue-700" : "bg-blue-300"}`}
+        className={`relative w-12 h-6 rounded-full transition-colors ${value ? "bg-primary" : "bg-surface-hover"}`}
       >
         <span
           className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${value ? "translate-x-6" : "translate-x-0.5"}`}
@@ -187,10 +187,10 @@ function Slider({
   onChange: (v: number) => void;
 }) {
   return (
-    <div className="px-3 py-2">
-      <div className="flex justify-between text-sm text-blue-900 mb-1">
-        <span>{label}</span>
-        <span className="font-bold">{value}%</span>
+    <div className="px-4 py-3 bg-surface-opaque rounded-xl border border-transparent hover:border-border transition-colors">
+      <div className="flex justify-between text-sm text-main mb-2">
+        <span className="font-semibold">{label}</span>
+        <span className="font-bold text-primary">{value}%</span>
       </div>
       <input
         type="range"
@@ -198,7 +198,7 @@ function Slider({
         max={100}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full accent-blue-700"
+        className="w-full accent-primary"
       />
     </div>
   );
@@ -216,15 +216,15 @@ function Select<T extends string>({
   options: { value: T; label: string }[];
 }) {
   return (
-    <label className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-      <span className="text-blue-900 font-semibold">{label}</span>
+    <label className="flex items-center justify-between p-4 bg-surface-opaque rounded-xl border border-transparent hover:border-border transition-colors">
+      <span className="text-main font-semibold">{label}</span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
-        className="px-3 py-1 bg-white border-2 border-blue-300 rounded-lg text-blue-900 font-semibold"
+        className="px-3 py-1 bg-surface outline-none border border-border rounded-lg text-main font-semibold focus:border-primary transition-colors"
       >
         {options.map((o) => (
-          <option key={o.value} value={o.value}>
+          <option key={o.value} value={o.value} className="bg-surface">
             {o.label}
           </option>
         ))}

@@ -43,38 +43,38 @@ export default function OnlineGameScreen({
   }, [roomId, selectedMode, onStartGame]);
 
   return (
-    <div className="min-h-screen bg-red-900 p-8">
+    <div className="w-full p-8 animate-fade-in">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={onBack}
-            className="p-3 bg-red-700 hover:bg-red-600 rounded-lg transition-colors"
+            className="p-3 bg-surface-opaque hover:bg-surface-hover text-muted hover:text-main transition-colors rounded-xl border border-border"
           >
-            <ArrowLeft className="w-6 h-6 text-white" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-4xl font-bold text-amber-100">
+          <h1 className="text-4xl font-bold font-heading text-main">
             {selectedMode === "menu" && "Play Online"}
             {selectedMode === "quickmatch" && "Quick Match"}
             {selectedMode === "room" && "Play with Friend"}
           </h1>
         </div>
 
-        <div className="bg-red-800/50 backdrop-blur-sm rounded-2xl p-8 border border-red-700/50">
+        <div className="glass-panel rounded-2xl p-8 border-border">
           {/* Main Menu */}
           {selectedMode === "menu" && (
             <div className="space-y-4">
               {/* Quick Match */}
               <button
                 onClick={handleQuickMatch}
-                className="w-full bg-yellow-600 hover:bg-yellow-500
-                         text-white p-6 rounded-xl flex items-center gap-4 transition-all transform hover:scale-105
-                         shadow-lg hover:shadow-xl border border-yellow-500/30"
+                className="w-full glass-panel-interactive text-main p-6 rounded-2xl flex items-center gap-6 group"
               >
-                <Zap className="w-8 h-8" />
+                <div className="w-16 h-16 rounded-xl bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <Zap className="w-8 h-8" />
+                </div>
                 <div className="text-left">
-                  <div className="text-xl font-bold">Quick Match</div>
-                  <div className="text-sm text-white/80">
+                  <div className="text-xl font-bold font-heading mb-1 group-hover:text-primary transition-colors">Quick Match</div>
+                  <div className="text-sm text-muted">
                     Play with random opponent
                   </div>
                 </div>
@@ -83,14 +83,14 @@ export default function OnlineGameScreen({
               {/* Play with Friend */}
               <button
                 onClick={() => setSelectedMode("room")}
-                className="w-full bg-blue-600 hover:bg-blue-500
-                         text-white p-6 rounded-xl flex items-center gap-4 transition-all transform hover:scale-105
-                         shadow-lg hover:shadow-xl border border-blue-500/30"
+                className="w-full glass-panel-interactive text-main p-6 rounded-2xl flex items-center gap-6 group"
               >
-                <Users className="w-8 h-8" />
+                <div className="w-16 h-16 rounded-xl bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <Users className="w-8 h-8" />
+                </div>
                 <div className="text-left">
-                  <div className="text-xl font-bold">Play with Friend</div>
-                  <div className="text-sm text-white/80">
+                  <div className="text-xl font-bold font-heading mb-1 group-hover:text-primary transition-colors">Play with Friend</div>
+                  <div className="text-sm text-muted">
                     Create or join a room
                   </div>
                 </div>
@@ -99,8 +99,7 @@ export default function OnlineGameScreen({
               {/* Back Button */}
               <button
                 onClick={onBack}
-                className="w-full bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl
-                         transition-all font-semibold text-lg"
+                className="w-full bg-surface-opaque hover:bg-surface-hover border border-border text-main p-4 rounded-xl transition-colors font-semibold text-lg mt-4"
               >
                 Back to Menu
               </button>
@@ -111,23 +110,23 @@ export default function OnlineGameScreen({
           {selectedMode === "quickmatch" && (
             <div className="flex flex-col items-center justify-center space-y-6 py-12">
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-amber-100 mb-2">
+                <h2 className="text-2xl font-bold font-heading text-main mb-2">
                   Finding Opponent...
                 </h2>
-                <p className="text-amber-200/70">
+                <p className="text-muted">
                   Searching for a player of similar skill level
                 </p>
               </div>
 
               <div className="animate-spin">
-                <Zap className="w-12 h-12 text-yellow-400" />
+                <Zap className="w-12 h-12 text-primary" />
               </div>
 
               <button
                 onClick={() => {
                   setSelectedMode("menu");
                 }}
-                className="bg-red-700 hover:bg-red-600 text-white p-3 rounded-lg transition-colors"
+                className="bg-surface-opaque hover:bg-surface-hover text-main p-3 rounded-xl border border-border transition-colors mt-6 px-6"
               >
                 Cancel
               </button>
@@ -146,7 +145,7 @@ export default function OnlineGameScreen({
             <div className="space-y-6">
               <button
                 onClick={() => setSelectedMode("menu")}
-                className="flex items-center gap-2 text-amber-100 hover:text-amber-50 transition-colors mb-4"
+                className="flex items-center gap-2 text-muted hover:text-main transition-colors mb-4"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back

@@ -28,26 +28,26 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = React.memo(
     ];
 
     return (
-      <div className="min-h-screen bg-surface p-6 md:p-12 text-muted animate-in fade-in duration-300">
+      <div className="w-full p-6 md:p-12 animate-fade-in">
         <div className="max-w-4xl mx-auto">
           {/* Navigation */}
           <button
             onClick={onBack}
-            className="mb-8 flex items-center gap-2 px-5 py-2.5 bg-surface-opaque hover:bg-surface-opaque text-muted rounded-xl font-medium transition-all shadow-md hover:shadow-lg border border-surface cursor-pointer"
+            className="mb-8 flex items-center gap-2 px-5 py-2.5 bg-surface-opaque hover:bg-surface-hover text-muted hover:text-main rounded-xl font-medium transition-all border border-border"
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Back to Menu</span>
           </button>
 
           {/* Board Container */}
-          <div className="bg-surface-opaque backdrop-blur-md rounded-3xl p-8 md:p-10 border border-surface shadow-2xl space-y-8">
-            <div className="flex items-center justify-between border-b border-surface pb-6">
+          <div className="glass-panel rounded-3xl p-8 md:p-10 space-y-8">
+            <div className="flex items-center justify-between border-b border-border pb-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-primary/10 rounded-2xl border border-primary/30">
+                <div className="p-3 bg-primary/20 rounded-2xl border border-primary/30">
                   <Trophy className="w-8 h-8 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-4xl font-extrabold text-on-primary tracking-tight">
+                  <h1 className="text-4xl font-extrabold font-heading text-main tracking-tight">
                     Leaderboard
                   </h1>
                   <p className="text-muted mt-1 text-sm">
@@ -66,12 +66,8 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = React.memo(
                     key={player.rank}
                     className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 rounded-2xl border transition-all duration-300 hover:scale-[1.01] ${
                       player.rank === 1
-                        ? "bg-surface-opaque border-primary/30 shadow-lg"
-                        : player.rank === 2
-                          ? "bg-surface-opaque border-surface"
-                          : player.rank === 3
-                            ? "bg-surface-opaque border-surface"
-                            : "bg-surface-opaque border-surface"
+                        ? "glass-panel-interactive border-primary shadow-[0_0_15px_rgba(14,165,233,0.2)]"
+                        : "bg-surface-opaque border-border"
                     }`}
                   >
                     <div className="flex items-center gap-4">
@@ -94,10 +90,10 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = React.memo(
                       </span>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xl text-on-primary font-bold">
+                          <span className="text-xl text-main font-bold">
                             {player.name}
                           </span>
-                          <span className="text-xs px-2 py-0.5 bg-surface-opaque border border-surface rounded-full font-medium text-muted">
+                          <span className="text-xs px-2 py-0.5 bg-surface-opaque border border-border rounded-full font-medium text-muted">
                             {player.title}
                           </span>
                         </div>

@@ -26,25 +26,25 @@ export const OfflineGameModeScreen: React.FC<OfflineGameModeScreenProps> =
     };
 
     return (
-      <div className="min-h-screen bg-surface p-8">
+      <div className="w-full p-8 animate-fade-in">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-4 mb-8">
             <button
               onClick={onBack}
-              className="p-3 bg-surface-opaque rounded-xl transition-all shadow-md hover:shadow-lg border border-surface cursor-pointer"
+              className="p-3 bg-surface-opaque rounded-xl transition-all border border-border text-muted hover:text-main hover:border-primary cursor-pointer"
             >
-              <ArrowLeft className="w-6 h-6 text-white" />
+              <ArrowLeft className="w-6 h-6" />
             </button>
-            <h1 className="text-4xl font-extrabold text-primary tracking-tight">
+            <h1 className="text-4xl font-extrabold font-heading text-main tracking-tight">
               Offline Match Settings
             </h1>
           </div>
 
-          <div className="bg-surface-opaque backdrop-blur-md rounded-3xl p-8 border border-surface shadow-2xl space-y-8 animate-in zoom-in-95 duration-200">
+          <div className="glass-panel rounded-3xl p-8 border-border space-y-8 animate-in zoom-in-95 duration-200">
             {/* Player Color */}
             <div>
-              <label className="block text-amber-100 text-lg font-semibold mb-4">
+              <label className="block text-main font-heading text-lg font-semibold mb-4">
                 Choose Your Color
               </label>
               <div className="grid grid-cols-3 gap-4">
@@ -54,8 +54,8 @@ export const OfflineGameModeScreen: React.FC<OfflineGameModeScreenProps> =
                     onClick={() => setPlayerColor(color)}
                     className={`p-4 rounded-xl border-2 transition-all cursor-pointer font-bold ${
                       playerColor === color
-                        ? "bg-primary border-primary text-on-primary shadow-lg"
-                        : "bg-surface-opaque border-surface text-muted hover:bg-surface-opaque"
+                        ? "bg-primary border-primary text-primary-foreground shadow-[0_0_15px_rgba(14,165,233,0.3)]"
+                        : "bg-surface-opaque border-transparent hover:border-primary text-muted hover:text-main"
                     }`}
                   >
                     <span className="capitalize font-semibold">{color}</span>
@@ -66,7 +66,7 @@ export const OfflineGameModeScreen: React.FC<OfflineGameModeScreenProps> =
 
             {/* Time Limit */}
             <div>
-              <label className="block text-muted text-lg font-semibold mb-4">
+              <label className="block text-main font-heading text-lg font-semibold mb-4">
                 Time Limit
               </label>
               <div className="grid grid-cols-4 gap-4">
@@ -76,8 +76,8 @@ export const OfflineGameModeScreen: React.FC<OfflineGameModeScreenProps> =
                     onClick={() => setTimeLimit(time)}
                     className={`p-4 rounded-xl border-2 transition-all cursor-pointer font-bold ${
                       timeLimit === time
-                        ? "bg-primary border-primary text-on-primary shadow-lg"
-                        : "bg-surface-opaque border-surface text-muted hover:bg-surface-opaque"
+                        ? "bg-primary border-primary text-primary-foreground shadow-[0_0_15px_rgba(14,165,233,0.3)]"
+                        : "bg-surface-opaque border-transparent hover:border-primary text-muted hover:text-main"
                     }`}
                   >
                     <span className="font-semibold">
@@ -92,13 +92,13 @@ export const OfflineGameModeScreen: React.FC<OfflineGameModeScreenProps> =
             <div className="flex gap-4 pt-4">
               <button
                 onClick={onBack}
-                className="flex-1 bg-surface-opaque text-muted p-4 rounded-xl transition-all font-semibold text-lg cursor-pointer shadow-md"
+                className="flex-1 bg-surface-opaque hover:bg-surface-hover border border-border text-main p-4 rounded-xl transition-all font-semibold text-lg cursor-pointer"
               >
                 Back
               </button>
               <button
                 onClick={handleStartGame}
-                className="flex-1 btn-primary p-4 rounded-xl transition-all font-black text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.03] cursor-pointer"
+                className="flex-1 btn-primary p-4 rounded-xl transition-all font-black text-lg shadow-lg cursor-pointer"
               >
                 Start Game
               </button>

@@ -69,6 +69,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
       // persist current match for guest reconnect
       if (roomData.matchUrl) {
         GuestStorage.setCurrentMatch(roomData.roomId);
+        window.history.pushState({}, "", roomData.matchUrl);
+      } else {
+        window.history.pushState({}, "", `/match/${roomData.roomId}`);
       }
       setCurrentFen(roomData.fen || INITIAL_FEN);
 
@@ -88,12 +91,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const handleRoomCreated = (data: any) => {
       console.log("Room created:", data.roomId);
       setRoomId(data.roomId);
+      window.history.pushState({}, "", `/match/${data.roomId}`);
       // Player color will be set when opponent joins
     };
 
     const handlePlayerJoined = (roomData: any) => {
       console.log("Player joined:", roomData);
       setRoomId(roomData.roomId);
+      window.history.pushState({}, "", `/match/${roomData.roomId}`);
       setCurrentFen(roomData.fen || INITIAL_FEN);
 
       // Determine which color this player is
@@ -107,6 +112,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const handleSpectatorJoined = (data: any) => {
       console.log("Spectator joined room:", data.roomId);
       setRoomId(data.roomId);
+      window.history.pushState({}, "", `/match/${data.roomId}`);
       setIsSpectator(true);
       setPlayerColor(null);
     };
@@ -161,7 +167,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [on, off, socketId]);
 
   const findMatch = useCallback(
-    (userData: any, isPlayRed: boolean) => {
+    (userData: any, _isPlayRed: boolean) => {
       // Use guest-specific event when guestToken is present
       const guestToken = localStorage.getItem("guestToken");
       if (guestToken) {

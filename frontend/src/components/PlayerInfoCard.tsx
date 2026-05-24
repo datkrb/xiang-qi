@@ -35,44 +35,44 @@ export const PlayerInfoCard: React.FC<PlayerInfoCardProps> = React.memo(
 
     return (
       <div
-        className={`bg-surface p-4 rounded-xl shadow-lg border border-surface transition-all duration-300 ${
-          isThinking ? "ring-2 ring-primary scale-[1.01]" : ""
+        className={`glass-panel p-4 shadow-lg border-border transition-all duration-300 ${
+          isThinking ? "ring-2 ring-primary scale-[1.01] shadow-[0_0_15px_rgba(14,165,233,0.3)]" : ""
         }`}
       >
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div
-              className={`w-12 h-12 rounded-full ${
+              className={`w-14 h-14 rounded-2xl flex items-center justify-center font-bold font-heading text-lg transition-transform duration-300 hover:scale-105 border ${
                 player.color === "red"
-                  ? "bg-primary text-on-primary"
-                  : "bg-gray-900 text-white"
-              } border-2 border-surface flex items-center justify-center font-bold transition-transform duration-300 hover:scale-105`}
+                  ? "bg-danger/20 text-danger border-danger/30 shadow-[0_0_10px_rgba(239,68,68,0.2)]"
+                  : "bg-surface-opaque text-main border-border shadow-md"
+              }`}
             >
               {isAI ? (
-                <Bot className="w-6 h-6 animate-pulse" />
+                <Bot className="w-7 h-7 animate-pulse" />
               ) : (
                 player.name[0]
               )}
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-on-primary font-bold">{player.name}</h3>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-main font-bold font-heading text-lg">{player.name}</h3>
                 {isAI && aiDifficulty ? (
-                  <span className="text-xs bg-primary text-on-primary px-2 py-0.5 rounded-full font-semibold shadow-sm animate-in fade-in duration-300">
+                  <span className="text-xs bg-primary/20 border border-primary/30 text-primary px-2.5 py-0.5 rounded-lg font-semibold shadow-sm animate-in fade-in duration-300">
                     AI {aiDifficulty}
                   </span>
                 ) : null}
               </div>
               <div className="flex items-center gap-2 text-muted text-sm">
                 {isThinking ? (
-                  <div className="flex items-center gap-2 text-amber-300 font-medium">
+                  <div className="flex items-center gap-2 text-primary font-medium">
                     <Loader2 className="w-4 h-4 animate-spin" />
                     <span>Đang nghĩ...</span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4" />
-                    <span>{formatTime(player.timeRemaining)}</span>
+                    <span className="font-medium">{formatTime(player.timeRemaining)}</span>
                   </div>
                 )}
               </div>

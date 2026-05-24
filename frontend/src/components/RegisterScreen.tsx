@@ -30,24 +30,24 @@ export default function RegisterScreen({
           : "";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-900 via-blue-800 to-cyan-800 p-4">
-      <div className="w-full max-w-md bg-blue-50/95 backdrop-blur rounded-2xl shadow-2xl border-4 border-blue-900 p-8">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="w-full max-w-md glass-panel rounded-2xl p-8 animate-fade-in">
         <div className="text-center mb-6">
           <div
-            className="w-16 h-16 mx-auto rounded-full bg-gray-900 text-blue-50 flex items-center justify-center border-4 border-blue-900 mb-3"
-            style={{ fontFamily: "serif", fontSize: 32, fontWeight: 700 }}
+            className="w-16 h-16 mx-auto rounded-full bg-primary/20 text-primary flex items-center justify-center border-2 border-primary mb-3"
+            style={{ fontFamily: "Outfit", fontSize: 32, fontWeight: 700 }}
           >
             將
           </div>
-          <h1 className="text-2xl font-bold text-blue-900">Đăng Ký</h1>
-          <p className="text-sm text-blue-800/70">
+          <h1 className="text-2xl font-bold font-heading text-main">Đăng Ký</h1>
+          <p className="text-sm text-muted">
             Tham gia cộng đồng cờ tướng
           </p>
         </div>
 
         <div className="space-y-4">
           <Field
-            icon={<Mail className="w-4 h-4 text-blue-700" />}
+            icon={<Mail className="w-4 h-4 text-primary" />}
             label="Email"
           >
             <input
@@ -55,12 +55,12 @@ export default function RegisterScreen({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="flex-1 outline-none bg-transparent text-blue-900"
+              className="flex-1 outline-none bg-transparent text-main placeholder:text-muted"
             />
           </Field>
 
           <Field
-            icon={<Lock className="w-4 h-4 text-blue-700" />}
+            icon={<Lock className="w-4 h-4 text-primary" />}
             label="Mật khẩu"
           >
             <input
@@ -68,7 +68,7 @@ export default function RegisterScreen({
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="flex-1 outline-none bg-transparent text-blue-900"
+              className="flex-1 outline-none bg-transparent text-main placeholder:text-muted"
             />
           </Field>
 
@@ -78,10 +78,10 @@ export default function RegisterScreen({
               <span
                 className={
                   strength === "Mạnh"
-                    ? "text-green-700"
+                    ? "text-success"
                     : strength === "Trung bình"
-                      ? "text-blue-700"
-                      : "text-red-700"
+                      ? "text-accent"
+                      : "text-danger"
                 }
               >
                 <strong>{strength}</strong>
@@ -90,7 +90,7 @@ export default function RegisterScreen({
           )}
 
           <Field
-            icon={<Lock className="w-4 h-4 text-blue-700" />}
+            icon={<Lock className="w-4 h-4 text-primary" />}
             label="Xác nhận mật khẩu"
           >
             <input
@@ -98,27 +98,27 @@ export default function RegisterScreen({
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               placeholder="••••••••"
-              className="flex-1 outline-none bg-transparent text-blue-900"
+              className="flex-1 outline-none bg-transparent text-main placeholder:text-muted"
             />
           </Field>
           {confirm && !pwdMatch && (
-            <p className="text-xs text-red-700">Mật khẩu không khớp</p>
+            <p className="text-xs text-danger">Mật khẩu không khớp</p>
           )}
 
-          <label className="flex items-start gap-2 text-sm text-blue-900">
+          <label className="flex items-start gap-2 text-sm text-main cursor-pointer">
             <input
               type="checkbox"
               checked={agree}
               onChange={(e) => setAgree(e.target.checked)}
-              className="mt-1"
+              className="mt-1 accent-primary"
             />
             <span>
               Tôi đồng ý với{" "}
-              <a className="text-blue-700 font-semibold hover:underline">
+              <a className="text-primary font-semibold hover:text-primary-hover transition-colors">
                 Điều khoản
               </a>{" "}
               và{" "}
-              <a className="text-blue-700 font-semibold hover:underline">
+              <a className="text-primary font-semibold hover:text-primary-hover transition-colors">
                 Chính sách bảo mật
               </a>
               .
@@ -128,16 +128,16 @@ export default function RegisterScreen({
           <button
             disabled={!canSubmit}
             onClick={() => canSubmit && onRegister?.({ email, password })}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-blue-700 hover:bg-blue-800 disabled:bg-blue-300 disabled:text-blue-700 text-blue-50 rounded-lg font-bold shadow-lg"
+            className="w-full btn-primary py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <UserPlus className="w-5 h-5" /> Tạo tài khoản
           </button>
 
-          <p className="text-center text-sm text-blue-800">
+          <p className="text-center text-sm text-muted">
             Đã có tài khoản?{" "}
             <button
               onClick={() => onNavigate?.("login")}
-              className="text-blue-700 font-semibold hover:underline"
+              className="text-primary font-semibold hover:text-primary-hover transition-colors"
             >
               Đăng nhập
             </button>
@@ -146,7 +146,7 @@ export default function RegisterScreen({
           {onBack && (
             <button
               onClick={onBack}
-              className="w-full text-center text-sm text-blue-700 hover:underline"
+              className="w-full text-center text-sm text-muted hover:text-main transition-colors mt-2"
             >
               ← Quay lại
             </button>
@@ -168,8 +168,8 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="text-sm font-semibold text-blue-900">{label}</span>
-      <div className="mt-1 flex items-center gap-2 px-3 py-2 bg-white rounded-lg border-2 border-blue-300 focus-within:border-blue-700">
+      <span className="text-sm font-semibold text-main">{label}</span>
+      <div className="mt-1 flex items-center gap-2 px-3 py-2 bg-surface-opaque rounded-lg border border-border focus-within:border-primary transition-colors">
         {icon}
         {children}
       </div>

@@ -41,97 +41,97 @@ export const GameControlPanel: React.FC<GameControlPanelProps> = React.memo(
     onPause,
   }) => {
     return (
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-amber-200 space-y-3">
-        <h3 className="text-xl font-bold text-amber-900 mb-4">
+      <div className="glass-panel p-6 shadow-2xl border-border space-y-3">
+        <h3 className="text-xl font-bold font-heading text-main mb-6">
           Game Controls
         </h3>
 
         <button
           onClick={onUndo}
-          className="w-full flex items-center gap-3 p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
         >
-          <Undo2 className="w-5 h-5" />
-          <span>Undo</span>
+          <Undo2 className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
+          <span className="font-semibold">Undo</span>
         </button>
 
         <button
           onClick={onRedo}
-          className="w-full flex items-center gap-3 p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
         >
-          <Redo2 className="w-5 h-5" />
-          <span>Redo</span>
+          <Redo2 className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
+          <span className="font-semibold">Redo</span>
         </button>
 
         <button
           onClick={onHint}
-          className="w-full flex items-center gap-3 p-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
         >
-          <Lightbulb className="w-5 h-5" />
-          <span>Hint</span>
+          <Lightbulb className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
+          <span className="font-semibold">Hint</span>
         </button>
 
-        <div className="border-t border-amber-200 my-4" />
+        <div className="border-t border-border my-5" />
 
         <button
           onClick={onSave}
-          className="w-full flex items-center gap-3 p-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
         >
-          <Save className="w-5 h-5" />
-          <span>Save Game</span>
+          <Save className="w-5 h-5 text-muted group-hover:text-success transition-colors" />
+          <span className="font-semibold">Save Game</span>
         </button>
 
         <button
           onClick={onLoad}
-          className="w-full flex items-center gap-3 p-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
         >
-          <FolderOpen className="w-5 h-5" />
-          <span>Load Game</span>
+          <FolderOpen className="w-5 h-5 text-muted group-hover:text-success transition-colors" />
+          <span className="font-semibold">Load Game</span>
         </button>
 
         <button
           onClick={onRestart}
-          className="w-full flex items-center gap-3 p-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
         >
-          <RotateCcw className="w-5 h-5" />
-          <span>Restart</span>
+          <RotateCcw className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
+          <span className="font-semibold">Restart</span>
         </button>
 
-        <div className="border-t border-amber-200 my-4" />
+        <div className="border-t border-border my-5" />
 
         <button
           onClick={onDrawOffer}
-          className="w-full flex items-center gap-3 p-3 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition-colors"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
         >
-          <Handshake className="w-5 h-5" />
-          <span>Offer Draw</span>
+          <Handshake className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
+          <span className="font-semibold">Offer Draw</span>
         </button>
 
         <button
           onClick={onResign}
-          className="w-full flex items-center gap-3 p-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+          className="w-full flex items-center gap-3 p-3 bg-danger/10 hover:bg-danger/20 border border-danger/30 text-danger rounded-xl transition-colors group"
         >
-          <Flag className="w-5 h-5" />
-          <span>Resign</span>
+          <Flag className="w-5 h-5 text-danger" />
+          <span className="font-semibold">Resign</span>
         </button>
 
         {mode === "online" ? (
           <button
             onClick={onChat}
-            className="w-full flex items-center gap-3 p-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors animate-in fade-in zoom-in-95 duration-200"
+            className="w-full flex items-center gap-3 p-3 bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary rounded-xl transition-colors group mt-3 animate-in fade-in zoom-in-95 duration-200"
           >
             <MessageSquare className="w-5 h-5" />
-            <span>Chat</span>
+            <span className="font-semibold">Chat</span>
           </button>
         ) : null}
 
-        <div className="border-t border-amber-200 my-4" />
+        <div className="border-t border-border my-5" />
 
         <button
           onClick={onPause}
-          className="w-full flex items-center gap-3 p-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+          className="w-full flex items-center gap-3 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl transition-colors group"
         >
-          <Pause className="w-5 h-5" />
-          <span>Pause Menu</span>
+          <Pause className="w-5 h-5 text-muted group-hover:text-main transition-colors" />
+          <span className="font-semibold">Pause Menu</span>
         </button>
       </div>
     );

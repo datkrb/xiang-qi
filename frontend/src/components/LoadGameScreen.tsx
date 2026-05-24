@@ -43,25 +43,25 @@ export default function LoadGameScreen({
   ]);
 
   return (
-    <div className="min-h-screen bg-surface p-8">
+    <div className="w-full p-8 animate-fade-in">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={onBack}
-            className="p-3 bg-surface-opaque rounded-lg transition-colors border border-surface"
+            className="p-3 bg-surface-opaque rounded-xl transition-colors border border-border text-muted hover:text-main"
           >
-            <ArrowLeft className="w-6 h-6 text-white" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-4xl font-bold text-primary">Load Saved Game</h1>
+          <h1 className="text-4xl font-bold font-heading text-main">Load Saved Game</h1>
         </div>
 
         {/* Saved games list */}
         <div className="space-y-4">
           {savedGames.length === 0 ? (
-            <div className="bg-surface-opaque backdrop-blur-sm rounded-2xl p-12 text-center border border-surface">
-              <p className="text-muted text-xl">No saved games found</p>
-              <p className="text-muted/70 mt-2">
+            <div className="glass-panel p-12 text-center border-border">
+              <p className="text-main text-xl font-heading font-semibold">No saved games found</p>
+              <p className="text-muted mt-2">
                 Start playing to create save files!
               </p>
             </div>
@@ -69,11 +69,11 @@ export default function LoadGameScreen({
             savedGames.map((game) => (
               <div
                 key={game.id}
-                className="bg-surface-opaque backdrop-blur-sm rounded-xl p-6 border border-surface hover:bg-surface-opaque transition-colors group"
+                className="glass-panel-interactive p-6 group"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-on-primary mb-2">
+                    <h3 className="text-2xl font-bold font-heading text-main mb-2">
                       {game.name}
                     </h3>
                     <div className="space-y-1 text-muted">
@@ -94,14 +94,14 @@ export default function LoadGameScreen({
                   <div className="flex gap-2">
                     <button
                       onClick={() => onLoadGame(game.id)}
-                      className="px-6 py-3 btn-primary rounded-lg font-bold transition-all transform hover:scale-105"
+                      className="px-6 py-3 btn-primary rounded-xl font-bold"
                     >
                       Load
                     </button>
-                    <button className="p-3 bg-surface-opaque hover:bg-surface-opaque text-muted rounded-lg transition-colors">
+                    <button className="p-3 bg-surface-opaque hover:bg-surface-hover text-muted hover:text-main rounded-xl border border-transparent hover:border-border transition-colors">
                       <Edit2 className="w-5 h-5" />
                     </button>
-                    <button className="p-3 bg-danger hover:bg-danger text-white rounded-lg transition-colors">
+                    <button className="p-3 bg-danger/10 hover:bg-danger text-danger hover:text-white rounded-xl transition-colors">
                       <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
@@ -114,8 +114,7 @@ export default function LoadGameScreen({
         {/* Back button */}
         <button
           onClick={onBack}
-          className="mt-8 w-full bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl
-                   transition-all font-semibold text-lg"
+          className="mt-8 w-full bg-surface-opaque hover:bg-surface-hover border border-border text-main p-4 rounded-xl transition-all font-semibold text-lg"
         >
           Back to Menu
         </button>

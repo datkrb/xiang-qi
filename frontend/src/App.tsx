@@ -15,6 +15,7 @@ type Screen =
   | "register"
   | "forgot"
   | "home"
+  | "play"
   | "offline"
   | "online"
   | "ai"
@@ -39,6 +40,7 @@ const HomeScreen = lazy(() => import("./components/HomeScreen"));
 const OnlineGameScreen = lazy(() => import("./components/OnlineGameScreen"));
 const MainGameScreen = lazy(() => import("./components/MainGameScreen"));
 const LoadGameScreen = lazy(() => import("./components/LoadGameScreen"));
+const PlayScreen = lazy(() => import("./components/PlayScreen"));
 
 // Named exports loaded via dynamic imports
 const OfflineGameModeScreen = lazy(() =>
@@ -64,9 +66,9 @@ const LeaderboardScreen = lazy(() =>
 
 // Fallback Loading Screen for lazy components
 const ScreenFallback = () => (
-  <div className="min-h-screen bg-surface flex flex-col items-center justify-center text-muted gap-4">
+  <div className="min-h-screen bg-background flex flex-col items-center justify-center text-muted gap-4">
     <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin shadow-lg" />
-    <p className="text-xl font-bold animate-pulse text-muted">
+    <p className="text-xl font-bold font-heading animate-pulse text-muted">
       Loading Battleground...
     </p>
   </div>
@@ -77,6 +79,7 @@ export default function App() {
   const [gameConfig, setGameConfig] = useState<GameConfig | null>(null);
   const [deepLinkRoomId, setDeepLinkRoomId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // Correct React State pattern: use useState with lazy initializer instead of useMemo for session userId
   const [userId] = useState(
@@ -87,6 +90,27 @@ export default function App() {
   const handleNavigate = useCallback((screen: string) => {
     setCurrentScreen(screen as Screen);
     setIsSidebarOpen(false);
+    
+    // push URL to history
+    let path = "/";
+    switch (screen) {
+      case "home": path = "/home"; break;
+      case "play": path = "/play"; break;
+      case "tutorial": path = "/tutorial"; break;
+      case "load": path = "/projects"; break;
+      case "settings": path = "/settings"; break;
+      case "login": path = "/login"; break;
+      case "register": path = "/register"; break;
+      case "forgot": path = "/forgot"; break;
+      case "profile": path = "/profile"; break;
+      case "friends": path = "/friends"; break;
+      case "offline": path = "/play/offline"; break;
+      case "online": path = "/play/online"; break;
+      case "ai": path = "/play/ai"; break;
+      case "leaderboard": path = "/leaderboard"; break;
+      default: break;
+    }
+    if (path !== "/") window.history.pushState({}, "", path);
   }, []);
 
   const handleNavigateToForgotOrRegister = useCallback((screen: string) => {
@@ -159,6 +183,7 @@ export default function App() {
     setIsSidebarOpen(false);
     setCurrentScreen("home");
     setGameConfig(null);
+    window.history.pushState({}, "", "/");
   }, []);
 
   const handleStartOnlineGame = useCallback(() => {
@@ -173,6 +198,35 @@ export default function App() {
   const handleLoadGame = useCallback((gameId: string) => {
     console.log("Loading game:", gameId);
     setCurrentScreen("game");
+  }, []);
+
+  const handleDeleteConfirm = useCallback(async () => {
+    // Perform deletion logic (e.g. GuestStorage or API)
+    console.log("Deleting project/game...");
+    setIsDeleteModalOpen(false);
+    // Optionally show a toast here
+  }, []);
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    
+    // Mount URL parsing
+    if (path.startsWith("/match/")) return;
+
+    if (path === "/home" || path === "/") setCurrentScreen("home");
+    else if (path === "/play") setCurrentScreen("play");
+    else if (path === "/tutorial") setCurrentScreen("tutorial");
+    else if (path === "/projects") setCurrentScreen("load");
+    else if (path === "/settings") setCurrentScreen("settings");
+    else if (path === "/login") setCurrentScreen("login");
+    else if (path === "/register") setCurrentScreen("register");
+    else if (path === "/forgot") setCurrentScreen("forgot");
+    else if (path === "/profile") setCurrentScreen("profile");
+    else if (path === "/friends") setCurrentScreen("friends");
+    else if (path === "/play/offline") setCurrentScreen("offline");
+    else if (path === "/play/online") setCurrentScreen("online");
+    else if (path === "/play/ai") setCurrentScreen("ai");
+    else if (path === "/leaderboard") setCurrentScreen("leaderboard");
   }, []);
 
   useEffect(() => {
@@ -229,25 +283,24 @@ export default function App() {
             {currentScreen !== "login" &&
             currentScreen !== "register" &&
             currentScreen !== "forgot" ? (
-              <div className="relative flex min-h-screen bg-surface">
+              <div className="relative flex min-h-screen bg-background">
                 <AppSidebar
                   currentScreen={currentScreen}
                   onNavigate={handleNavigate}
-                  onLogout={handleLogout}
                   isOpen={isSidebarOpen}
                   onClose={() => setIsSidebarOpen(false)}
                 />
                 <main className="flex-1 min-w-0 w-full lg:ml-0">
-                  <div className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-surface bg-surface-opaque px-4 py-3 backdrop-blur lg:hidden">
+                  <div className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-border glass-panel px-4 py-3 lg:hidden">
                     <button
                       onClick={() => setIsSidebarOpen(true)}
-                      className="inline-flex items-center justify-center rounded-lg bg-white/5 p-2 hover:bg-white/10"
+                      className="inline-flex items-center justify-center rounded-lg bg-surface-opaque p-2 hover:bg-surface-hover transition-colors"
                       aria-label="Open navigation"
                     >
-                      <Menu className="h-5 w-5" />
+                      <Menu className="h-5 w-5 text-main" />
                     </button>
                     <div className="text-center">
-                      <p className="text-sm font-semibold leading-tight">
+                      <p className="text-sm font-bold font-heading text-main leading-tight">
                         Xiangqi Arena
                       </p>
                       <p className="text-[11px] text-muted capitalize">
@@ -275,6 +328,13 @@ export default function App() {
 
                     {currentScreen === "home" ? (
                       <HomeScreen onNavigate={handleNavigate} />
+                    ) : null}
+
+                    {currentScreen === "play" ? (
+                      <PlayScreen
+                        onNavigate={handleNavigate}
+                        onBack={handleBackToHome}
+                      />
                     ) : null}
 
                     {currentScreen === "offline" ? (
@@ -329,6 +389,31 @@ export default function App() {
               </div>
             ) : null}
           </Suspense>
+
+          {isDeleteModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
+              <div className="glass-panel rounded-2xl p-6 max-w-sm w-full border-border shadow-2xl transform transition-all">
+                <h3 className="text-xl font-bold font-heading text-danger mb-2">Delete Item</h3>
+                <p className="text-muted text-sm mb-6">
+                  Are you sure you want to delete this project? This action cannot be undone.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setIsDeleteModalOpen(false)}
+                    className="flex-1 px-4 py-2 rounded-lg bg-surface-opaque text-muted hover:text-main transition-colors border border-border hover:border-primary"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDeleteConfirm}
+                    className="flex-1 px-4 py-2 rounded-lg btn-danger shadow-lg"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </GameProvider>
     </ThemeProvider>

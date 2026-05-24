@@ -47,44 +47,44 @@ export default function FriendsScreen({ onBack }: FriendsScreenProps) {
         );
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-100 via-blue-50 to-cyan-100 p-4">
-      <div className="max-w-3xl mx-auto space-y-4">
+    <div className="w-full p-4 animate-fade-in">
+      <div className="max-w-3xl mx-auto space-y-6">
         {onBack && (
           <button
             onClick={onBack}
-            className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-blue-50 rounded-lg font-semibold"
+            className="px-4 py-2 bg-surface-opaque hover:bg-surface-hover transition-colors text-muted hover:text-main rounded-xl font-semibold border border-border"
           >
             ← Quay lại
           </button>
         )}
 
-        <div className="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-xl border border-blue-200">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold text-blue-900">Bạn bè</h1>
-            <button className="flex items-center gap-2 px-4 py-2 bg-blue-700 hover:bg-blue-800 text-blue-50 rounded-lg font-semibold">
+        <div className="glass-panel rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-3xl font-bold font-heading text-main">Bạn bè</h1>
+            <button className="flex items-center gap-2 btn-primary px-4 py-2 rounded-xl">
               <UserPlus className="w-4 h-4" /> Thêm bạn
             </button>
           </div>
 
-          <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 rounded-lg border-2 border-blue-300 focus-within:border-blue-700 mb-4">
-            <Search className="w-4 h-4 text-blue-700" />
+          <div className="flex items-center gap-2 px-4 py-3 bg-surface-opaque rounded-xl border border-border focus-within:border-primary transition-colors mb-6">
+            <Search className="w-5 h-5 text-primary" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Tìm bạn theo tên..."
-              className="flex-1 outline-none bg-transparent text-blue-900"
+              className="flex-1 outline-none bg-transparent text-main placeholder:text-muted"
             />
           </div>
 
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
             {(["all", "online", "requests"] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`px-4 py-2 rounded-lg font-semibold text-sm ${
+                className={`px-5 py-2 rounded-xl font-semibold text-sm whitespace-nowrap transition-colors border ${
                   tab === t
-                    ? "bg-blue-700 text-blue-50"
-                    : "bg-blue-100 text-blue-900 hover:bg-blue-200"
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-surface-opaque text-muted hover:text-main border-transparent hover:border-border"
                 }`}
               >
                 {t === "all"
@@ -96,17 +96,17 @@ export default function FriendsScreen({ onBack }: FriendsScreenProps) {
             ))}
           </div>
 
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {list.map((f) => (
               <li
                 key={f.id}
-                className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100"
+                className="flex items-center gap-4 p-4 bg-surface-opaque rounded-xl border border-transparent hover:border-primary transition-colors"
               >
                 <div className="relative">
                   <span
-                    className="w-12 h-12 rounded-full bg-blue-700 text-blue-50 flex items-center justify-center border-2 border-blue-900"
+                    className="w-12 h-12 rounded-full bg-primary/20 text-primary flex items-center justify-center border border-primary/30"
                     style={{
-                      fontFamily: "serif",
+                      fontFamily: "Outfit",
                       fontSize: 24,
                       fontWeight: 700,
                     }}
@@ -114,45 +114,45 @@ export default function FriendsScreen({ onBack }: FriendsScreenProps) {
                     {f.avatar}
                   </span>
                   <span
-                    className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-blue-50 ${f.online ? "bg-green-500" : "bg-gray-400"}`}
+                    className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-surface ${f.online ? "bg-success" : "bg-muted"}`}
                   />
                 </div>
                 <div className="flex-1">
-                  <div className="font-bold text-blue-900">{f.name}</div>
-                  <div className="text-xs text-blue-700">
+                  <div className="font-bold text-main text-lg">{f.name}</div>
+                  <div className="text-sm text-muted">
                     Elo {f.elo} · {f.online ? "Đang online" : "Offline"}
                   </div>
                 </div>
                 {tab === "requests" ? (
                   <div className="flex gap-2">
-                    <button className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">
-                      <Check className="w-4 h-4" />
+                    <button className="p-2.5 bg-success/20 hover:bg-success/30 text-success rounded-xl transition-colors border border-success/30">
+                      <Check className="w-5 h-5" />
                     </button>
-                    <button className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg">
-                      <X className="w-4 h-4" />
+                    <button className="p-2.5 bg-danger/20 hover:bg-danger/30 text-danger rounded-xl transition-colors border border-danger/30">
+                      <X className="w-5 h-5" />
                     </button>
                   </div>
                 ) : (
                   <div className="flex gap-2">
                     <button
                       disabled={!f.online}
-                      className="p-2 bg-blue-700 hover:bg-blue-800 disabled:bg-blue-300 text-blue-50 rounded-lg"
+                      className="p-2.5 bg-surface hover:bg-surface-hover disabled:opacity-50 disabled:hover:bg-surface border border-border text-primary rounded-xl transition-colors"
                       title="Mời chơi"
                     >
-                      <Swords className="w-4 h-4" />
+                      <Swords className="w-5 h-5" />
                     </button>
                     <button
-                      className="p-2 bg-blue-700 hover:bg-blue-800 text-blue-50 rounded-lg"
+                      className="p-2.5 bg-surface hover:bg-surface-hover border border-border text-primary rounded-xl transition-colors"
                       title="Nhắn tin"
                     >
-                      <MessageSquare className="w-4 h-4" />
+                      <MessageSquare className="w-5 h-5" />
                     </button>
                   </div>
                 )}
               </li>
             ))}
             {list.length === 0 && (
-              <li className="text-center text-blue-700 py-8">
+              <li className="text-center text-muted py-10">
                 Không có kết quả
               </li>
             )}

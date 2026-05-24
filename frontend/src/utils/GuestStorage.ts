@@ -6,9 +6,9 @@ const CURRENT_MATCH_KEY = "currentMatch";
 
 export const GuestStorage = {
   getOrCreateGuest(): { guestToken: string; guestElo: number } {
-    let guestToken = localStorage.getItem(GUEST_TOKEN_KEY);
-    if (!guestToken) {
-      guestToken = uuidv4();
+    const existingToken = localStorage.getItem(GUEST_TOKEN_KEY);
+    const guestToken = existingToken ? existingToken : uuidv4();
+    if (!existingToken) {
       localStorage.setItem(GUEST_TOKEN_KEY, guestToken);
     }
 

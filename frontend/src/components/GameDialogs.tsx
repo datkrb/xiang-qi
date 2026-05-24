@@ -14,8 +14,8 @@ export const ResignConfirmDialog: React.FC<ResignConfirmDialogProps> =
 
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 animate-in fade-in duration-200">
-        <div className="bg-surface rounded-2xl p-8 max-w-md shadow-2xl animate-in zoom-in-95 duration-200 border border-surface">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        <div className="glass-panel p-8 max-w-md shadow-2xl animate-in zoom-in-95 duration-200 border-border">
+          <h2 className="text-2xl font-bold font-heading text-main mb-4">
             Confirm Resignation
           </h2>
           <p className="text-muted mb-6">
@@ -24,13 +24,13 @@ export const ResignConfirmDialog: React.FC<ResignConfirmDialogProps> =
           <div className="flex gap-4">
             <button
               onClick={onCancel}
-              className="flex-1 p-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors cursor-pointer"
+              className="flex-1 p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl font-semibold transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={onConfirm}
-              className="flex-1 p-3 bg-danger hover:bg-red-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+              className="flex-1 p-3 bg-danger/90 hover:bg-danger text-white rounded-xl font-semibold transition-colors cursor-pointer"
             >
               Confirm
             </button>
@@ -54,21 +54,21 @@ export const DrawOfferDialog: React.FC<DrawOfferDialogProps> = React.memo(
 
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 animate-in fade-in duration-200">
-        <div className="bg-surface rounded-2xl p-8 max-w-md shadow-2xl animate-in zoom-in-95 duration-200 border border-surface">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Draw Offer</h2>
+        <div className="glass-panel p-8 max-w-md shadow-2xl animate-in zoom-in-95 duration-200 border-border">
+          <h2 className="text-2xl font-bold font-heading text-main mb-4">Draw Offer</h2>
           <p className="text-muted mb-6">
             Your opponent offers a draw. Do you accept?
           </p>
           <div className="flex gap-4">
             <button
               onClick={onDecline}
-              className="flex-1 p-3 bg-danger hover:bg-red-600 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+              className="flex-1 p-3 bg-danger/90 hover:bg-danger text-white rounded-xl font-semibold transition-colors cursor-pointer"
             >
               Decline
             </button>
             <button
               onClick={onAccept}
-              className="flex-1 p-3 bg-success hover:bg-green-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+              className="flex-1 p-3 bg-success/90 hover:bg-success text-success-foreground rounded-xl font-semibold transition-colors cursor-pointer"
             >
               Accept
             </button>
@@ -95,35 +95,35 @@ export const PauseMenuDialog: React.FC<PauseMenuDialogProps> = React.memo(
 
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 animate-in fade-in duration-200">
-        <div className="bg-surface rounded-2xl p-8 max-w-md w-full shadow-2xl space-y-3 animate-in zoom-in-95 duration-200 border border-surface">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
+        <div className="glass-panel p-8 max-w-md w-full shadow-2xl space-y-3 animate-in zoom-in-95 duration-200 border-border">
+          <h2 className="text-2xl font-bold font-heading text-main mb-6 text-center">
             Paused
           </h2>
 
           <button
             onClick={onResume}
-            className="w-full p-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+            className="w-full p-3 bg-success hover:bg-success/80 text-success-foreground rounded-xl font-semibold transition-colors cursor-pointer"
           >
             Resume
           </button>
 
           <button
             onClick={onSave}
-            className="w-full p-3 btn-primary rounded-lg font-semibold transition-colors cursor-pointer"
+            className="w-full p-3 btn-primary rounded-xl font-semibold transition-colors cursor-pointer"
           >
             Save Game
           </button>
 
           <button
             onClick={onSettings}
-            className="w-full p-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+            className="w-full p-3 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl font-semibold transition-colors cursor-pointer"
           >
             Settings
           </button>
 
           <button
             onClick={onExit}
-            className="w-full p-3 bg-danger hover:bg-red-700 text-white rounded-lg font-semibold transition-colors cursor-pointer"
+            className="w-full p-3 bg-danger/10 hover:bg-danger text-danger hover:text-white border border-danger/20 hover:border-danger rounded-xl font-semibold transition-colors cursor-pointer"
           >
             Exit to Menu
           </button>
@@ -164,22 +164,22 @@ export const GameResultDialog: React.FC<GameResultDialogProps> = React.memo(
 
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 animate-in fade-in duration-300">
-        <div className="bg-surface rounded-3xl p-10 max-w-lg shadow-2xl border-4 border-surface animate-in zoom-in-95 duration-300">
+        <div className="glass-panel p-10 max-w-lg shadow-2xl border-border animate-in zoom-in-95 duration-300">
           {/* Icon */}
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-6">
             {isStalemate ? (
-              <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
-                <Swords className="w-10 h-10 text-gray-600" />
+              <div className="w-20 h-20 bg-surface-opaque border border-border rounded-full flex items-center justify-center shadow-lg">
+                <Swords className="w-10 h-10 text-muted" />
               </div>
             ) : (
-              <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-lg animate-bounce duration-1000">
-                <Trophy className="w-10 h-10 text-on-primary" />
+              <div className="w-20 h-20 bg-primary/20 border border-primary/30 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(14,165,233,0.3)] animate-bounce duration-1000">
+                <Trophy className="w-10 h-10 text-primary" />
               </div>
             )}
           </div>
 
           {/* Title */}
-          <h2 className="text-4xl font-bold text-center mb-2">
+          <h2 className="text-4xl font-bold font-heading text-main text-center mb-2">
             {isStalemate
               ? "Hòa cờ!"
               : gameResult.type === "checkmate"
@@ -189,10 +189,10 @@ export const GameResultDialog: React.FC<GameResultDialogProps> = React.memo(
 
           {/* Winner info */}
           {!isStalemate ? (
-            <p className="text-center text-xl mb-4">
+            <p className="text-center text-xl mb-6 text-muted">
               <span
                 className={`font-bold ${
-                  gameResult.winner === "red" ? "text-red-600" : "text-gray-800"
+                  gameResult.winner === "red" ? "text-danger" : "text-main"
                 }`}
               >
                 {gameResult.winner === "red" ? "Quân Đỏ" : "Quân Đen"}
@@ -202,9 +202,9 @@ export const GameResultDialog: React.FC<GameResultDialogProps> = React.memo(
           ) : null}
 
           {/* Details */}
-          <div className="bg-surface rounded-xl p-4 mb-6 space-y-2 text-muted border border-surface">
+          <div className="bg-surface-opaque rounded-xl p-5 mb-8 space-y-2 text-muted border border-border">
             <p>
-              <strong>Kết quả:</strong>{" "}
+              <strong className="text-main">Kết quả:</strong>{" "}
               {gameResult.type === "checkmate" ? "Chiếu hết (Checkmate)" : null}
               {gameResult.type === "captured"
                 ? "Ăn Tướng (đối phương mất Tướng)"
@@ -214,7 +214,7 @@ export const GameResultDialog: React.FC<GameResultDialogProps> = React.memo(
                 : null}
             </p>
             <p>
-              <strong>Tổng số nước đi:</strong> {moveHistoryLength}
+              <strong className="text-main">Tổng số nước đi:</strong> {moveHistoryLength}
             </p>
           </div>
 
@@ -228,8 +228,7 @@ export const GameResultDialog: React.FC<GameResultDialogProps> = React.memo(
             </button>
             <button
               onClick={onExit}
-              className="p-4 bg-gray-600 hover:bg-gray-700 text-white rounded-xl font-bold text-lg
-                       shadow-lg hover:shadow-xl transition-all hover:scale-[1.03] cursor-pointer"
+              className="p-4 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl font-bold text-lg transition-all cursor-pointer"
             >
               Về Menu
             </button>

@@ -1,6 +1,4 @@
-import React from "react";
 import { Copy, ExternalLink } from "lucide-react";
-import { GuestStorage } from "../utils/GuestStorage";
 
 interface Props {
   roomId: string;
@@ -27,11 +25,11 @@ export default function MatchFoundDialog({ roomId, matchUrl, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className="bg-surface rounded-lg p-6 z-60 w-[420px] shadow-xl border border-surface">
-        <h3 className="text-xl font-bold mb-2 text-on-primary">Match Found</h3>
-        <p className="text-sm text-muted mb-4">
+    <div className="fixed inset-0 flex items-center justify-center z-50 animate-fade-in p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+      <div className="glass-panel rounded-2xl p-6 z-[60] w-full max-w-md shadow-2xl border-border transform transition-all">
+        <h3 className="text-2xl font-bold font-heading mb-2 text-main">Match Found</h3>
+        <p className="text-sm text-muted mb-6">
           Your opponent has been found. Share or open the match link:
         </p>
 
@@ -40,26 +38,28 @@ export default function MatchFoundDialog({ roomId, matchUrl, onClose }: Props) {
             type="text"
             readOnly
             value={fullUrl}
-            className="flex-1 px-3 py-2 border border-surface rounded bg-surface-opaque text-muted"
+            className="flex-1 px-4 py-2 border border-border rounded-xl bg-surface-opaque text-main outline-none focus:border-primary transition-colors"
           />
           <button
             onClick={handleCopy}
-            className="px-3 py-2 btn-primary rounded"
+            className="px-4 py-2 btn-primary rounded-xl"
+            title="Copy link"
           >
-            <Copy className="w-4 h-4" />
+            <Copy className="w-5 h-5" />
           </button>
           <button
             onClick={handleOpen}
-            className="px-3 py-2 bg-green-600 text-white rounded"
+            className="px-4 py-2 bg-success hover:bg-success/80 text-success-foreground rounded-xl transition-colors shadow-lg shadow-success/20"
+            title="Open match"
           >
-            <ExternalLink className="w-4 h-4" />
+            <ExternalLink className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-3 mt-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 border rounded border-surface text-muted"
+            className="px-6 py-2 border rounded-xl border-border bg-surface-opaque hover:bg-surface-hover text-main transition-colors font-semibold"
           >
             Close
           </button>

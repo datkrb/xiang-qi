@@ -33,17 +33,17 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-linear-to-br from-blue-900 via-blue-800 to-cyan-800">
+    <div className="flex flex-col animate-fade-in w-full">
       {/* Header */}
-      <header className="px-8 py-4 flex items-center justify-between border-b border-blue-700/50 relative">
+      <header className="px-8 py-6 flex items-center justify-between border-b border-border bg-surface/30 backdrop-blur-md relative">
         {/* Left: Logo & Title */}
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center border-4 border-blue-900 shrink-0">
-            <span className="text-2xl font-bold">將</span>
+          <div className="w-14 h-14 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30 shrink-0">
+            <span className="text-2xl font-bold font-heading text-primary">將</span>
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-blue-50">象棋 Xiangqi</h1>
-            <p className="text-sm text-blue-200/70">Chinese Chess Master</p>
+            <h1 className="text-3xl font-bold font-heading text-main">象棋 Xiangqi</h1>
+            <p className="text-sm text-muted">Chinese Chess Master</p>
           </div>
         </div>
 
@@ -51,47 +51,47 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
         <div className="relative">
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="flex items-center gap-3 px-4 py-2 bg-blue-700 hover:bg-blue-600 text-blue-50 rounded-lg transition-colors"
+            className="flex items-center gap-3 px-4 py-2 glass-panel-interactive rounded-xl"
           >
             <div className="text-right">
-              <p className="text-sm font-semibold">Cao Thủ 2026</p>
-              <p className="text-xs text-blue-200/70">Elo 1820 · Rank #128</p>
+              <p className="text-sm font-semibold text-main">Cao Thủ 2026</p>
+              <p className="text-xs text-muted">Elo 1820 · Rank #128</p>
             </div>
-            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center border-2 border-blue-900 shrink-0">
-              <User className="w-5 h-5 text-blue-900" />
+            <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30 shrink-0">
+              <User className="w-5 h-5 text-primary" />
             </div>
-            <ChevronDown className="w-4 h-4 text-blue-200" />
+            <ChevronDown className="w-4 h-4 text-muted" />
           </button>
 
           {/* Dropdown Menu */}
           {showMenu && (
-            <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-blue-200 overflow-hidden z-50">
+            <div className="absolute right-0 mt-2 w-56 bg-surface-opaque rounded-xl shadow-2xl border border-border overflow-hidden z-50 animate-fade-in">
               <button
                 onClick={() => handleNavigate("profile")}
-                className="w-full text-left px-4 py-3 flex items-center gap-3 text-blue-900 hover:bg-blue-50 transition-colors border-b border-blue-100"
+                className="w-full text-left px-4 py-3 flex items-center gap-3 text-main hover:bg-surface-hover transition-colors border-b border-border"
               >
-                <User className="w-5 h-5 text-blue-700" />
+                <User className="w-5 h-5 text-primary" />
                 <span className="font-semibold">My Profile</span>
               </button>
               <button
                 onClick={() => handleNavigate("friends")}
-                className="w-full text-left px-4 py-3 flex items-center gap-3 text-blue-900 hover:bg-blue-50 transition-colors border-b border-blue-100"
+                className="w-full text-left px-4 py-3 flex items-center gap-3 text-main hover:bg-surface-hover transition-colors border-b border-border"
               >
-                <Users className="w-5 h-5 text-blue-700" />
+                <Users className="w-5 h-5 text-primary" />
                 <span className="font-semibold">Friends</span>
               </button>
               <button
                 onClick={() => handleNavigate("settings")}
-                className="w-full text-left px-4 py-3 flex items-center gap-3 text-blue-900 hover:bg-blue-50 transition-colors border-b border-blue-100"
+                className="w-full text-left px-4 py-3 flex items-center gap-3 text-main hover:bg-surface-hover transition-colors border-b border-border"
               >
-                <Settings className="w-5 h-5 text-blue-700" />
+                <Settings className="w-5 h-5 text-primary" />
                 <span className="font-semibold">Settings</span>
               </button>
               <button
                 onClick={() => handleNavigate("login")}
-                className="w-full text-left px-4 py-3 flex items-center gap-3 text-red-900 hover:bg-red-50 transition-colors"
+                className="w-full text-left px-4 py-3 flex items-center gap-3 text-danger hover:bg-surface-hover transition-colors"
               >
-                <LogOut className="w-5 h-5 text-red-700" />
+                <LogOut className="w-5 h-5" />
                 <span className="font-semibold">Logout</span>
               </button>
             </div>
@@ -104,7 +104,7 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
         <div className="w-full max-w-2xl space-y-4">
           {/* Game Menu */}
           <div>
-            <h2 className="text-lg font-bold text-blue-200 mb-3 uppercase tracking-wide">
+            <h2 className="text-lg font-bold font-heading text-primary mb-4 uppercase tracking-wide">
               Game Menu
             </h2>
             <div className="space-y-2">
@@ -114,12 +114,12 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
                   <button
                     key={item.id}
                     onClick={() => onNavigate(item.id)}
-                    className="w-full bg-linear-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500
-                             text-white p-4 rounded-lg flex items-center gap-4 transition-all transform hover:scale-105
-                             shadow-lg hover:shadow-xl border border-blue-500/30"
+                    className="w-full glass-panel-interactive p-4 rounded-xl flex items-center gap-4 group"
                   >
-                    <Icon className="w-6 h-6" />
-                    <span className="text-lg font-semibold">{item.label}</span>
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="text-lg font-semibold text-main group-hover:text-primary transition-colors">{item.label}</span>
                   </button>
                 );
               })}
@@ -129,10 +129,10 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
       </main>
 
       {/* Footer */}
-      <footer className="p-6 text-center border-t border-blue-700/50">
-        <p className="text-blue-200/50 text-sm">Version 1.0.0</p>
-        <p className="text-blue-200/40 text-xs mt-1">
-          © 2026 Xiangqi Game. All rights reserved.
+      <footer className="p-6 text-center border-t border-border mt-auto opacity-70">
+        <p className="text-muted text-sm font-medium">Version 1.0.0</p>
+        <p className="text-muted text-xs mt-1">
+          © 2026 Xiangqi Arena. All rights reserved.
         </p>
       </footer>
     </div>

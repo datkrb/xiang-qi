@@ -49,11 +49,11 @@ export function GameBoard() {
             <button
               className={`
                 w-10 h-10 rounded-full flex items-center justify-center text-[22px] font-bold
-                leading-none select-none border-2 transition-all hover:scale-110
+                leading-none select-none border transition-all hover:scale-110
                 ${
                   piece.color === "red"
-                    ? "bg-red-100 border-red-600 text-red-700"
-                    : "bg-gray-100 border-gray-800 text-gray-900"
+                    ? "bg-danger/20 border-danger/40 text-danger shadow-[0_0_10px_rgba(239,68,68,0.2)]"
+                    : "bg-surface-opaque border-border text-main shadow-md"
                 }
               `}
               style={{
@@ -73,8 +73,8 @@ export function GameBoard() {
   }, [gameState.board, selectedSquare, handleSquareClick]);
 
   return (
-    <div className="bg-surface-opaque rounded-xl p-4 shadow-2xl border-4 border-surface">
-      <div className="relative bg-surface rounded-lg p-4">
+    <div className="glass-panel p-4 shadow-2xl border-border">
+      <div className="relative bg-surface/50 border border-border rounded-lg p-4">
         <div className="relative aspect-[9/10]">
           <svg
             className="absolute inset-0 h-full w-full"

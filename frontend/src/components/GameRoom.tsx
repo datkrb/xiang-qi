@@ -32,47 +32,49 @@ export function GameRoom({ userData }: GameRoomProps) {
   };
 
   return (
-    <div className="space-y-4 p-4 border rounded">
+    <div className="glass-panel p-6 border-border space-y-8 animate-fade-in">
       <div>
-        <h3 className="text-lg font-bold mb-2">Create Room</h3>
-        <div className="flex gap-2">
+        <h3 className="text-xl font-bold font-heading text-main mb-4">Create Room</h3>
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={() => handleCreateRoom(true)}
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            className="px-5 py-2.5 bg-danger/10 hover:bg-danger text-danger hover:text-white border border-danger/30 hover:border-danger rounded-xl transition-colors font-semibold"
           >
             Create as Red
           </button>
           <button
             onClick={() => handleCreateRoom(false)}
-            className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+            className="px-5 py-2.5 bg-surface-opaque hover:bg-surface-hover text-main border border-border rounded-xl transition-colors font-semibold shadow-sm"
           >
             Create as Black
           </button>
           <button
             onClick={() => handleCreateRoom("random")}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="px-5 py-2.5 btn-primary rounded-xl font-semibold shadow-lg shadow-primary/20"
           >
             Create Random
           </button>
         </div>
         {roomId && (
-          <p className="mt-2 text-green-600">✓ Room created: {roomId}</p>
+          <p className="mt-4 text-success font-medium flex items-center gap-2 bg-success/10 p-3 rounded-xl border border-success/20">
+            ✓ Room created: <strong className="text-success-foreground">{roomId}</strong>
+          </p>
         )}
       </div>
 
-      <div className="border-t pt-4">
-        <h3 className="text-lg font-bold mb-2">Join Room</h3>
-        <div className="flex gap-2">
+      <div className="border-t border-border pt-6">
+        <h3 className="text-xl font-bold font-heading text-main mb-4">Join Room</h3>
+        <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
             value={joinRoomId}
             onChange={(e) => setJoinRoomId(e.target.value)}
             placeholder="Enter room ID"
-            className="flex-1 px-3 py-2 border rounded"
+            className="flex-1 px-4 py-3 bg-surface-opaque border border-border rounded-xl text-main placeholder:text-muted focus:border-primary outline-none transition-colors"
           />
           <button
             onClick={handleJoinRoom}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="px-8 py-3 btn-primary rounded-xl font-bold whitespace-nowrap"
           >
             Join
           </button>

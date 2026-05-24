@@ -11,9 +11,10 @@
 
 1. [Authentication API](#authentication-api)
 2. [Users API](#users-api)
-3. [Socket Events](#socket-events)
-4. [Data Models](#data-models)
-5. [Response Format](#response-format)
+3. [Profile API](#profile-api)
+4. [Socket Events](#socket-events)
+5. [Data Models](#data-models)
+6. [Response Format](#response-format)
 
 ---
 
@@ -101,6 +102,47 @@
 ### Prerequisites
 
 All user endpoints require appropriate authorization (Admin for some operations). See each endpoint for details.
+
+---
+
+## Profile API
+
+### Public Profile
+
+- **Endpoint:** `GET /users/:id/profile`
+- **Authentication:** Not required
+- **Description:** Fetch a user's public profile by user id
+- **Response (200 OK):**
+  ```json
+  {
+    "code": 200,
+    "message": "Profile retrieved successfully",
+    "data": {
+      "id": "profile-uuid",
+      "userId": "user-uuid",
+      "username": "user_12345678",
+      "elo": 1200,
+      "avatar": null
+    }
+  }
+  ```
+
+### My Profile
+
+- **Endpoint:** `GET /me/profile`
+- **Authentication:** Required
+- **Description:** Fetch the authenticated user's profile
+
+- **Endpoint:** `PATCH /me/profile`
+- **Authentication:** Required
+- **Description:** Update the authenticated user's profile
+- **Request Body:**
+  ```json
+  {
+    "username": "new_username",
+    "avatar": "https://example.com/avatar.png"
+  }
+  ```
 
 ---
 

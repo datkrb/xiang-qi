@@ -1,5 +1,6 @@
 import authRouter from "./modules/auth/auth.routes";
 import usersRouter from "./modules/users/user.routes";
+import profilesRouter from "./modules/profiles/profiles.routes";
 import { Router } from "express";
 import { activeRooms } from "./socket/gameState";
 import { Request, Response } from "express";
@@ -9,6 +10,7 @@ const router = Router();
 
 router.use("/auth", authRouter);
 router.use("/users", usersRouter);
+router.use("/", profilesRouter);
 
 // GET /match/:roomId - return in-memory room snapshot (useful for shareable links)
 router.get("/match/:roomId", (req: Request, res: Response) => {

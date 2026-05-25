@@ -1,0 +1,62 @@
+{
+  "common": {
+    "back": "返回",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "logout": "登出",
+    "close": "关闭",
+    "confirm": "确认",
+    "error": "错误",
+    "success": "成功"
+  },
+  "settings": {
+    "title": "设置",
+    "audio": {
+      "title": "音频",
+      "soundEnabled": "音效",
+      "sfxVolume": "音效音量",
+      "musicEnabled": "背景音乐",
+      "musicVolume": "音乐音量"
+    },
+    "display": {
+      "title": "显示",
+      "theme": "应用主题",
+      "themeDescription": "选择您喜欢的界面主题",
+      "showCoordinates": "显示棋盘坐标",
+      "highlightMoves": "突出显示有效移动"
+    },
+    "language": {
+      "title": "语言",
+      "label": "语言"
+    },
+    "notifications": {
+      "title": "通知",
+      "enabled": "启用通知",
+      "gameInvitations": "游戏邀请通知",
+      "messages": "消息通知"
+    },
+    "account": {
+      "title": "账户",
+      "changePassword": "更改密码",
+      "manageData": "管理数据",
+      "exportData": "导出数据"
+    },
+    "muted": "已关闭声音"
+  },
+  "auth": {
+    "login": "登录",
+    "register": "注册",
+    "forgotPassword": "忘记密码?",
+    "currentPassword": "当前密码",
+    "newPassword": "新密码",
+    "confirmPassword": "确认密码"
+  },
+  "game": {
+    "home": "首页",
+    "play": "玩游戏",
+    "friends": "朋友",
+    "leaderboard": "排行榜",
+    "profile": "个人资料"
+  }
+}

@@ -1,18 +1,18 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Russo+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Russo+One&display=swap");
 
 :root {
   /* Deep dark slate/indigo theme with cyan/blue accents */
   --color-background: #0f172a; /* slate-950 */
-  
+
   --color-surface: rgba(30, 41, 59, 0.7); /* slate-800 with opacity for glass */
   --color-surface-opaque: #1e293b; /* slate-800 solid */
   --color-surface-hover: rgba(51, 65, 85, 0.8); /* slate-700 with opacity */
-  
+
   --color-primary: #0ea5e9; /* sky-500 */
   --color-primary-hover: #0284c7; /* sky-600 */
   --color-primary-foreground: #ffffff;
-  
+
   --color-accent: #06b6d4; /* cyan-500 */
   --color-accent-hover: #0891b2; /* cyan-600 */
 
@@ -27,25 +27,104 @@
 
 /* Theme variants (for future runtime switching) */
 .theme-blue {
-  /* Keep default */
+  /* Keep default from :root */
+  --bg-image: url("/bg-blue.png");
+}
+
+/* Task 2.1: Dark theme variant */
+.theme-dark {
+  /* Very dark backgrounds with muted accents for low-light environments */
+  --color-background: #0a0e27; /* near-black */
+
+  --color-surface: rgba(15, 23, 42, 0.8); /* slate-900 with opacity */
+  --color-surface-opaque: #0f172a; /* slate-950 solid */
+  --color-surface-hover: rgba(30, 41, 59, 0.9); /* slate-800 with opacity */
+
+  --color-primary: #38bdf8; /* sky-400 - softer blue */
+  --color-primary-hover: #0ea5e9; /* sky-500 */
+  --color-primary-foreground: #ffffff;
+
+  --color-accent: #22d3ee; /* cyan-400 - softer cyan */
+  --color-accent-hover: #06b6d4; /* cyan-500 */
+
+  --color-border: rgba(255, 255, 255, 0.08);
+
+  --color-text-main: #f1f5f9; /* slate-100 */
+  --color-text-muted: #cbd5e1; /* slate-300 */
+
+  --color-success: #10b981;
+  --color-danger: #f43f5e;
+
+  --bg-image: url("/bg-dark.png");
+}
+
+/* Task 2.2: Light theme variant */
+.theme-light {
+  /* Light backgrounds with warm accents for bright environments */
+  --color-background: #f8fafc; /* slate-50 */
+
+  --color-surface: rgba(241, 245, 249, 0.9); /* slate-100 with slight opacity */
+  --color-surface-opaque: #f1f5f9; /* slate-100 solid */
+  --color-surface-hover: rgba(226, 232, 240, 0.95); /* slate-200 with opacity */
+
+  --color-primary: #2563eb; /* blue-600 - deeper blue */
+  --color-primary-hover: #1d4ed8; /* blue-700 */
+  --color-primary-foreground: #ffffff;
+
+  --color-accent: #7c3aed; /* violet-600 - warm accent */
+  --color-accent-hover: #6d28d9; /* violet-700 */
+
+  --color-border: rgba(0, 0, 0, 0.1);
+
+  --color-text-main: #1e293b; /* slate-800 */
+  --color-text-muted: #64748b; /* slate-500 */
+
+  --color-success: #059669;
+  --color-danger: #dc2626;
+
+  --bg-image: url("/bg-light.png");
 }
 
 /* Base resets and typography */
 body {
   background-color: var(--color-background);
-  background-image: url('/bg-blue.png');
+  background-image: var(--bg-image);
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   color: var(--color-text-main);
-  font-family: 'Chakra Petch', sans-serif;
+  font-family: "Chakra Petch", sans-serif;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Task 3.1: Add CSS transitions for smooth theme switching (0.3s duration) */
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-image 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-h1, h2, h3, h4, h5, h6, .font-heading {
-  font-family: 'Russo One', sans-serif;
+/* Task 3.2: Respect prefers-reduced-motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+  font-family: "Russo One", sans-serif;
   letter-spacing: 0.05em;
 }
 
@@ -55,7 +134,14 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--color-border);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  /* Task 3.1: Add transitions for theme-aware properties */
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-panel-interactive {
@@ -70,22 +156,31 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   background: var(--color-surface-hover);
   border-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 /* Modern Gradient Buttons */
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-accent)
+  );
   color: var(--color-primary-foreground);
   font-weight: 600;
   border: none;
+  /* Task 3.1: Add transitions for smooth color changes */
   transition: all 0.2s ease-in-out;
-  text-shadow: 0 0 8px rgba(255,255,255,0.4);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
 }
 
 .btn-primary:hover {
   filter: brightness(1.1);
-  box-shadow: 0 0 20px rgba(14, 165, 233, 0.6), 0 0 40px rgba(6, 182, 212, 0.4);
+  box-shadow:
+    0 0 20px rgba(14, 165, 233, 0.6),
+    0 0 40px rgba(6, 182, 212, 0.4);
   transform: translateY(-2px);
 }
 
@@ -106,7 +201,9 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 /* Ensure background color is fully painted */
-html, body, #root {
+html,
+body,
+#root {
   min-height: 100vh;
 }
 

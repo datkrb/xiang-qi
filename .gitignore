@@ -6,7 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
-
+.github/
+openspec/
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -144,3 +145,12 @@ bruno/
 # Postman API requests
 backend/postman/
 .agent/
+
+# OpenSpec skills and temporary files
+.github/skills/node_modules/
+.github/skills/.env
+.github/skills/.env.local
+.github/skills/dist/
+.github/skills/build/
+.github/skills/.DS_Store
+.github/skills/*.log

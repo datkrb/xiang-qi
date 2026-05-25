@@ -1,0 +1,62 @@
+{
+  "common": {
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "logout": "Logout",
+    "close": "Close",
+    "confirm": "Confirm",
+    "error": "Error",
+    "success": "Success"
+  },
+  "settings": {
+    "title": "Settings",
+    "audio": {
+      "title": "Audio",
+      "soundEnabled": "Sound Effects",
+      "sfxVolume": "SFX Volume",
+      "musicEnabled": "Background Music",
+      "musicVolume": "Music Volume"
+    },
+    "display": {
+      "title": "Display",
+      "theme": "Application Theme",
+      "themeDescription": "Choose your preferred interface theme",
+      "showCoordinates": "Show Board Coordinates",
+      "highlightMoves": "Highlight Valid Moves"
+    },
+    "language": {
+      "title": "Language",
+      "label": "Language"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "enabled": "Enable Notifications",
+      "gameInvitations": "Game Invitation Notifications",
+      "messages": "Message Notifications"
+    },
+    "account": {
+      "title": "Account",
+      "changePassword": "Change Password",
+      "manageData": "Manage Data",
+      "exportData": "Export Data"
+    },
+    "muted": "Sound muted"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "forgotPassword": "Forgot Password?",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password"
+  },
+  "game": {
+    "home": "Home",
+    "play": "Play",
+    "friends": "Friends",
+    "leaderboard": "Leaderboard",
+    "profile": "Profile"
+  }
+}

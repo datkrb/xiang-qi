@@ -1,0 +1,62 @@
+{
+  "common": {
+    "back": "Quay lại",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "logout": "Đăng xuất",
+    "close": "Đóng",
+    "confirm": "Xác nhận",
+    "error": "Lỗi",
+    "success": "Thành công"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "audio": {
+      "title": "Âm thanh",
+      "soundEnabled": "Hiệu ứng âm thanh",
+      "sfxVolume": "Âm lượng SFX",
+      "musicEnabled": "Nhạc nền",
+      "musicVolume": "Âm lượng nhạc"
+    },
+    "display": {
+      "title": "Hiển thị",
+      "theme": "Chủ đề ứng dụng",
+      "themeDescription": "Chọn giao diện ưa thích của bạn",
+      "showCoordinates": "Hiện toạ độ bàn cờ",
+      "highlightMoves": "Tô sáng nước đi hợp lệ"
+    },
+    "language": {
+      "title": "Ngôn ngữ",
+      "label": "Ngôn ngữ"
+    },
+    "notifications": {
+      "title": "Thông báo",
+      "enabled": "Bật thông báo",
+      "gameInvitations": "Thông báo lời mời chơi",
+      "messages": "Thông báo tin nhắn"
+    },
+    "account": {
+      "title": "Tài khoản",
+      "changePassword": "Đổi mật khẩu",
+      "manageData": "Quản lý dữ liệu",
+      "exportData": "Xuất dữ liệu"
+    },
+    "muted": "Đã tắt âm thanh"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "forgotPassword": "Quên mật khẩu?",
+    "currentPassword": "Mật khẩu hiện tại",
+    "newPassword": "Mật khẩu mới",
+    "confirmPassword": "Xác nhận mật khẩu"
+  },
+  "game": {
+    "home": "Trang chủ",
+    "play": "Chơi",
+    "friends": "Bạn bè",
+    "leaderboard": "Bảng xếp hạng",
+    "profile": "Hồ sơ"
+  }
+}

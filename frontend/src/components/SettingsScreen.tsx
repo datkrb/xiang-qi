@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Volume2,
   VolumeX,
@@ -8,6 +7,8 @@ import {
   Shield,
   LogOut,
 } from "lucide-react";
+import { ThemeSwitcher } from "./ThemeSwitcher";
+import { useSettings } from "../hooks/useSettings";
 
 interface SettingsScreenProps {
   onBack?: () => void;
@@ -18,15 +19,7 @@ export default function SettingsScreen({
   onBack,
   onLogout,
 }: SettingsScreenProps) {
-  const [sound, setSound] = useState(true);
-  const [music, setMusic] = useState(true);
-  const [musicVol, setMusicVol] = useState(60);
-  const [sfxVol, setSfxVol] = useState(80);
-  const [notif, setNotif] = useState(true);
-  const [theme, setTheme] = useState<"classic" | "dark" | "wood">("classic");
-  const [lang, setLang] = useState<"vi" | "en" | "zh">("vi");
-  const [showCoords, setShowCoords] = useState(true);
-  const [highlightMoves, setHighlightMoves] = useState(true);
+  const { settings, updateSettings } = useSettings();
 
   return (
     <div className="w-full p-4 animate-fade-in">
@@ -43,48 +36,88 @@ export default function SettingsScreen({
         <h1 className="text-3xl font-bold font-heading text-main">Cài đặt</h1>
 
         <Section title="Âm thanh" icon={<Volume2 className="w-5 h-5" />}>
-          <Toggle label="Hiệu ứng âm thanh" value={sound} onChange={setSound} />
-          {sound && (
-            <Slider label="Âm lượng SFX" value={sfxVol} onChange={setSfxVol} />
+          <Toggle
+            label="Hiệu ứng âm thanh"
+            value={settings.audio.soundEnabled}
+            onChange={(value) =>
+              updateSettings({
+                audio: { ...settings.audio, soundEnabled: value },
+              })
+            }
+          />
+          {settings.audio.soundEnabled && (
+            <Slider
+              label="Âm lượng SFX"
+              value={settings.audio.sfxVolume}
+              onChange={(value) =>
+                updateSettings({
+                  audio: { ...settings.audio, sfxVolume: value },
+                })
+              }
+            />
           )}
-          <Toggle label="Nhạc nền" value={music} onChange={setMusic} />
-          {music && (
+          <Toggle
+            label="Nhạc nền"
+            value={settings.audio.musicEnabled}
+            onChange={(value) =>
+              updateSettings({
+                audio: { ...settings.audio, musicEnabled: value },
+              })
+            }
+          />
+          {settings.audio.musicEnabled && (
             <Slider
               label="Âm lượng nhạc"
-              value={musicVol}
-              onChange={setMusicVol}
+              value={settings.audio.musicVolume}
+              onChange={(value) =>
+                updateSettings({
+                  audio: { ...settings.audio, musicVolume: value },
+                })
+              }
             />
           )}
         </Section>
 
         <Section title="Hiển thị" icon={<Palette className="w-5 h-5" />}>
-          <Select
-            label="Giao diện bàn cờ"
-            value={theme}
-            onChange={(v) => setTheme(v as typeof theme)}
-            options={[
-              { value: "classic", label: "Cổ điển (xanh/lam)" },
-              { value: "dark", label: "Tối" },
-              { value: "wood", label: "Gỗ" },
-            ]}
-          />
-          <Toggle
-            label="Hiện toạ độ bàn cờ"
-            value={showCoords}
-            onChange={setShowCoords}
-          />
-          <Toggle
-            label="Tô sáng nước đi hợp lệ"
-            value={highlightMoves}
-            onChange={setHighlightMoves}
-          />
+          {/* Task 5.2: Add "Theme" section with ThemeSwitcher */}
+          <div className="space-y-4">
+            <div>
+              <h4 className="text-sm font-semibold text-main mb-2">
+                Chủ đề ứng dụng
+              </h4>
+              <p className="text-xs text-muted mb-3">
+                Chọn giao diện ưa thích của bạn
+              </p>
+              <ThemeSwitcher />
+            </div>
+            <div className="border-t border-border pt-4">
+              <Toggle
+                label="Hiện toạ độ bàn cờ"
+                value={settings.display.showCoordinates}
+                onChange={(value) =>
+                  updateSettings({
+                    display: { ...settings.display, showCoordinates: value },
+                  })
+                }
+              />
+              <Toggle
+                label="Tô sáng nước đi hợp lệ"
+                value={settings.display.highlightMoves}
+                onChange={(value) =>
+                  updateSettings({
+                    display: { ...settings.display, highlightMoves: value },
+                  })
+                }
+              />
+            </div>
+          </div>
         </Section>
 
         <Section title="Ngôn ngữ" icon={<Globe className="w-5 h-5" />}>
           <Select
             label="Ngôn ngữ"
-            value={lang}
-            onChange={(v) => setLang(v as typeof lang)}
+            value={settings.language.language}
+            onChange={(v) => updateSettings({ language: { language: v } })}
             options={[
               { value: "vi", label: "Tiếng Việt" },
               { value: "en", label: "English" },
@@ -94,20 +127,45 @@ export default function SettingsScreen({
         </Section>
 
         <Section title="Thông báo" icon={<Bell className="w-5 h-5" />}>
-          <Toggle label="Bật thông báo" value={notif} onChange={setNotif} />
+          <Toggle
+            label="Bật thông báo"
+            value={settings.notifications.notificationsEnabled}
+            onChange={(value) =>
+              updateSettings({
+                notifications: {
+                  ...settings.notifications,
+                  notificationsEnabled: value,
+                },
+              })
+            }
+          />
           <Toggle
             label="Thông báo lời mời chơi"
-            value={notif}
-            onChange={setNotif}
+            value={settings.notifications.gameInvitations}
+            onChange={(value) =>
+              updateSettings({
+                notifications: {
+                  ...settings.notifications,
+                  gameInvitations: value,
+                },
+              })
+            }
           />
           <Toggle
             label="Thông báo tin nhắn"
-            value={notif}
-            onChange={setNotif}
+            value={settings.notifications.messages}
+            onChange={(value) =>
+              updateSettings({
+                notifications: { ...settings.notifications, messages: value },
+              })
+            }
           />
         </Section>
 
-        <Section title="Tài khoản" icon={<Shield className="w-5 h-5 text-primary" />}>
+        <Section
+          title="Tài khoản"
+          icon={<Shield className="w-5 h-5 text-primary" />}
+        >
           <button className="w-full text-left px-4 py-3 bg-surface-opaque hover:bg-surface-hover transition-colors rounded-xl font-semibold text-main border border-transparent hover:border-border">
             Đổi mật khẩu
           </button>
@@ -125,7 +183,7 @@ export default function SettingsScreen({
         <p className="text-center text-xs text-muted">Cờ Tướng v1.0.0</p>
       </div>
 
-      {!sound && (
+      {!settings.audio.soundEnabled && (
         <div className="fixed bottom-4 left-4 glass-panel text-muted px-4 py-2 rounded-full text-xs flex items-center gap-2 shadow-lg">
           <VolumeX className="w-4 h-4 text-danger" /> Đã tắt âm thanh
         </div>

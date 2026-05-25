@@ -21,7 +21,16 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "skills:find": "npx skills find",
+    "skills:add:web-design": "npx skills add vercel/web-design-guidelines",
+    "skills:add:building-components": "npx skills add vercel/building-components",
+    "skills:add:react-best-practices": "npx skills add vercel/vercel-react-best-practices",
+    "skills:install-all": "npm run skills:add:web-design && npm run skills:add:building-components && npm run skills:add:react-best-practices",
+    "skills:run:web-design": "npx skills run vercel/web-design-guidelines --path src --output reports/report-web-design.json",
+    "skills:run:building-components": "npx skills run vercel/building-components --path src --output reports/report-building-components.json",
+    "skills:run:react-best-practices": "npx skills run vercel/vercel-react-best-practices --path src --output reports/report-react-best-practices.json",
+    "skills:run-all": "npm run skills:run:web-design && npm run skills:run:building-components && npm run skills:run:react-best-practices"
   },
   "peerDependencies": {
     "react": "^18.2.0",

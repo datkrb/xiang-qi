@@ -14,6 +14,17 @@ export interface CardProps extends React.ComponentPropsWithoutRef<"div"> {
   footer?: React.ReactNode;
 }
 
+interface CardComponentType extends React.ForwardRefExoticComponent<
+  CardProps & React.RefAttributes<HTMLDivElement>
+> {
+  Header: React.ForwardRefExoticComponent<
+    React.ComponentPropsWithoutRef<"div"> & React.RefAttributes<HTMLDivElement>
+  >;
+  Footer: React.ForwardRefExoticComponent<
+    React.ComponentPropsWithoutRef<"div"> & React.RefAttributes<HTMLDivElement>
+  >;
+}
+
 const variantClasses = {
   elevated: "shadow-md",
   outlined: "border",
@@ -47,7 +58,7 @@ const variantStyles = {
  *   <Card.Footer>Footer content</Card.Footer>
  * </Card>
  */
-export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (
     {
       variant = "elevated",
@@ -96,4 +107,47 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   },
 );
 
+/**
+ * Header sub-component for Card
+ */
+const CardHeader = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<"div">
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={`border-b pb-3 mb-3 ${className || ""}`}
+    style={{ borderColor: "var(--color-border)" }}
+    {...props}
+  />
+));
+
+CardHeader.displayName = "Card.Header";
+
+/**
+ * Footer sub-component for Card
+ */
+const CardFooter = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<"div">
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={`border-t pt-3 mt-3 ${className || ""}`}
+    style={{ borderColor: "var(--color-border)" }}
+    {...props}
+  />
+));
+
+CardFooter.displayName = "Card.Footer";
+
+// Assign sub-components to main component
 Card.displayName = "Card";
+(Card as any).Header = CardHeader;
+(Card as any).Footer = CardFooter;
+
+// Export Card with proper typing that includes Header and Footer sub-components
+const CardWithSubcomponents = Card as unknown as CardComponentType;
+
+export { CardWithSubcomponents as Card };
+export type { CardComponentType as CardComponent };

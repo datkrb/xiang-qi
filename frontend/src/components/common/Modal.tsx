@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { X } from "lucide-react";
-import { Button } from "../ui";
 
 export type ModalSize = "sm" | "md" | "lg";
 
@@ -57,11 +56,10 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({ title, onClose }) => (
     {onClose && (
       <button
         onClick={onClose}
-        className="p-1 rounded-md transition-colors focus:outline-none focus:ring-2"
+        className="p-1 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
         style={{
           color: "var(--color-text-main)",
           backgroundColor: "var(--color-surface-hover)",
-          focusRingColor: "var(--color-primary)",
         }}
         aria-label="Close modal"
       >

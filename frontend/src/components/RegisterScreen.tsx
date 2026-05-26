@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Mail, Lock, UserPlus } from "lucide-react";
+import { Toggle } from "./ui";
 
 interface RegisterScreenProps {
   onBack?: () => void;
@@ -40,16 +41,11 @@ export default function RegisterScreen({
             將
           </div>
           <h1 className="text-2xl font-bold font-heading text-main">Đăng Ký</h1>
-          <p className="text-sm text-muted">
-            Tham gia cộng đồng cờ tướng
-          </p>
+          <p className="text-sm text-muted">Tham gia cộng đồng cờ tướng</p>
         </div>
 
         <div className="space-y-4">
-          <Field
-            icon={<Mail className="w-4 h-4 text-primary" />}
-            label="Email"
-          >
+          <Field icon={<Mail className="w-4 h-4 text-primary" />} label="Email">
             <input
               type="email"
               value={email}
@@ -106,11 +102,11 @@ export default function RegisterScreen({
           )}
 
           <label className="flex items-start gap-2 text-sm text-main cursor-pointer">
-            <input
-              type="checkbox"
-              checked={agree}
-              onChange={(e) => setAgree(e.target.checked)}
-              className="mt-1 accent-primary"
+            <Toggle
+              isChecked={agree}
+              onChange={setAgree}
+              size="sm"
+              aria-label="Tôi đồng ý với điều khoản và chính sách bảo mật"
             />
             <span>
               Tôi đồng ý với{" "}

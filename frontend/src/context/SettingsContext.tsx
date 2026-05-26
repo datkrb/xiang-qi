@@ -5,14 +5,7 @@ import React, {
   ReactNode,
   useCallback,
 } from "react";
-import {
-  AppSettings,
-  SettingsUpdate,
-  AudioSettings,
-  DisplaySettings,
-  LanguageSettings,
-  NotificationSettings,
-} from "../types/settings";
+import { AppSettings, SettingsUpdate } from "../types/settings";
 
 const DEFAULT_SETTINGS: AppSettings = {
   audio: {
@@ -38,7 +31,7 @@ const DEFAULT_SETTINGS: AppSettings = {
 
 const STORAGE_KEY = "app-settings";
 
-interface SettingsContextType {
+export interface SettingsContextType {
   settings: AppSettings;
   updateSettings: (updates: SettingsUpdate) => void;
   resetSettings: () => void;
@@ -159,7 +152,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
  * Placeholder for backend sync logic.
  * Will be implemented in settingsService.ts with debouncing.
  */
-function syncSettingsToBackend(settings: AppSettings) {
+function syncSettingsToBackend(_settings: AppSettings) {
   // TODO: Implement in settingsService with debouncing
 }
 

@@ -1,14 +1,7 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Text,
-  Input,
-  Card,
-  Badge,
-  Form,
-  Modal,
-  Toggle,
-} from "../index";
+import { Button, Text, Input, Card, Badge, Toggle } from "../ui";
+import { Modal } from "../common/Modal";
+import { Form } from "../common/Form";
 
 type Theme = "blue" | "dark" | "light";
 
@@ -370,7 +363,7 @@ export const ComponentShowcasePage: React.FC = () => {
                   />
                   <Toggle
                     isChecked={!toggleOn}
-                    onChange={(v) => setToggleOn(!v)}
+                    onChange={(v: boolean) => setToggleOn(!v)}
                     label="Disable"
                   />
                 </div>
@@ -393,7 +386,11 @@ export const ComponentShowcasePage: React.FC = () => {
             <Card.Header>
               <Text variant="h2">Form Component</Text>
             </Card.Header>
-            <Form onSubmit={(e) => e.preventDefault()}>
+            <Form
+              onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
+                e.preventDefault()
+              }
+            >
               <Form.Field
                 label="Full Name"
                 error={formInput === "error" ? "Required field" : undefined}
@@ -402,7 +399,9 @@ export const ComponentShowcasePage: React.FC = () => {
                   type="text"
                   placeholder="John Doe"
                   value={formInput}
-                  onChange={(e) => setFormInput(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormInput(e.target.value)
+                  }
                 />
               </Form.Field>
 
@@ -411,11 +410,13 @@ export const ComponentShowcasePage: React.FC = () => {
               </Form.Field>
 
               <Form.Field label="Message">
-                <Input
-                  type="text"
+                <textarea
+                  className="w-full p-2 border rounded"
                   placeholder="Your message here..."
-                  multiline
-                  as="textarea"
+                  style={{
+                    borderColor: "var(--color-border)",
+                    backgroundColor: "var(--color-surface)",
+                  }}
                 />
               </Form.Field>
 

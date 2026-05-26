@@ -1,8 +1,4 @@
-import {
-  AppSettings,
-  SettingsUpdate,
-  SettingsResponse,
-} from "../types/settings";
+import { AppSettings, SettingsResponse } from "../types/settings";
 
 const STORAGE_KEY = "app-settings";
 const DEBOUNCE_DELAY = 1000; // 1 second

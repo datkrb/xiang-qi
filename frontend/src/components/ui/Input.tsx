@@ -3,7 +3,10 @@ import React from "react";
 export type InputSize = "sm" | "md" | "lg";
 export type ValidationState = "default" | "error" | "success" | "warning";
 
-export interface InputProps extends React.ComponentPropsWithoutRef<"input"> {
+export interface InputProps extends Omit<
+  React.ComponentPropsWithoutRef<"input">,
+  "size"
+> {
   /** Input size */
   size?: InputSize;
   /** Validation state */

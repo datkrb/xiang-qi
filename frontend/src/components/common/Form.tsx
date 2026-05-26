@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Button, type InputProps } from "../ui";
+import { Button } from "../ui";
 
 export interface FormProps extends React.ComponentPropsWithoutRef<"form"> {
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;

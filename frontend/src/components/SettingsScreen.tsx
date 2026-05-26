@@ -8,6 +8,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import { Toggle } from "./ui";
 import { useSettings } from "../hooks/useSettings";
 
 interface SettingsScreenProps {
@@ -36,9 +37,9 @@ export default function SettingsScreen({
         <h1 className="text-3xl font-bold font-heading text-main">Cài đặt</h1>
 
         <Section title="Âm thanh" icon={<Volume2 className="w-5 h-5" />}>
-          <Toggle
+          <SettingsToggle
             label="Hiệu ứng âm thanh"
-            value={settings.audio.soundEnabled}
+            checked={settings.audio.soundEnabled}
             onChange={(value) =>
               updateSettings({
                 audio: { ...settings.audio, soundEnabled: value },
@@ -56,9 +57,9 @@ export default function SettingsScreen({
               }
             />
           )}
-          <Toggle
+          <SettingsToggle
             label="Nhạc nền"
-            value={settings.audio.musicEnabled}
+            checked={settings.audio.musicEnabled}
             onChange={(value) =>
               updateSettings({
                 audio: { ...settings.audio, musicEnabled: value },
@@ -91,18 +92,18 @@ export default function SettingsScreen({
               <ThemeSwitcher />
             </div>
             <div className="border-t border-border pt-4">
-              <Toggle
+              <SettingsToggle
                 label="Hiện toạ độ bàn cờ"
-                value={settings.display.showCoordinates}
+                checked={settings.display.showCoordinates}
                 onChange={(value) =>
                   updateSettings({
                     display: { ...settings.display, showCoordinates: value },
                   })
                 }
               />
-              <Toggle
+              <SettingsToggle
                 label="Tô sáng nước đi hợp lệ"
-                value={settings.display.highlightMoves}
+                checked={settings.display.highlightMoves}
                 onChange={(value) =>
                   updateSettings({
                     display: { ...settings.display, highlightMoves: value },
@@ -127,9 +128,9 @@ export default function SettingsScreen({
         </Section>
 
         <Section title="Thông báo" icon={<Bell className="w-5 h-5" />}>
-          <Toggle
+          <SettingsToggle
             label="Bật thông báo"
-            value={settings.notifications.notificationsEnabled}
+            checked={settings.notifications.notificationsEnabled}
             onChange={(value) =>
               updateSettings({
                 notifications: {
@@ -139,9 +140,9 @@ export default function SettingsScreen({
               })
             }
           />
-          <Toggle
+          <SettingsToggle
             label="Thông báo lời mời chơi"
-            value={settings.notifications.gameInvitations}
+            checked={settings.notifications.gameInvitations}
             onChange={(value) =>
               updateSettings({
                 notifications: {
@@ -151,9 +152,9 @@ export default function SettingsScreen({
               })
             }
           />
-          <Toggle
+          <SettingsToggle
             label="Thông báo tin nhắn"
-            value={settings.notifications.messages}
+            checked={settings.notifications.messages}
             onChange={(value) =>
               updateSettings({
                 notifications: { ...settings.notifications, messages: value },
@@ -211,27 +212,27 @@ function Section({
   );
 }
 
-function Toggle({
+function SettingsToggle({
   label,
-  value,
+  checked,
   onChange,
 }: {
   label: string;
-  value: boolean;
-  onChange: (v: boolean) => void;
+  checked: boolean;
+  onChange: (value: boolean) => void;
 }) {
   return (
-    <label className="flex items-center justify-between p-4 bg-surface-opaque rounded-xl cursor-pointer border border-transparent hover:border-border transition-colors">
-      <span className="text-main font-semibold">{label}</span>
-      <button
-        onClick={() => onChange(!value)}
-        className={`relative w-12 h-6 rounded-full transition-colors ${value ? "bg-primary" : "bg-surface-hover"}`}
-      >
-        <span
-          className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${value ? "translate-x-6" : "translate-x-0.5"}`}
+    <div className="flex items-center justify-between gap-4 px-4 py-3 bg-surface-opaque rounded-xl border border-transparent hover:border-border transition-colors overflow-hidden">
+      <span className="text-main font-semibold shrink">{label}</span>
+      <div className="shrink-0">
+        <Toggle
+          isChecked={checked}
+          onChange={onChange}
+          size="sm"
+          aria-label={label}
         />
-      </button>
-    </label>
+      </div>
+    </div>
   );
 }
 

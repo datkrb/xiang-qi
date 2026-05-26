@@ -41,7 +41,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
     const dims = sizeMap[size];
 
     const handleToggle = useCallback(
-      (e?: React.SyntheticEvent) => {
+      (_e?: React.SyntheticEvent) => {
         if (disabled) return;
         onChange(!isChecked);
       },
@@ -74,10 +74,12 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
         : "var(--color-surface)",
       border: `1px solid var(--color-border)`,
       position: "relative",
-      transition: "background-color 0.18s ease, box-shadow 0.18s ease",
+      transition:
+        "background-color 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease",
       display: "inline-block",
       flexShrink: 0,
       outline: "none",
+      cursor: disabled ? "not-allowed" : "pointer",
     };
 
     const indicatorStyle: React.CSSProperties = {
@@ -105,7 +107,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
           onClick={handleToggle}
           onKeyDown={handleKeyDown}
           tabIndex={disabled ? -1 : 0}
-          className="focus:outline-none"
+          className="focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90 transition-opacity"
           style={{
             ...switchStyle,
             boxShadow: isChecked

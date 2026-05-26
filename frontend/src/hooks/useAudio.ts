@@ -34,16 +34,16 @@ const audioManager = new AudioManager();
 
 /**
  * useAudio hook provides audio playback functionality integrated with settings
- * 
+ *
  * @example
  * ```tsx
  * function GameComponent() {
  *   const audioRef = useAudio("move-sound");
- *   
+ *
  *   const handleMove = () => {
  *     audioRef.current?.play();
  *   };
- *   
+ *
  *   return (
  *     <>
  *       <audio ref={audioRef} src="/sounds/move.mp3" />
@@ -55,7 +55,9 @@ const audioManager = new AudioManager();
  */
 export const useAudio = (id: string) => {
   const { settings } = useSettings();
-    const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
     if (audioRef.current) {
       audioManager.registerElement(id, audioRef.current);
       return () => {

@@ -1,4 +1,4 @@
-import { AppSettings, Language, Theme } from "../types/settings";
+import { Language, Theme } from "../types/settings";
 
 const VALID_LANGUAGES: Language[] = ["vi", "en", "zh"];
 const VALID_THEMES: Theme[] = ["blue", "dark", "light"];

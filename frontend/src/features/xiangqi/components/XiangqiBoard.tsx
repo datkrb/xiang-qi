@@ -1,53 +1,45 @@
-import React from "react";
-import { BoardGrid } from "./xiangqi/BoardGrid";
-import { Intersection } from "./xiangqi/Intersection";
-import { PieceView } from "./xiangqi/PieceView";
-import { TurnIndicator } from "./xiangqi/TurnIndicator";
-import { BOARD_H, BOARD_W, COLS, ROWS } from "./xiangqi/constants";
-import { XiangqiGame, useXiangqiGame } from "./xiangqi/useXiangqiGame";
-import { PieceColor } from "./xiangqi/types";
+import React, { useCallback } from "react";
+import { BoardGrid } from "./BoardGrid";
+import { Intersection } from "./Intersection";
+import { PieceView } from "./PieceView";
+import { BOARD_H, BOARD_W, COLS, ROWS } from "../utils/constants";
+import { Piece, PieceColor, Coord } from "../types";
 
-interface XiangqiBoardProps {
-  game?: XiangqiGame;
-  showTurnIndicator?: boolean;
+export interface XiangqiBoardProps {
+  pieces: Piece[];
+  selectedPiece?: Coord | null;
+  validMoves?: Coord[];
+  isCheck?: boolean;
   /** Bên nào ở phía dưới bàn cờ (mặc định: 'red') */
   perspective?: PieceColor;
-  /** Bên mà người chơi này điều khiển (cho online multiplayer) */
-  playerColor?: PieceColor;
+  onPointClick?: (x: number, y: number) => void;
 }
 
 const XiangqiBoard: React.FC<XiangqiBoardProps> = React.memo(
   ({
-    game: externalGame,
-    showTurnIndicator = true,
+    pieces,
+    selectedPiece = null,
+    validMoves = [],
+    isCheck = false,
     perspective = "red",
-    playerColor,
+    onPointClick,
   }) => {
-    const internalGame = useXiangqiGame();
-    const game = externalGame ?? internalGame;
-    const {
-      pieces,
-      selectedPiece,
-      validMoves,
-      currentTurn,
-      isCheck,
-      getPieceAt,
-      handleClick,
-    } = game;
-
     // Khi perspective='black', lật bàn cờ 180° (Đen ở dưới)
     const flipped = perspective === "black";
 
-    // Wrapper for handleClick: only allow moving own pieces (for multiplayer)
-    const handleClickWithValidation = (x: number, y: number) => {
-      if (playerColor) {
-        const piece = getPieceAt(x, y);
-        if (piece && piece.color !== playerColor && validMoves.length === 0) {
-          return; // Can't select opponent's pieces
+    const getPieceAt = useCallback(
+      (x: number, y: number) => pieces.find((p) => p.position[0] === x && p.position[1] === y) || null,
+      [pieces]
+    );
+
+    const handleClick = useCallback(
+      (x: number, y: number) => {
+        if (onPointClick) {
+          onPointClick(x, y);
         }
-      }
-      handleClick(x, y);
-    };
+      },
+      [onPointClick]
+    );
 
     return (
       <div className="flex items-center justify-center p-4">
@@ -76,7 +68,7 @@ const XiangqiBoard: React.FC<XiangqiBoardProps> = React.memo(
                     x={x}
                     y={y}
                     showDot={isValid && !occupied}
-                    onClick={handleClickWithValidation}
+                    onClick={handleClick}
                   />
                 );
               })
@@ -98,14 +90,12 @@ const XiangqiBoard: React.FC<XiangqiBoardProps> = React.memo(
                   selected={selected}
                   capturable={capturable}
                   inCheck={isCheck}
-                  onClick={handleClickWithValidation}
+                  onClick={handleClick}
                   flipped={flipped}
                 />
               );
             })}
           </div>
-
-          {showTurnIndicator ? <TurnIndicator turn={currentTurn} /> : null}
         </div>
       </div>
     );

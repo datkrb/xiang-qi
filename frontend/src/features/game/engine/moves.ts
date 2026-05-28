@@ -1,4 +1,4 @@
-import { Coord, Piece, PieceColor } from './types';
+import { Coord, Piece, PieceColor } from '@features/xiangqi';
 
 export type GetPieceAt = (x: number, y: number) => Piece | null;
 

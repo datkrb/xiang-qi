@@ -1,4 +1,4 @@
-import { BOARD_H, BOARD_W, CELL, COLS, ROWS, px, py } from './constants';
+import { BOARD_H, BOARD_W, CELL, COLS, ROWS, px, py } from '../utils/constants';
 
 const STROKE = '#5a3a1a';
 

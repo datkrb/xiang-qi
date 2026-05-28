@@ -7,7 +7,7 @@ import {
   GameResult,
 } from "./moves";
 import { decodeFEN } from "./fen";
-import { Coord, Piece, PieceColor } from "./types";
+import { Coord, Piece, PieceColor } from "@features/xiangqi";
 
 export interface MoveRecord {
   piece: Piece;

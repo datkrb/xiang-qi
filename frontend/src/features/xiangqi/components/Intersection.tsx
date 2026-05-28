@@ -1,4 +1,4 @@
-import { CELL, px, py } from './constants';
+import { CELL, px, py } from '../utils/constants';
 
 interface IntersectionProps {
   x: number;

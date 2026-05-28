@@ -1,4 +1,4 @@
-import { Piece, PieceColor, PieceType } from "./types";
+import { Piece, PieceColor, PieceType } from "@features/xiangqi";
 
 /**
  * Xiangqi FEN encoding/decoding.

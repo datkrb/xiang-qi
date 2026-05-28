@@ -1,6 +1,6 @@
 import React from "react";
 import { Bot, Clock, Loader2 } from "lucide-react";
-import { CapturedTray } from "./xiangqi/CapturedTray";
+import { CapturedTray } from "./CapturedTray";
 
 interface Player {
   name: string;

@@ -1,4 +1,4 @@
-import { Piece } from './types';
+import { Piece } from "@features/xiangqi";
 
 export const INITIAL_PIECES: Piece[] = [
   { type: 'chariot', color: 'red', position: [0, 0] },

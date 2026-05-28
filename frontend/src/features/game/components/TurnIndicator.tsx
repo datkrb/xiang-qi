@@ -1,4 +1,4 @@
-import { PieceColor } from './types';
+import { PieceColor } from "@features/xiangqi";
 
 export function TurnIndicator({ turn }: { turn: PieceColor }) {
   return (

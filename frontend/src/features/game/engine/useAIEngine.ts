@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Piece, PieceColor } from './types';
+import { Piece, PieceColor } from "@features/xiangqi";
+
 
 interface AIMove {
   fromX: number;

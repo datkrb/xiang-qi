@@ -1,5 +1,5 @@
-import { PIECE, pieceNames, px, py } from './constants';
-import { Piece } from './types';
+import { PIECE, pieceNames, px, py } from '../utils/constants';
+import { Piece } from '../types';
 
 interface PieceViewProps {
   piece: Piece;

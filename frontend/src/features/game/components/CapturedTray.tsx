@@ -1,5 +1,4 @@
-import { pieceNames } from './constants';
-import { Piece, PieceColor } from './types';
+import { pieceNames, Piece, PieceColor } from "@features/xiangqi";
 
 interface CapturedTrayProps {
   pieces: Piece[];

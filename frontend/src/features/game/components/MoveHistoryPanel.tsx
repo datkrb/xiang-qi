@@ -1,5 +1,5 @@
-import { pieceNames } from './constants';
-import { MoveRecord } from './useXiangqiGame';
+import { pieceNames } from '@features/xiangqi';
+import { MoveRecord } from '../engine/useXiangqiGame';
 
 interface MoveHistoryPanelProps {
   moves: MoveRecord[];

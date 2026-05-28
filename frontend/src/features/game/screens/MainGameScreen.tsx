@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { AlertTriangle } from "lucide-react";
-import XiangqiBoard from "@features/game/components/XiangqiBoard";
 import { GameConfig } from "@features/game/screens/GameModeScreen";
-import { useXiangqiGame } from "@features/game/components/xiangqi/useXiangqiGame";
-import { MoveHistoryPanel } from "@features/game/components/xiangqi/MoveHistoryPanel";
-import { useAIEngine } from "@features/game/components/xiangqi/useAIEngine";
 import { useGame } from "@app/providers/GameProvider";
-import { encodeFEN } from "@features/game/components/xiangqi/fen";
+import { XiangqiBoard } from "@features/xiangqi";
+import { useXiangqiGame } from "../engine/useXiangqiGame";
+import { useAIEngine } from "../engine/useAIEngine";
+import { encodeFEN } from "../engine/fen";
 
 // Decomposed components
-import { GameControlPanel } from "@features/game/components/GameControlPanel";
-import { PlayerInfoCard } from "@features/game/components/PlayerInfoCard";
+import { MoveHistoryPanel } from "../components/MoveHistoryPanel";
+import { GameControlPanel } from "../components/GameControlPanel";
+import { PlayerInfoCard } from "../components/PlayerInfoCard";
+import { TurnIndicator } from "../components/TurnIndicator";
 import {
   ResignConfirmDialog,
   DrawOfferDialog,
@@ -258,11 +259,25 @@ export default function MainGameScreen({
             />
 
             {/* Game board */}
-            <XiangqiBoard
-              game={game}
-              perspective={playerColor}
-              playerColor={config.mode === "online" ? playerColor : undefined}
-            />
+            <div className="relative flex justify-center">
+              <XiangqiBoard
+                pieces={game.pieces}
+                selectedPiece={game.selectedPiece}
+                validMoves={game.validMoves}
+                isCheck={game.isCheck}
+                perspective={playerColor}
+                onPointClick={(x, y) => {
+                  if (config.mode === "online" && playerColor) {
+                    const piece = game.getPieceAt(x, y);
+                    if (piece && piece.color !== playerColor && game.validMoves.length === 0) {
+                      return; // Only allow clicking own pieces if no valid moves selected
+                    }
+                  }
+                  game.handleClick(x, y);
+                }}
+              />
+              <TurnIndicator turn={game.currentTurn} />
+            </div>
 
             {/* Bottom player = you */}
             <PlayerInfoCard

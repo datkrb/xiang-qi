@@ -1,4 +1,4 @@
-import { PieceType } from './types';
+import { PieceType } from '../types';
 
 export const COLS = 9;
 export const ROWS = 10;

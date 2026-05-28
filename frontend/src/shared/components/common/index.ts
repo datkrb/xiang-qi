@@ -5,6 +5,9 @@ export type { FormProps } from "./Form";
 export { Modal } from "./Modal";
 export type { ModalProps } from "./Modal";
 
+export { StatCard } from "./StatCard";
+export type { StatCardProps } from "./StatCard";
+
 // Re-exports from legacy root `components/` to ease migration
 export { default as AppSidebar } from "@shared/components/layouts/AppSidebar";
 export { ControlPanel } from "@shared/components/game/ControlPanel";

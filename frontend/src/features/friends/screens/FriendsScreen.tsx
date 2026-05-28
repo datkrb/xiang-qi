@@ -7,6 +7,8 @@ import {
   Check,
   X,
 } from "lucide-react";
+import { PageContainer } from "@shared/components/layouts";
+import { Card, Text, Button, Input } from "@shared/components/ui";
 
 interface FriendsScreenProps {
   onBack?: () => void;
@@ -47,118 +49,116 @@ export default function FriendsScreen({ onBack }: FriendsScreenProps) {
         );
 
   return (
-    <div className="w-full p-4 animate-fade-in">
-      <div className="max-w-3xl mx-auto space-y-6">
-        {onBack && (
-          <button
-            onClick={onBack}
-            className="px-4 py-2 bg-surface-opaque hover:bg-surface-hover transition-colors text-muted hover:text-main rounded-xl font-semibold border border-border"
-          >
-            ← Quay lại
-          </button>
-        )}
+    <PageContainer maxWidth="3xl">
+      {onBack && (
+        <Button
+          variant="secondary"
+          onClick={onBack}
+          className="mb-6 font-semibold"
+        >
+          ← Quay lại
+        </Button>
+      )}
 
-        <div className="glass-panel rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl font-bold font-heading text-main">Bạn bè</h1>
-            <button className="flex items-center gap-2 btn-primary px-4 py-2 rounded-xl">
-              <UserPlus className="w-4 h-4" /> Thêm bạn
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2 px-4 py-3 bg-surface-opaque rounded-xl border border-border focus-within:border-primary transition-colors mb-6">
-            <Search className="w-5 h-5 text-primary" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Tìm bạn theo tên..."
-              className="flex-1 outline-none bg-transparent text-main placeholder:text-muted"
-            />
-          </div>
-
-          <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-            {(["all", "online", "requests"] as const).map((t) => (
-              <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={`px-5 py-2 rounded-xl font-semibold text-sm whitespace-nowrap transition-colors border ${
-                  tab === t
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-surface-opaque text-muted hover:text-main border-transparent hover:border-border"
-                }`}
-              >
-                {t === "all"
-                  ? `Tất cả (${FRIENDS.length})`
-                  : t === "online"
-                    ? `Online (${FRIENDS.filter((f) => f.online).length})`
-                    : `Lời mời (${REQUESTS.length})`}
-              </button>
-            ))}
-          </div>
-
-          <ul className="space-y-3">
-            {list.map((f) => (
-              <li
-                key={f.id}
-                className="flex items-center gap-4 p-4 bg-surface-opaque rounded-xl border border-transparent hover:border-primary transition-colors"
-              >
-                <div className="relative">
-                  <span
-                    className="w-12 h-12 rounded-full bg-primary/20 text-primary flex items-center justify-center border border-primary/30"
-                    style={{
-                      fontFamily: "Outfit",
-                      fontSize: 24,
-                      fontWeight: 700,
-                    }}
-                  >
-                    {f.avatar}
-                  </span>
-                  <span
-                    className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-surface ${f.online ? "bg-success" : "bg-muted"}`}
-                  />
-                </div>
-                <div className="flex-1">
-                  <div className="font-bold text-main text-lg">{f.name}</div>
-                  <div className="text-sm text-muted">
-                    Elo {f.elo} · {f.online ? "Đang online" : "Offline"}
-                  </div>
-                </div>
-                {tab === "requests" ? (
-                  <div className="flex gap-2">
-                    <button className="p-2.5 bg-success/20 hover:bg-success/30 text-success rounded-xl transition-colors border border-success/30">
-                      <Check className="w-5 h-5" />
-                    </button>
-                    <button className="p-2.5 bg-danger/20 hover:bg-danger/30 text-danger rounded-xl transition-colors border border-danger/30">
-                      <X className="w-5 h-5" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex gap-2">
-                    <button
-                      disabled={!f.online}
-                      className="p-2.5 bg-surface hover:bg-surface-hover disabled:opacity-50 disabled:hover:bg-surface border border-border text-primary rounded-xl transition-colors"
-                      title="Mời chơi"
-                    >
-                      <Swords className="w-5 h-5" />
-                    </button>
-                    <button
-                      className="p-2.5 bg-surface hover:bg-surface-hover border border-border text-primary rounded-xl transition-colors"
-                      title="Nhắn tin"
-                    >
-                      <MessageSquare className="w-5 h-5" />
-                    </button>
-                  </div>
-                )}
-              </li>
-            ))}
-            {list.length === 0 && (
-              <li className="text-center text-muted py-10">
-                Không có kết quả
-              </li>
-            )}
-          </ul>
+      <Card variant="elevated" padding="lg">
+        <div className="flex items-center justify-between mb-6">
+          <Text variant="h2" className="text-main">Bạn bè</Text>
+          <Button variant="primary" className="flex items-center gap-2">
+            <UserPlus className="w-4 h-4" /> Thêm bạn
+          </Button>
         </div>
-      </div>
-    </div>
+
+        <div className="mb-6 relative">
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Tìm bạn theo tên..."
+            className="pl-10"
+          />
+          <Search className="w-5 h-5 text-primary absolute left-3 top-3 pointer-events-none" />
+        </div>
+
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+          {(["all", "online", "requests"] as const).map((t) => (
+            <Button
+              key={t}
+              variant={tab === t ? "primary" : "secondary"}
+              onClick={() => setTab(t)}
+              size="sm"
+            >
+              {t === "all"
+                ? `Tất cả (${FRIENDS.length})`
+                : t === "online"
+                  ? `Online (${FRIENDS.filter((f) => f.online).length})`
+                  : `Lời mời (${REQUESTS.length})`}
+            </Button>
+          ))}
+        </div>
+
+        <ul className="space-y-3">
+          {list.map((f) => (
+            <li
+              key={f.id}
+              className="flex items-center gap-4 p-4 bg-surface-opaque rounded-xl border border-transparent hover:border-primary transition-colors"
+            >
+              <div className="relative">
+                <span
+                  className="w-12 h-12 rounded-full bg-primary/20 text-primary flex items-center justify-center border border-primary/30"
+                  style={{
+                    fontFamily: "Outfit",
+                    fontSize: 24,
+                    fontWeight: 700,
+                  }}
+                >
+                  {f.avatar}
+                </span>
+                <span
+                  className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-surface ${f.online ? "bg-success" : "bg-muted"}`}
+                />
+              </div>
+              <div className="flex-1">
+                <Text variant="body" className="font-bold text-main">{f.name}</Text>
+                <Text variant="caption" className="text-muted mt-0.5">
+                  Elo {f.elo} · {f.online ? "Đang online" : "Offline"}
+                </Text>
+              </div>
+              {tab === "requests" ? (
+                <div className="flex gap-2">
+                  <Button variant="ghost" className="text-success hover:bg-success/20 p-2 border border-success/30">
+                    <Check className="w-5 h-5" />
+                  </Button>
+                  <Button variant="ghost" className="text-danger hover:bg-danger/20 p-2 border border-danger/30">
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <Button
+                    variant="secondary"
+                    disabled={!f.online}
+                    title="Mời chơi"
+                    className="p-2 text-primary"
+                  >
+                    <Swords className="w-5 h-5" />
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    title="Nhắn tin"
+                    className="p-2 text-primary"
+                  >
+                    <MessageSquare className="w-5 h-5" />
+                  </Button>
+                </div>
+              )}
+            </li>
+          ))}
+          {list.length === 0 && (
+            <li className="text-center text-muted py-10">
+              Không có kết quả
+            </li>
+          )}
+        </ul>
+      </Card>
+    </PageContainer>
   );
 }

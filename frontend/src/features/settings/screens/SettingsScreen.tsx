@@ -8,7 +8,8 @@ import {
   LogOut,
 } from "lucide-react";
 import { ThemeSwitcher } from "@features/settings/screens/ThemeSwitcher";
-import { Toggle } from "@shared/components/ui";
+import { Toggle, Card, Text, Button, Select, Slider } from "@shared/components/ui";
+import { PageContainer } from "@shared/components/layouts";
 import { useSettings } from "@shared/hooks/useSettings";
 
 interface SettingsScreenProps {
@@ -23,18 +24,18 @@ export default function SettingsScreen({
   const { settings, updateSettings } = useSettings();
 
   return (
-    <div className="w-full p-4 animate-fade-in">
-      <div className="max-w-3xl mx-auto space-y-6">
-        {onBack && (
-          <button
-            onClick={onBack}
-            className="px-4 py-2 bg-surface-opaque hover:bg-surface-hover transition-colors text-muted hover:text-main rounded-xl font-semibold border border-border"
-          >
-            ← Quay lại
-          </button>
-        )}
+    <PageContainer maxWidth="3xl">
+      {onBack && (
+        <Button
+          variant="secondary"
+          onClick={onBack}
+          className="mb-6 font-semibold"
+        >
+          ← Quay lại
+        </Button>
+      )}
 
-        <h1 className="text-3xl font-bold font-heading text-main">Cài đặt</h1>
+      <Text variant="h2" className="text-main mb-6">Cài đặt</Text>
 
         <Section title="Âm thanh" icon={<Volume2 className="w-5 h-5" />}>
           <SettingsToggle
@@ -118,7 +119,7 @@ export default function SettingsScreen({
           <Select
             label="Ngôn ngữ"
             value={settings.language.language}
-            onChange={(v) => updateSettings({ language: { language: v } })}
+            onChange={(v) => updateSettings({ language: { language: v as any } })}
             options={[
               { value: "vi", label: "Tiếng Việt" },
               { value: "en", label: "English" },
@@ -167,29 +168,29 @@ export default function SettingsScreen({
           title="Tài khoản"
           icon={<Shield className="w-5 h-5 text-primary" />}
         >
-          <button className="w-full text-left px-4 py-3 bg-surface-opaque hover:bg-surface-hover transition-colors rounded-xl font-semibold text-main border border-transparent hover:border-border">
+          <Button variant="secondary" className="w-full justify-start font-semibold">
             Đổi mật khẩu
-          </button>
-          <button className="w-full text-left px-4 py-3 bg-surface-opaque hover:bg-surface-hover transition-colors rounded-xl font-semibold text-main border border-transparent hover:border-border">
+          </Button>
+          <Button variant="secondary" className="w-full justify-start font-semibold">
             Quản lý dữ liệu
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="secondary"
             onClick={onLogout}
-            className="w-full btn-danger flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold"
+            className="w-full flex items-center justify-center gap-2 font-bold text-danger border-danger hover:bg-danger/10"
           >
             <LogOut className="w-4 h-4" /> Đăng xuất
-          </button>
+          </Button>
         </Section>
 
-        <p className="text-center text-xs text-muted">Cờ Tướng v1.0.0</p>
-      </div>
+        <Text variant="caption" className="text-center text-muted w-full block">Cờ Tướng v1.0.0</Text>
 
       {!settings.audio.soundEnabled && (
         <div className="fixed bottom-4 left-4 glass-panel text-muted px-4 py-2 rounded-full text-xs flex items-center gap-2 shadow-lg">
           <VolumeX className="w-4 h-4 text-danger" /> Đã tắt âm thanh
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
 
@@ -203,12 +204,12 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="glass-panel rounded-2xl p-6">
-      <h3 className="text-lg font-bold font-heading text-main mb-4 flex items-center gap-2">
+    <Card variant="elevated" padding="lg">
+      <Text variant="h3" className="mb-4 flex items-center gap-2">
         {icon} {title}
-      </h3>
+      </Text>
       <div className="space-y-3">{children}</div>
-    </div>
+    </Card>
   );
 }
 
@@ -236,58 +237,3 @@ function SettingsToggle({
   );
 }
 
-function Slider({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  onChange: (v: number) => void;
-}) {
-  return (
-    <div className="px-4 py-3 bg-surface-opaque rounded-xl border border-transparent hover:border-border transition-colors">
-      <div className="flex justify-between text-sm text-main mb-2">
-        <span className="font-semibold">{label}</span>
-        <span className="font-bold text-primary">{value}%</span>
-      </div>
-      <input
-        type="range"
-        min={0}
-        max={100}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full accent-primary"
-      />
-    </div>
-  );
-}
-
-function Select<T extends string>({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string;
-  value: T;
-  onChange: (v: T) => void;
-  options: { value: T; label: string }[];
-}) {
-  return (
-    <label className="flex items-center justify-between p-4 bg-surface-opaque rounded-xl border border-transparent hover:border-border transition-colors">
-      <span className="text-main font-semibold">{label}</span>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value as T)}
-        className="px-3 py-1 bg-surface outline-none border border-border rounded-lg text-main font-semibold focus:border-primary transition-colors"
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value} className="bg-surface">
-            {o.label}
-          </option>
-        ))}
-      </select>
-    </label>
-  );
-}

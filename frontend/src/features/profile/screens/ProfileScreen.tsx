@@ -1,5 +1,7 @@
 import { Trophy, Swords, Star, TrendingUp, Edit3, Share2 } from "lucide-react";
-
+import { PageContainer } from "@shared/components/layouts";
+import { Card, Badge, Button, Text } from "@shared/components/ui";
+import { StatCard } from "@shared/components/common/StatCard";
 interface ProfileScreenProps {
   onBack?: () => void;
 }
@@ -49,160 +51,136 @@ const ACHIEVEMENTS = [
 
 export default function ProfileScreen({ onBack }: ProfileScreenProps) {
   return (
-    <div className="w-full p-4 animate-fade-in">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {onBack && (
-          <button
-            onClick={onBack}
-            className="px-4 py-2 bg-surface-opaque hover:bg-surface-hover transition-colors text-muted hover:text-main rounded-xl font-semibold border border-border"
+    <PageContainer maxWidth="4xl">
+      {onBack && (
+        <Button
+          variant="secondary"
+          onClick={onBack}
+          className="mb-6 font-semibold"
+        >
+          ← Quay lại
+        </Button>
+      )}
+
+      <Card
+        variant="elevated"
+        className="p-6 text-main border-primary shadow-[0_0_15px_rgba(14,165,233,0.2)]"
+      >
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          <div
+            className="w-28 h-28 rounded-full bg-primary/20 text-primary border-2 border-primary flex items-center justify-center shadow-lg"
+            style={{ fontFamily: "Outfit", fontSize: 56, fontWeight: 700 }}
           >
-            ← Quay lại
-          </button>
-        )}
-
-        <div className="glass-panel border-primary shadow-[0_0_15px_rgba(14,165,233,0.2)] rounded-2xl p-6 text-main">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div
-              className="w-28 h-28 rounded-full bg-primary/20 text-primary border-2 border-primary flex items-center justify-center shadow-lg"
-              style={{ fontFamily: "Outfit", fontSize: 56, fontWeight: 700 }}
-            >
-              帥
-            </div>
-            <div className="flex-1 text-center md:text-left">
-              <h1 className="text-3xl font-bold font-heading">Cao Thủ 2026</h1>
-              <p className="text-muted mt-1">
-                Tham gia từ tháng 3, 2025 · Việt Nam
-              </p>
-              <div className="mt-3 flex flex-wrap gap-3 justify-center md:justify-start">
-                <Badge
-                  icon={<Trophy className="w-4 h-4" />}
-                  label="Xếp hạng #128"
-                />
-                <Badge icon={<Star className="w-4 h-4" />} label="Elo 1820" />
-                <Badge
-                  icon={<TrendingUp className="w-4 h-4" />}
-                  label="Tăng 45 tuần này"
-                />
-              </div>
-            </div>
-            <div className="flex gap-3 mt-4 md:mt-0">
-              <button className="px-5 py-2 bg-surface-opaque hover:bg-surface-hover border border-border text-main rounded-xl font-semibold flex items-center gap-2 transition-colors">
-                <Edit3 className="w-4 h-4" /> Sửa
-              </button>
-              <button className="px-5 py-2 btn-primary rounded-xl font-semibold flex items-center gap-2">
-                <Share2 className="w-4 h-4" /> Chia sẻ
-              </button>
+            帥
+          </div>
+          <div className="flex-1 text-center md:text-left">
+            <Text variant="h2">Cao Thủ 2026</Text>
+            <Text variant="body" className="text-muted mt-1">
+              Tham gia từ tháng 3, 2025 · Việt Nam
+            </Text>
+            <div className="mt-3 flex flex-wrap gap-3 justify-center md:justify-start">
+              <Badge variant="default">
+                <Trophy className="w-4 h-4" /> Xếp hạng #128
+              </Badge>
+              <Badge variant="default">
+                <Star className="w-4 h-4" /> Elo 1820
+              </Badge>
+              <Badge variant="default">
+                <TrendingUp className="w-4 h-4" /> Tăng 45 tuần này
+              </Badge>
             </div>
           </div>
+          <div className="flex gap-3 mt-4 md:mt-0">
+            <Button variant="secondary" className="font-semibold flex items-center gap-2">
+              <Edit3 className="w-4 h-4" /> Sửa
+            </Button>
+            <Button variant="primary" className="font-semibold flex items-center gap-2">
+              <Share2 className="w-4 h-4" /> Chia sẻ
+            </Button>
+          </div>
         </div>
+      </Card>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Stat label="Tổng ván" value="247" color="text-main" />
-          <Stat label="Thắng" value="142" color="text-success" />
-          <Stat label="Thua" value="89" color="text-danger" />
-          <Stat label="Hoà" value="16" color="text-primary" />
-        </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+        <StatCard label="Tổng ván" value="247" color="text-main" />
+        <StatCard label="Thắng" value="142" color="text-success" />
+        <StatCard label="Thua" value="89" color="text-danger" />
+        <StatCard label="Hoà" value="16" color="text-primary" />
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="glass-panel rounded-2xl p-6">
-            <h3 className="text-xl font-bold font-heading text-main mb-4 flex items-center gap-2">
-              <Swords className="w-5 h-5 text-primary" /> Ván gần đây
-            </h3>
-            <ul className="space-y-2">
-              {RECENT_GAMES.map((g) => (
-                <li
-                  key={g.id}
-                  className="flex items-center justify-between p-4 bg-surface-opaque border border-border hover:border-primary transition-colors rounded-xl"
-                >
-                  <div>
-                    <div className="font-semibold text-main">
-                      vs {g.opponent}
-                    </div>
-                    <div className="text-xs text-muted mt-1">
-                      {g.mode} · {g.date}
-                    </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <Card variant="elevated" padding="lg">
+          <Text variant="h3" className="mb-4 flex items-center gap-2">
+            <Swords className="w-5 h-5 text-primary" /> Ván gần đây
+          </Text>
+          <ul className="space-y-2">
+            {RECENT_GAMES.map((g) => (
+              <li
+                key={g.id}
+                className="flex items-center justify-between p-4 bg-surface-opaque border border-border hover:border-primary transition-colors rounded-xl"
+              >
+                <div>
+                  <div className="font-semibold text-main">
+                    vs {g.opponent}
                   </div>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-bold border ${
-                      g.result === "win"
-                        ? "bg-success/20 text-success border-success/30"
-                        : g.result === "loss"
-                          ? "bg-danger/20 text-danger border-danger/30"
-                          : "bg-primary/20 text-primary border-primary/30"
-                    }`}
-                  >
-                    {g.result === "win"
-                      ? "Thắng"
+                  <div className="text-xs text-muted mt-1">
+                    {g.mode} · {g.date}
+                  </div>
+                </div>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                    g.result === "win"
+                      ? "bg-success/20 text-success border-success/30"
                       : g.result === "loss"
-                        ? "Thua"
-                        : "Hoà"}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="glass-panel rounded-2xl p-6">
-            <h3 className="text-xl font-bold font-heading text-main mb-4 flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-primary" /> Thành tựu
-            </h3>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {ACHIEVEMENTS.map((a) => (
-                <li
-                  key={a.name}
-                  className={`p-3 rounded-xl border transition-colors ${a.unlocked ? "bg-surface-opaque border-primary/50" : "bg-surface-opaque/50 border-border opacity-60"}`}
+                        ? "bg-danger/20 text-danger border-danger/30"
+                        : "bg-primary/20 text-primary border-primary/30"
+                  }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <span
-                      className="w-12 h-12 rounded-full bg-primary/20 text-primary border border-primary/30 flex items-center justify-center shrink-0"
-                      style={{
-                        fontFamily: "Outfit",
-                        fontSize: 20,
-                        fontWeight: 700,
-                      }}
-                    >
-                      {a.icon}
-                    </span>
-                    <div>
-                      <div className="font-bold text-main text-sm leading-tight">
-                        {a.name}
-                      </div>
-                      <div className="text-xs text-muted mt-0.5">{a.desc}</div>
+                  {g.result === "win"
+                    ? "Thắng"
+                    : g.result === "loss"
+                      ? "Thua"
+                      : "Hoà"}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <Card variant="elevated" padding="lg">
+          <Text variant="h3" className="mb-4 flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-primary" /> Thành tựu
+          </Text>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {ACHIEVEMENTS.map((a) => (
+              <li
+                key={a.name}
+                className={`p-3 rounded-xl border transition-colors ${a.unlocked ? "bg-surface-opaque border-primary/50" : "bg-surface-opaque/50 border-border opacity-60"}`}
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className="w-12 h-12 rounded-full bg-primary/20 text-primary border border-primary/30 flex items-center justify-center shrink-0"
+                    style={{
+                      fontFamily: "Outfit",
+                      fontSize: 20,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {a.icon}
+                  </span>
+                  <div>
+                    <div className="font-bold text-main text-sm leading-tight">
+                      {a.name}
                     </div>
+                    <div className="text-xs text-muted mt-0.5">{a.desc}</div>
                   </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Card>
       </div>
-    </div>
+    </PageContainer>
   );
 }
 
-function Badge({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <span className="flex items-center gap-1.5 px-3 py-1.5 bg-surface-opaque border border-border rounded-full text-sm font-medium">
-      {icon} {label}
-    </span>
-  );
-}
-
-function Stat({
-  label,
-  value,
-  color = "text-main",
-}: {
-  label: string;
-  value: string;
-  color?: string;
-}) {
-  return (
-    <div className="glass-panel rounded-2xl p-4 text-center">
-      <div className={`text-3xl font-bold font-heading ${color}`}>{value}</div>
-      <div className="text-xs text-muted mt-1 uppercase tracking-wider font-semibold">
-        {label}
-      </div>
-    </div>
-  );
-}

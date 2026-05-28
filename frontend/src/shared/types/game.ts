@@ -44,3 +44,4 @@ export interface AIConfig {
   level: "easy" | "medium" | "hard";
   depth: number;
 }
+ 

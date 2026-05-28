@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Mail, Lock, UserPlus } from "lucide-react";
-import { Toggle } from "@shared/components/ui";
+import { UserPlus } from "lucide-react";
+import { Toggle, Card, Button, Text, Input } from "@shared/components/ui";
 
 interface RegisterScreenProps {
   onBack?: () => void;
@@ -32,41 +32,34 @@ export default function RegisterScreen({
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md glass-panel rounded-2xl p-8 animate-fade-in">
-        <div className="text-center mb-6">
+      <Card variant="elevated" padding="lg" className="w-full max-w-md animate-fade-in">
+        <Card.Header className="text-center mb-6">
           <div
             className="w-16 h-16 mx-auto rounded-full bg-primary/20 text-primary flex items-center justify-center border-2 border-primary mb-3"
             style={{ fontFamily: "Outfit", fontSize: 32, fontWeight: 700 }}
           >
             將
           </div>
-          <h1 className="text-2xl font-bold font-heading text-main">Đăng Ký</h1>
-          <p className="text-sm text-muted">Tham gia cộng đồng cờ tướng</p>
-        </div>
+          <Text variant="h2" className="text-main">Đăng Ký</Text>
+          <Text variant="caption" className="text-muted">Tham gia cộng đồng cờ tướng</Text>
+        </Card.Header>
 
         <div className="space-y-4">
-          <Field icon={<Mail className="w-4 h-4 text-primary" />} label="Email">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className="flex-1 outline-none bg-transparent text-main placeholder:text-muted"
-            />
-          </Field>
+          <Input
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+          />
 
-          <Field
-            icon={<Lock className="w-4 h-4 text-primary" />}
+          <Input
             label="Mật khẩu"
-          >
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="flex-1 outline-none bg-transparent text-main placeholder:text-muted"
-            />
-          </Field>
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+          />
 
           {strength && (
             <div className="text-xs">
@@ -85,21 +78,15 @@ export default function RegisterScreen({
             </div>
           )}
 
-          <Field
-            icon={<Lock className="w-4 h-4 text-primary" />}
+          <Input
             label="Xác nhận mật khẩu"
-          >
-            <input
-              type="password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              placeholder="••••••••"
-              className="flex-1 outline-none bg-transparent text-main placeholder:text-muted"
-            />
-          </Field>
-          {confirm && !pwdMatch && (
-            <p className="text-xs text-danger">Mật khẩu không khớp</p>
-          )}
+            type="password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            placeholder="••••••••"
+            validationState={confirm && !pwdMatch ? "error" : "default"}
+            errorMessage={confirm && !pwdMatch ? "Mật khẩu không khớp" : undefined}
+          />
 
           <label className="flex items-start gap-2 text-sm text-main cursor-pointer">
             <Toggle
@@ -121,54 +108,39 @@ export default function RegisterScreen({
             </span>
           </label>
 
-          <button
+          <Button
+            variant="primary"
             disabled={!canSubmit}
             onClick={() => canSubmit && onRegister?.({ email, password })}
-            className="w-full btn-primary py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2"
           >
             <UserPlus className="w-5 h-5" /> Tạo tài khoản
-          </button>
+          </Button>
 
-          <p className="text-center text-sm text-muted">
+          <Text variant="body" className="text-center text-sm text-muted">
             Đã có tài khoản?{" "}
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => onNavigate?.("login")}
-              className="text-primary font-semibold hover:text-primary-hover transition-colors"
+              style={{ padding: 0, display: "inline" }}
             >
               Đăng nhập
-            </button>
-          </p>
+            </Button>
+          </Text>
 
           {onBack && (
-            <button
+            <Button
+              variant="ghost"
               onClick={onBack}
-              className="w-full text-center text-sm text-muted hover:text-main transition-colors mt-2"
+              className="w-full text-center text-sm mt-2"
             >
               ← Quay lại
-            </button>
+            </Button>
           )}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
 
-function Field({
-  icon,
-  label,
-  children,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="block">
-      <span className="text-sm font-semibold text-main">{label}</span>
-      <div className="mt-1 flex items-center gap-2 px-3 py-2 bg-surface-opaque rounded-lg border border-border focus-within:border-primary transition-colors">
-        {icon}
-        {children}
-      </div>
-    </label>
-  );
-}

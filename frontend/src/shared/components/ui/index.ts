@@ -5,6 +5,12 @@ export type { ButtonProps, ButtonVariant, ButtonSize } from "./Button";
 export { Text } from "./Text";
 export type { TextProps, TextVariant } from "./Text";
 
+export { Select } from "./Select";
+export type { SelectProps } from "./Select";
+
+export { Slider } from "./Slider";
+export type { SliderProps } from "./Slider";
+
 export { Input } from "./Input";
 export type { InputProps } from "./Input";
 

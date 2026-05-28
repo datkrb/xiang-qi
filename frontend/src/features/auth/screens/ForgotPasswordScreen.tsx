@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Mail, Send, CheckCircle2 } from "lucide-react";
+import { Send, CheckCircle2 } from "lucide-react";
+import { Card, Button, Input, Text } from "@shared/components/ui";
 
 interface ForgotPasswordScreenProps {
   onBack?: () => void;
@@ -23,86 +24,85 @@ export default function ForgotPasswordScreen({
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md glass-panel rounded-2xl p-8 animate-fade-in">
-        <div className="text-center mb-6">
+      <Card variant="elevated" padding="lg" className="w-full max-w-md animate-fade-in">
+        <Card.Header className="text-center mb-6">
           <div
             className="w-16 h-16 mx-auto rounded-full bg-primary/20 text-primary flex items-center justify-center border-2 border-primary mb-3"
             style={{ fontFamily: "Outfit", fontSize: 32, fontWeight: 700 }}
           >
             仕
           </div>
-          <h1 className="text-2xl font-bold font-heading text-main">Quên Mật Khẩu</h1>
-          <p className="text-sm text-muted">
+          <Text variant="h2" className="text-main">Quên Mật Khẩu</Text>
+          <Text variant="caption" className="text-muted">
             Chúng tôi sẽ gửi liên kết khôi phục về email của bạn
-          </p>
-        </div>
+          </Text>
+        </Card.Header>
 
         {sent ? (
           <div className="text-center space-y-4">
             <CheckCircle2 className="w-16 h-16 text-success mx-auto animate-fade-in" />
-            <p className="text-main">
+            <Text variant="body" className="text-main">
               Đã gửi liên kết khôi phục đến <strong>{email}</strong>.
-            </p>
-            <p className="text-sm text-muted">
+            </Text>
+            <Text variant="caption" className="text-muted">
               Kiểm tra hộp thư đến (và cả thư rác) trong vài phút tới.
-            </p>
-            <button
+            </Text>
+            <Button
+              variant="ghost"
               onClick={() => setSent(false)}
-              className="text-primary font-semibold hover:text-primary-hover transition-colors"
             >
               Gửi lại
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="primary"
               onClick={() => onNavigate?.("login")}
-              className="block w-full py-3 btn-primary rounded-lg font-bold"
+              className="w-full"
             >
               Quay về đăng nhập
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="space-y-4 animate-fade-in">
-            <label className="block">
-              <span className="text-sm font-semibold text-main">Email</span>
-              <div className="mt-1 flex items-center gap-2 px-3 py-2 bg-surface-opaque rounded-lg border border-border focus-within:border-primary transition-colors">
-                <Mail className="w-4 h-4 text-primary" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="flex-1 outline-none bg-transparent text-main placeholder:text-muted"
-                />
-              </div>
-            </label>
+            <Input
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+            />
 
-            <button
+            <Button
+              variant="primary"
               onClick={submit}
-              className="w-full btn-primary py-3 rounded-lg flex items-center justify-center gap-2"
+              className="w-full flex items-center justify-center gap-2"
             >
               <Send className="w-5 h-5" /> Gửi liên kết
-            </button>
+            </Button>
 
-            <p className="text-center text-sm text-muted">
+            <Text variant="body" className="text-center text-sm text-muted">
               Nhớ ra mật khẩu rồi?{" "}
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => onNavigate?.("login")}
-                className="text-primary font-semibold hover:text-primary-hover transition-colors"
+                style={{ padding: 0, display: "inline" }}
               >
                 Đăng nhập
-              </button>
-            </p>
+              </Button>
+            </Text>
 
             {onBack && (
-              <button
+              <Button
+                variant="ghost"
                 onClick={onBack}
-                className="w-full text-center text-sm text-muted hover:text-main transition-colors mt-2"
+                className="w-full text-center text-sm mt-2"
               >
                 ← Quay lại
-              </button>
+              </Button>
             )}
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 }

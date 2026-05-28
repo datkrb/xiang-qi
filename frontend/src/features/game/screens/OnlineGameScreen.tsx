@@ -2,7 +2,7 @@ import { ArrowLeft, Zap, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useGame } from "@app/providers/GameProvider";
 import { GameRoom } from "@features/game/screens/GameRoom";
-import MatchFoundDialog from "@shared/components/game/MatchFoundDialog";
+import MatchFoundDialog from "@features/game/components/MatchFoundDialog";
 
 interface OnlineGameScreenProps {
   onBack: () => void;

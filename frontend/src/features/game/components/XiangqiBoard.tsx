@@ -3,8 +3,8 @@ import { BoardGrid } from "./xiangqi/BoardGrid";
 import { Intersection } from "./xiangqi/Intersection";
 import { PieceView } from "./xiangqi/PieceView";
 import { TurnIndicator } from "./xiangqi/TurnIndicator";
-import { BOARD_H, BOARD_W, COLS, ROWS } from "@shared/components/game/xiangqi/constants";
-import { XiangqiGame, useXiangqiGame } from "@shared/components/game/xiangqi/useXiangqiGame";
+import { BOARD_H, BOARD_W, COLS, ROWS } from "./xiangqi/constants";
+import { XiangqiGame, useXiangqiGame } from "./xiangqi/useXiangqiGame";
 import { PieceColor } from "./xiangqi/types";
 
 interface XiangqiBoardProps {

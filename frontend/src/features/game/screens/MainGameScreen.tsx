@@ -1,22 +1,22 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { AlertTriangle } from "lucide-react";
-import XiangqiBoard from "@shared/components/game/XiangqiBoard";
+import XiangqiBoard from "@features/game/components/XiangqiBoard";
 import { GameConfig } from "@features/game/screens/GameModeScreen";
-import { useXiangqiGame } from "@shared/components/game/xiangqi/useXiangqiGame";
-import { MoveHistoryPanel } from "@shared/components/game/xiangqi/MoveHistoryPanel";
-import { useAIEngine } from "@shared/components/game/xiangqi/useAIEngine";
+import { useXiangqiGame } from "@features/game/components/xiangqi/useXiangqiGame";
+import { MoveHistoryPanel } from "@features/game/components/xiangqi/MoveHistoryPanel";
+import { useAIEngine } from "@features/game/components/xiangqi/useAIEngine";
 import { useGame } from "@app/providers/GameProvider";
-import { encodeFEN } from "@shared/components/game/xiangqi/fen";
+import { encodeFEN } from "@features/game/components/xiangqi/fen";
 
 // Decomposed components
-import { GameControlPanel } from "@shared/components/game/GameControlPanel";
-import { PlayerInfoCard } from "@shared/components/game/PlayerInfoCard";
+import { GameControlPanel } from "@features/game/components/GameControlPanel";
+import { PlayerInfoCard } from "@features/game/components/PlayerInfoCard";
 import {
   ResignConfirmDialog,
   DrawOfferDialog,
   PauseMenuDialog,
   GameResultDialog,
-} from "@shared/components/game/GameDialogs";
+} from "@features/game/components/GameDialogs";
 
 interface MainGameScreenProps {
   config: GameConfig;

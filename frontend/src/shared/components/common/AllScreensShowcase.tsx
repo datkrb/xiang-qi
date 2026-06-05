@@ -1,6 +1,6 @@
 import HomeScreen from "@features/play/screens/HomeScreen";
 import GameModeScreen, { GameConfig } from "@features/game/screens/GameModeScreen";
-import MainGameScreen from "@features/game/screens/MainGameScreen";
+import LocalMatchScreen from "@features/game/modes/local/LocalMatchScreen";
 import LoadGameScreen from "@features/play/screens/LoadGameScreen";
 
 const noop = () => {};
@@ -48,8 +48,8 @@ export default function AllScreensShowcase() {
         <LoadGameScreen onBack={noop} onLoadGame={noopLoad} />
       </Section>
 
-      <Section title="MainGameScreen (with board, captured tray, history, popups)">
-        <MainGameScreen config={demoConfig} onExit={noop} />
+      <Section title="LocalMatchScreen (with board, captured tray, history, popups)">
+        <LocalMatchScreen config={demoConfig} onExit={noop} />
       </Section>
     </div>
   );

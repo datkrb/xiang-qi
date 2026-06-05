@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  Home,
   Gamepad2,
   Bot,
   FolderOpen,
@@ -10,6 +9,7 @@ import {
   Users,
   Settings,
   ChevronDown,
+  Zap,
 } from "lucide-react";
 
 interface HomeScreenProps {
@@ -21,7 +21,8 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
 
   const gameMenuItems = [
     { id: "offline", label: "Play Offline", icon: Gamepad2 },
-    { id: "online", label: "Play Online", icon: Home },
+    { id: "online", label: "Quick Match", icon: Zap },
+    { id: "friend", label: "Play with Friend", icon: Users },
     { id: "ai", label: "Play vs AI", icon: Bot },
     { id: "load", label: "Load Saved Game", icon: FolderOpen },
     { id: "leaderboard", label: "Leaderboard", icon: Trophy },

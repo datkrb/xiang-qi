@@ -18,6 +18,7 @@ type Screen =
   | "play"
   | "offline"
   | "online"
+  | "friend"
   | "ai"
   | "game"
   | "load"
@@ -35,27 +36,32 @@ const ProfileScreen = lazy(() => import("@features/profile/screens/ProfileScreen
 const FriendsScreen = lazy(() => import("@features/friends/screens/FriendsScreen"));
 const SettingsScreen = lazy(() => import("@features/settings/screens/SettingsScreen"));
 const HomeScreen = lazy(() => import("@features/play/screens/HomeScreen"));
-const OnlineGameScreen = lazy(() => import("@features/game/screens/OnlineGameScreen"));
-const MainGameScreen = lazy(() => import("@features/game/screens/MainGameScreen"));
 const LoadGameScreen = lazy(() => import("@features/play/screens/LoadGameScreen"));
 const PlayScreen = lazy(() => import("@features/play/screens/PlayScreen"));
 
-// Named exports loaded via dynamic imports
-const OfflineGameModeScreen = lazy(() =>
-  import("@features/game/screens/OfflineGameModeScreen").then((m) => ({
+// Named exports loaded via dynamic imports (Setups & Lobbies)
+const OfflineSetupScreen = lazy(() =>
+  import("@features/game/modes/local/OfflineSetupScreen").then((m) => ({
     default: m.OfflineGameModeScreen,
   })),
 );
-const AIGameModeScreen = lazy(() =>
-  import("@features/game/screens/AIGameModeScreen").then((m) => ({
+const AISetupScreen = lazy(() =>
+  import("@features/game/modes/ai/AISetupScreen").then((m) => ({
     default: m.AIGameModeScreen,
   })),
 );
 const TutorialScreen = lazy(() =>
-  import("@features/game/screens/TutorialScreen").then((m) => ({
+  import("@features/game/modes/tutorial/TutorialScreen").then((m) => ({
     default: m.TutorialScreen,
   })),
 );
+const FriendLobbyScreen = lazy(() => import("@features/game/modes/friend/FriendLobbyScreen"));
+const QuickMatchLobby = lazy(() => import("@features/game/modes/online/QuickMatchLobby"));
+
+// Match Screens
+const LocalMatchScreen = lazy(() => import("@features/game/modes/local/LocalMatchScreen"));
+const AIMatchScreen = lazy(() => import("@features/game/modes/ai/AIMatchScreen"));
+const NetworkMatchScreen = lazy(() => import("@features/game/modes/online/NetworkMatchScreen"));
 const LeaderboardScreen = lazy(() =>
   import("@features/leaderboard/screens/LeaderboardScreen").then((m) => ({
     default: m.LeaderboardScreen,
@@ -104,6 +110,7 @@ export default function App() {
       case "friends": path = "/friends"; break;
       case "offline": path = "/play/offline"; break;
       case "online": path = "/play/online"; break;
+      case "friend": path = "/play/friend"; break;
       case "ai": path = "/play/ai"; break;
       case "leaderboard": path = "/leaderboard"; break;
       default: break;
@@ -223,6 +230,7 @@ export default function App() {
     else if (path === "/friends") setCurrentScreen("friends");
     else if (path === "/play/offline") setCurrentScreen("offline");
     else if (path === "/play/online") setCurrentScreen("online");
+    else if (path === "/play/friend") setCurrentScreen("friend");
     else if (path === "/play/ai") setCurrentScreen("ai");
     else if (path === "/leaderboard") setCurrentScreen("leaderboard");
   }, []);
@@ -336,14 +344,14 @@ export default function App() {
                     ) : null}
 
                     {currentScreen === "offline" ? (
-                      <OfflineGameModeScreen
+                      <OfflineSetupScreen
                         onBack={handleBackToHome}
                         onStartGame={handleStartGame}
                       />
                     ) : null}
 
                     {currentScreen === "online" ? (
-                      <OnlineGameScreen
+                      <QuickMatchLobby
                         onBack={handleBackToHome}
                         onStartGame={handleStartOnlineGame}
                         userData={{
@@ -354,18 +362,30 @@ export default function App() {
                       />
                     ) : null}
 
+                    {currentScreen === "friend" ? (
+                      <FriendLobbyScreen
+                        onBack={handleBackToHome}
+                        userData={{
+                          userId,
+                          username: "Player",
+                          elo: 1000,
+                        }}
+                      />
+                    ) : null}
+
                     {currentScreen === "ai" ? (
-                      <AIGameModeScreen
+                      <AISetupScreen
                         onBack={handleBackToHome}
                         onStartGame={handleStartGame}
                       />
                     ) : null}
 
                     {currentScreen === "game" ? (
-                      <MainGameScreen
-                        config={gameConfig!}
-                        onExit={handleBackToHome}
-                      />
+                      <>
+                        {gameConfig?.mode === "pvp" && <LocalMatchScreen config={gameConfig} onExit={handleBackToHome} />}
+                        {gameConfig?.mode === "ai" && <AIMatchScreen config={gameConfig} onExit={handleBackToHome} />}
+                        {gameConfig?.mode === "online" && <NetworkMatchScreen onExit={handleBackToHome} />}
+                      </>
                     ) : null}
 
                     {currentScreen === "load" ? (
